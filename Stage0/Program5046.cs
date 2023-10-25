@@ -5,6 +5,7 @@
         Welcome5046();
         //Console.Readkey();
         Welcome8812();
+        int x;
     }
 
     private static void Welcome5046()
@@ -16,8 +17,7 @@
 
     private static void Welcome8812()
     {
-
-    }
-
+        
+    }  
 }
 
