@@ -5,7 +5,6 @@ using DalApi;
 using DO;
 using System.Collections.Generic;
 using System.Xml.Linq;
-
 public static class Initialization
 {
     private static ITask? s_dalTask; 
@@ -13,7 +12,7 @@ public static class Initialization
     private static IDependensy? s_dalDependensy;
 
     private static readonly Random s_rand = new();
-
+    //מחיקת ערכי התאריכים חוץ מ2 על פי התיאו הכללי
     private static void CreateTask()
     {
         string[] taskAliases =
