@@ -14,7 +14,7 @@ internal static class DataSource
         private static int nextDependensyId = IdD;
         internal static int NextDependensyId { get => nextDependensyId++; }
        
-        internal const int IdT = 1000;
+        internal const int IdT = 10;
         private static int nextTaskId = IdT;
         internal static int NextTaskId { get => nextTaskId++; }
     }

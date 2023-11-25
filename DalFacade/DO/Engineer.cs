@@ -3,11 +3,11 @@ namespace DO;
 /// <summary>
 /// יישות מהנס 
 /// </summary>
-/// <param name="Id">מזהה המהנדס</param>
-/// <param name="Email"> מייל המהנדס</param>
-/// <param name="Cost">מחיר לשעה</param>
+/// <param name="Id">מספר מזהה ייחודי </param>
+/// <param name="Email">כתובת דוא"ל</param>
+/// <param name="Cost">עלות לשעה</param>
 /// <param name="Name">שם המהנדס</param>
-/// <param name="Level">שלב המהנדס</param>
+/// <param name="Level">רמת המהנדס</param>
 public record Engineer
 (
     int Id,

@@ -4,9 +4,9 @@ namespace DO;
 /// <summary>
 ///ישות ששומרת את הנתונים לגבי כל משימה האם היא תלויה במשימות אחרות או שיש משימות אחרות שתלויות בה
 /// </summary>
-/// <param name="Id">תלות המשימותהתלות בין המשימה </param>
-/// <param name="DependentTask">האם המשימה תלויה במשימות אחרות</param>
-/// <param name="DependsOnTask">האם משימות אחרות תלויות במשימה זו</param>
+/// <param name="Id">מספר מזהה ייחודי </param>
+/// <param name="DependentTask">מספר מזהה של משימה תלויה</param>
+/// <param name="DependsOnTask">מספר מזהה של משימה קודמת</param>
 public record Dependensy
 (
     int Id,
