@@ -3,6 +3,7 @@ namespace DalTest;
 
 using DalApi;
 using DO;
+using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
 public static class Initialization
@@ -45,6 +46,8 @@ public static class Initialization
             s_dalTask!.Create(newTask);
         }
 
+
+
     }
 
     private static void CreateEngineers()
@@ -79,7 +82,7 @@ public static class Initialization
         int randomT2;
         int dependencyId;
 
-        for(int i=0;i<50;i++)
+        for(int i=0;i<40;i++)
         {
             do
                 dependencyId = s_rand.Next(10, 99);
@@ -88,7 +91,7 @@ public static class Initialization
             randomT1 = RandomIdTask();
             do
                 randomT2 = RandomIdTask();
-            while (randomT2 == randomT1);
+            while (randomT2 == randomT1 || IfDependensySame(randomT1, randomT2));
 
             Dependensy newDependency = new (
                 dependencyId, randomT1, randomT2
@@ -96,8 +99,69 @@ public static class Initialization
 
             s_dalDependensy!.Create(newDependency);
         }
+
+        //הוספת 3 תלותיות על משימה אחת
+        randomT1 = RandomIdTask();
+        for (int i = 0; i < 3; i++)
+        {
+            do
+                dependencyId = s_rand.Next(10, 99);
+            while (s_dalDependensy!.Read(dependencyId) != null);
+
+            do
+                randomT2 = RandomIdTask();
+            while (randomT2 == randomT1 || IfDependensySame(randomT1, randomT2));
+
+            Dependensy newDependency = new(
+                dependencyId, randomT1, randomT2
+            );
+
+            s_dalDependensy!.Create(newDependency);
+        }
+
+        //יצירת 2 משימות עם תלותיות שווה
+        CreateDependentTasksPair();
+
     }
-     
+
+    //פונקציה ליצירת 2 משימות עם תלותיות שווה
+    private static void CreateDependentTasksPair()
+    {
+        int randomT1;
+        int randomT2;
+        int dependencyId;
+
+        do
+            randomT1 = RandomIdTask();
+        while (s_dalTask!.Read(randomT1) == null);
+
+        do
+            randomT2 = RandomIdTask();
+        while (randomT2 == randomT1 || s_dalTask!.Read(randomT2) == null);
+
+        // יצירת מזהה ייחודי לתלותית
+        do
+            dependencyId = s_rand.Next(10, 99);
+        while (s_dalDependensy!.Read(dependencyId) != null);
+
+        // יצירת התלותית
+        Dependensy newDependency = new(
+            dependencyId, randomT1, randomT2
+        );
+        //create
+        s_dalDependensy!.Create(newDependency);
+    }
+
+    //פונקציה שבודקת האם תלות כבר קיימת או שההיפוך שלה קיים
+    private static bool IfDependensySame(int randomT1,int randomT2)
+    {
+        var tasks = s_dalDependensy!.ReadAll().ToArray();
+        for(int i = 0; i <= tasks.Length; i++)
+            if (tasks[i].DependentTask == randomT2 && tasks[i].DependsOnTask == randomT1)
+                return false;
+        return true;
+    }
+
     private static int RandomIdEngineer()
     {
         var engineers = s_dalEngineer!.ReadAll().ToArray();
@@ -112,7 +176,7 @@ public static class Initialization
         return randomTask.Id;
     }
 
-    public static void Do(ITask? dalTask, IEngineer dalEngineer, IDependensy dalDependensy)
+    public static void Do(ITask? dalTask, IEngineer? dalEngineer, IDependensy? dalDependensy)
     {
         s_dalTask = dalTask ?? throw new NullReferenceException("DAL can not be null!");
         s_dalEngineer = dalEngineer ?? throw new NullReferenceException("DAL can not be null!");

@@ -1,6 +1,8 @@
 ﻿using Dal;
 using DalApi;
 using DO;
+using System.Threading.Channels;
+using System.Threading.Tasks;
 
 namespace DalTest
 {
@@ -10,6 +12,7 @@ namespace DalTest
         private static IDependensy? s_dalDependensy = new DependensyImplementation();
         private static IEngineer? s_dalEngineer = new EngineerImplementation();
         private static ITask? s_dalTask = new TaskImplementation();
+        private static int? id;
 
         //פעולה שמדפיסה את התפריט הראשי
 
@@ -45,7 +48,7 @@ namespace DalTest
         }
 
         //תפריט של ישיות
-        private static void DependensyMenu(int numOfEntityl)
+        private static void DependensyMenu()
         {
 
             bool exit = false;
@@ -61,24 +64,39 @@ namespace DalTest
                         break;
                     case 1:
                         // Test Create operation
-                        Console.WriteLine("enter the proporties of dependensy");
-                        int id=int.Parse(Console.ReadLine());   
-                        int dependsOnTask = int.Parse(Console.ReadLine());
-                        int dependentTask = int.Parse(Console.ReadLine());  
-                        Dependensy t = new (id,dependentTask,dependsOnTask);
-                        s_dalDependensy.Create(t);
+                        Dependensy dependensy = new()
+                        {
+                            DependentTask = int.Parse(Console.ReadLine()?? ""),
+                            DependsOnTask = int.Parse(Console.ReadLine() ?? "")
+                        };
+                        id = s_dalDependensy?.Create(dependensy);
                         break;
                     case 2:
                         // Test Read operation
-                        TestRead(dal);
-                        break;
+                        Console.WriteLine("Enter id to read: ");
+                        int idToFind = int.Parse(Console.ReadLine() ?? "");
+                        Console.WriteLine(s_dalDependensy!.Read(idToFind));
+                         break;
                     case 3:
-                        // Test Update operation
-                        TestUpdate(dal);
+                        // Test ReadAll operation
+                        Console.WriteLine("Organs in the entity:");
+                        Console.WriteLine(s_dalDependensy!.ReadAll());
                         break;
                     case 4:
+                        // Test Update operation
+                        Console.WriteLine("enter the proporties of dependensy");
+                        Dependensy dependensy1 = new()
+                        {
+                            DependentTask = int.Parse(Console.ReadLine() ?? ""),
+                            DependsOnTask = int.Parse(Console.ReadLine() ?? "")
+                        };
+                        s_dalDependensy!.Update(dependensy1);
+                        break;
+                    case 5:
                         // Test Delete operation
-                        TestDelete(dal);
+                        Console.WriteLine("Enter an ID to delete");
+                        int DeletionID = int.Parse(Console.ReadLine() ?? "");
+                        s_dalDependensy!.Delete(DeletionID);
                         break;
                     default:
                         Console.WriteLine("Invalid choice. Please try again.");
@@ -87,20 +105,14 @@ namespace DalTest
             }
         }
 
-        private static void EngineerMenu(int numOfEntity)
+        private static void EngineerMenu()
         {
 
             bool exit = false;
             while (!exit)
             {
-                Console.WriteLine("Engineer Menu:");
-                Console.WriteLine("0. Exit");
-                Console.WriteLine("1.  Create");
-                Console.WriteLine("2.  Read");
-                Console.WriteLine("3.  ReadAll");
-                Console.WriteLine("4.  Update");
-                Console.WriteLine("5.  Delete");
-                int entityChoice = GetUserChoice("Choose a CRUD operation or exit: ");
+                PrintEntityMenu();
+                 int entityChoice = GetUserChoice("Choose a CRUD operation or exit: ");
 
                 switch (entityChoice)
                 {
@@ -109,28 +121,53 @@ namespace DalTest
                         break;
                     case 1:
                         // Test Create operation
-                        TestCreate(dal);
+                        Console.WriteLine("enter the proporties of engineer");
+                        Engineer engineer = new()
+                        {
+                            Email = Console.ReadLine(),
+                            Cost = double.Parse(Console.ReadLine() ?? ""),
+                            Name = Console.ReadLine()
+                        };
+                         id = s_dalEngineer?.Create(engineer);
+
                         break;
                     case 2:
                         // Test Read operation
-                        TestRead(dal);
+                        Console.WriteLine("Enter id to read: ");
+                        int idToFind = int.Parse(Console.ReadLine() ?? "");
+                        Console.WriteLine(s_dalEngineer!.Read(idToFind));
                         break;
                     case 3:
-                        // Test Update operation
-                        TestUpdate(dal);
+                        // Test ReadAll operation
+                        Console.WriteLine("Organs in the entity:");
+                        Console.WriteLine(s_dalEngineer!.ReadAll());
                         break;
                     case 4:
+                        // Test Update operation
+                        Console.WriteLine("enter the proporties of engineer");
+                        Engineer engineer1 = new()
+                        {
+                            Id = int.Parse(Console.ReadLine() ?? ""),
+                            Email = Console.ReadLine(),
+                            Cost = double.Parse(Console.ReadLine() ?? ""),
+                            Name = Console.ReadLine()
+                        };
+                        s_dalEngineer!.Update(engineer1);
+                        break;
+                    case 5:
                         // Test Delete operation
-                        TestDelete(dal);
+                        Console.WriteLine("Enter an ID to delete");
+                        int DeletionID = int.Parse(Console.ReadLine()?? "");
+                        s_dalEngineer!.Delete(DeletionID);
                         break;
                     default:
                         Console.WriteLine("Invalid choice. Please try again.");
-                        break;
+                    break;
                 }
             }
         }
 
-        private static void TaskMenu(int numOfEntity)
+        private static void TaskMenu()
         {
   
             bool exit = false;
@@ -146,19 +183,61 @@ namespace DalTest
                         break;
                     case 1:
                         // Test Create operation
-                        TestCreate(dal);
+                        Console.WriteLine("enter the proporties of task");
+                        DO.Task task = new DO.Task()
+                        {
+                            Alias = Console.ReadLine(),
+                            Description = Console.ReadLine(),
+                            RequiredEffortTime = TimeSpan.Parse(Console.ReadLine()?? ""),
+                            IsMilestone = bool.Parse(Console.ReadLine() ?? ""),
+                           // DO.EngineerExperience? Copmlexity =Console.ReadLine(),
+                            StartDate = DateTime.Parse(Console.ReadLine() ?? ""),
+                            ScheduledDate = DateTime.Parse(Console.ReadLine() ?? "" ),
+                            DeadlineDate = DateTime.Parse(Console.ReadLine() ?? ""),
+                            CompleteDate = DateTime.Parse(Console.ReadLine()     ?? ""),
+                            Deliverables = Console.ReadLine() ?? "",
+                            Remarks = Console.ReadLine() ?? "",
+                            EngineerId = int.Parse(Console.ReadLine() ?? "" )
+                        };
+                        id = s_dalTask?.Create(task);
                         break;
                     case 2:
                         // Test Read operation
-                        TestRead(dal);
+                        Console.WriteLine("Enter id to read: ");
+                        int idToFind = int.Parse(Console.ReadLine() ?? "");
+                        Console.WriteLine(s_dalTask!.Read(idToFind));
                         break;
                     case 3:
-                        // Test Update operation
-                        TestUpdate(dal);
+                        // Test ReadAll operation
+                        Console.WriteLine("Organs in the entity:");
+                        Console.WriteLine(s_dalTask!.ReadAll());
                         break;
                     case 4:
+                        // Test Update operation
+                        Console.WriteLine("enter the proporties of task");
+                        DO.Task newTask = new DO.Task()
+                        {
+                            Id=int.Parse(Console.ReadLine() ?? ""),
+                            Alias = Console.ReadLine(),
+                            Description = Console.ReadLine(),
+                            RequiredEffortTime = TimeSpan.Parse(Console.ReadLine() ?? ""),
+                            IsMilestone = bool.Parse(Console.ReadLine() ?? ""),
+                            // DO.EngineerExperience? Copmlexity =Console.ReadLine(),
+                            StartDate = DateTime.Parse(Console.ReadLine() ?? ""),
+                            ScheduledDate = DateTime.Parse(Console.ReadLine() ?? ""),
+                            DeadlineDate = DateTime.Parse(Console.ReadLine() ?? ""),
+                            CompleteDate = DateTime.Parse(Console.ReadLine() ?? ""),
+                            Deliverables = Console.ReadLine() ?? "",
+                            Remarks = Console.ReadLine() ?? "",
+                            EngineerId = int.Parse(Console.ReadLine() ?? "")
+                        };
+                        s_dalTask!.Update(newTask);
+                        break;
+                    case 5:
                         // Test Delete operation
-                        TestDelete(dal);
+                        Console.WriteLine("Enter an ID to delete");                       
+                        int DeletionID = int.Parse(Console.ReadLine() ?? "");
+                        s_dalEngineer!.Delete(DeletionID);
                         break;
                     default:
                         Console.WriteLine("Invalid choice. Please try again.");
@@ -183,15 +262,15 @@ namespace DalTest
                         break;
                     case 1:
                         //int.TryParse(Console.ReadLine(), out menuChoice);
-                        DependensyMenu(menuChoice);
+                        DependensyMenu();
                         break;
                     case 2:
                         //int.TryParse(Console.ReadLine(), out menuChoice);
-                        EngineerMenu(menuChoice);
+                        EngineerMenu();
                         break;
                     case 3:
                         //int.TryParse(Console.ReadLine(), out menuChoice);
-                        TaskMenu(menuChoice);
+                        TaskMenu();
                         break;
                     default:
                         Console.WriteLine("Invalid choice. Please try again.");

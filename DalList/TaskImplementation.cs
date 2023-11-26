@@ -65,7 +65,7 @@ public class TaskImplementation : ITask
     {
         Task? newItem = DataSource.Tasks.Find(x => x.Id == item.Id);
         if (newItem == null)
-            throw new Exception("Object of type Task with such Id does not exist.");
+            throw new Exception("Objedt of type Task with such Id does not exist.");
         else
         {
             DataSource.Tasks.Remove(newItem);
