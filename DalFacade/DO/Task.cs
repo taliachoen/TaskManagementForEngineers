@@ -1,21 +1,21 @@
 ﻿namespace DO;
 /// <summary>
-/// יישות המבטאה את המשימות והתכונות שלהם
+/// An entity that expresses their tasks and attributes.
 /// </summary>
-/// <param name="Id">מספר זיהוי של המשימה</param>
-/// <param name="Alias">כינוי של המשימה</param>
-/// <param name="Description">תיאור המשימה</param>
-/// <param name="CreatedAtDate">תאריך יצירת המשימה</param>
-/// <param name="RequiredEffortTime">זמן נדרש למשימה</param>
-/// <param name="IsMilestone"> אבן דרך</param>    ??????????????????????????????
-/// <param name="Copmlexity">מורכבות המשימה</param>
-/// <param name="StartDate">תאריך התחלה</param>
-/// <param name="ScheduledDate">תאריך מתוכנן לסיום המשימה</param>
-/// <param name="DeadlineDate">דד ליין למשימה</param>
-/// <param name="CompleteDate">תאריך סיום המשימה</param>
-/// <param name="Deliverables">תוצר</param                 ????????????????????
-/// <param name="Remarks">הערות</param>
-/// <param name="EngineerId">מזהה המהנדס</param>
+/// <param name="Id">Task identification number</param>
+/// <param name="Alias">nickname</param>
+/// <param name="Description">Description</param>
+/// <param name="CreatedAtDate">Task creation date</param>
+/// <param name="RequiredEffortTime">The amount of time required to perform the task.</param>
+/// <param name="IsMilestone">Milestone</param>
+/// <param name="Copmlexity">The difficulty level of the task</param>
+/// <param name="StartDate">Date of commencement of work on the assignment</param>
+/// <param name="ScheduledDate">Planned date for starting work</param>
+/// <param name="DeadlineDate"> Possible final end date(deadline)</param>
+/// <param name="CompleteDate">Actual end date</param>
+/// <param name="Deliverables">product</param               
+/// <param name="Remarks">Remarks</param>
+/// <param name="EngineerId">The engineer ID assigned to the task</param>
 public record Task
 (
     int Id,

@@ -2,10 +2,12 @@
 namespace Dal;
 using DalApi;
 using DO;
+using System.Text;
 
+//Creating the CRUD operations for dependencies
 public class DependensyImplementation : IDependensy
 {
-    public  int Create(Dependensy item)
+    public int Create(Dependensy item)
     {
         int newID = DataSource.Config.NextDependensyId;
         Dependensy newItem = new()
@@ -20,7 +22,6 @@ public class DependensyImplementation : IDependensy
 
     public void Delete(int id)
     {
-        //if()   אוביקט שאסור למחוק
         Dependensy? newItem = DataSource.Dependensies.Find(x => x.Id == id);
         if (newItem == null)
         {
@@ -28,16 +29,16 @@ public class DependensyImplementation : IDependensy
         }
         else
         {
-            DataSource.Dependensies.Remove(newItem);   
+            DataSource.Dependensies.Remove(newItem);
         }
     }
 
     public Dependensy? Read(int id)
     {
-        Dependensy ?newItem = DataSource.Dependensies.Find(x => x.Id == id);
+        Dependensy? newItem = DataSource.Dependensies.Find(x => x.Id == id);
         if (newItem != null)
             return newItem;
-        return null;    
+        return null;
     }
 
     public List<Dependensy> ReadAll()
@@ -46,15 +47,15 @@ public class DependensyImplementation : IDependensy
     }
 
     public void Update(Dependensy item)
+{
+    Dependensy? newItem = DataSource.Dependensies.Find(x => x.Id == item.Id);
+    if (newItem == null)
+        throw new Exception("Object of type Dependensy with such Id does not exist.");
+    else
     {
-        Dependensy? newItem = DataSource.Dependensies.Find(x => x.Id == item.Id);
-        if (newItem == null)
-              throw new Exception("Object of type Dependensy with such Id does not exist.");
-        else
-        {
-            DataSource.Dependensies.Remove(newItem);
-            DataSource.Dependensies.Add(item);
-        }
-
+        DataSource.Dependensies.Remove(newItem);
+        DataSource.Dependensies.Add(item);
     }
+
+}
 }

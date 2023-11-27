@@ -1,13 +1,13 @@
 ﻿
 namespace DO;
 /// <summary>
-/// יישות מהנס 
+/// An entity that contains the attributes of the engineer
 /// </summary>
-/// <param name="Id">מספר מזהה ייחודי </param>
-/// <param name="Email">כתובת דוא"ל</param>
-/// <param name="Cost">עלות לשעה</param>
-/// <param name="Name">שם המהנדס</param>
-/// <param name="Level">רמת המהנדס</param>
+/// <param name="Id">Unique ID number </param>
+/// <param name="Email">Email</param>
+/// <param name="Cost">cost per hour</param>
+/// <param name="Name">The name of the engineer</param>
+/// <param name="Level">Engineer level</param>
 public record Engineer
 (
     int Id,

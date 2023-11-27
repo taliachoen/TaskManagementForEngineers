@@ -2,7 +2,7 @@
 namespace Dal;
 using DalApi;
 using DO;
-
+//Creating CRUD operations for the task
 public class TaskImplementation : ITask
 {
     public int Create(Task item)
@@ -32,20 +32,19 @@ public class TaskImplementation : ITask
 
     public void Delete(int id)
     {
-        //if()   אוביקט שאסור למחוק
         Task? newItem = DataSource.Tasks.Find(x => x.Id == id);
         if (newItem == null)
         {
             throw new Exception("Object of type Task with such Id does not exist.");
         }
         else
-        {
+        { 
+            //Checking whether this task has a dependency on another task
+            if (DataSource.Dependensies.Any(x => x.DependsOnTask == id))
+                throw new Exception("The task cannot be deleted because it has a dependency on another task");
             DataSource.Tasks.Remove(newItem);
-
         }
-
-
-
+       
     }
 
     public Task? Read(int id)

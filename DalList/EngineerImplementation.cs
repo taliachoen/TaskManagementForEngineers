@@ -2,7 +2,7 @@
 namespace Dal;
 using DalApi;
 using DO;
-
+//Creating the CRUD operations for the engineer
 public class EngineerImplementation : IEngineer
 {
     public int Create(Engineer item)
@@ -19,7 +19,6 @@ public class EngineerImplementation : IEngineer
 
     public void Delete(int id)
     {
-        //if()   אוביקט שאסור למחוק
         Engineer? newItem = DataSource.Engineers.Find(x => x.Id == id);
         if (newItem == null)
         {
@@ -27,12 +26,12 @@ public class EngineerImplementation : IEngineer
         }
         else
         {
-            DataSource.Engineers.Remove(newItem);
-
+            //Checking whether there are tasks that depend on this engineer
+           if (DataSource.Tasks.Any(x => x.EngineerId== id))
+              throw new Exception("It is not possible to delete the engineer because he has existing tasks");
+           DataSource.Engineers.Remove(newItem);
         }
-
-
-
+        
     }
 
     public Engineer? Read(int id)

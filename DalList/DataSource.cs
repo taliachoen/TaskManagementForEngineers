@@ -10,10 +10,11 @@ internal static class DataSource
 
     internal static class Config
     {
+        //יצירת ערכי מזהה יחודי לתלות
         internal const int IdD = 1000;
         private static int nextDependensyId = IdD;
         internal static int NextDependensyId { get => nextDependensyId++; }
-       
+       //יצירת ערכי מזהה יחודי למשימה
         internal const int IdT = 10;
         private static int nextTaskId = IdT;
         internal static int NextTaskId { get => nextTaskId++; }

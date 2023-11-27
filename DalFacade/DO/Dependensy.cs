@@ -2,11 +2,12 @@
 namespace DO;
 
 /// <summary>
-///ישות ששומרת את הנתונים לגבי כל משימה האם היא תלויה במשימות אחרות או שיש משימות אחרות שתלויות בה
-/// </summary>
-/// <param name="Id">מספר מזהה ייחודי </param>
-/// <param name="DependentTask">מספר מזהה של משימה תלויה</param>
-/// <param name="DependsOnTask">מספר מזהה של משימה קודמת</param>
+///An entity that save the data about the dependencies of each task/// </summary>
+/// <param name="Id">Unique ID number </param>
+/// <param name="DependentTask">ID number of pending task</param>
+/// <param name="DependsOnTask">ID number of previous task</param>
+ ///
+
 public record Dependensy
 (
     int Id,
