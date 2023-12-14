@@ -5,7 +5,7 @@ using DO;
 using System.Text;
 
 //Creating the CRUD operations for dependencies
-public class DependensyImplementation : IDependensy
+internal class DependensyImplementation : IDependensy
 {
     public int Create(Dependensy item)
     {

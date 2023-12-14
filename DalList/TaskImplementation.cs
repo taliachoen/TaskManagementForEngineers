@@ -3,7 +3,7 @@ namespace Dal;
 using DalApi;
 using DO;
 //Creating CRUD operations for the task
-public class TaskImplementation : ITask
+internal class TaskImplementation : ITask
 {
     public int Create(Task item)
     {

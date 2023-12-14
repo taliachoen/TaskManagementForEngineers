@@ -8,10 +8,8 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 public static class Initialization
 {
-    private static ITask? s_dalTask; 
-    private static IEngineer? s_dalEngineer;
-    private static IDependensy? s_dalDependensy;
     private static readonly Random s_rand = new();
+    private static IDal? s_dal;
 
 
     //Creating initial tasks
@@ -45,7 +43,7 @@ public static class Initialization
                 false, complexity, startDate, null, null,
                 completeDate, deliverables, remarks, null 
                 );
-            s_dalTask!.Create(newTask);
+            s_dal!.Task.Create(newTask);
         }
 
     }
@@ -67,12 +65,12 @@ public static class Initialization
             int id;
             do
                 id = s_rand.Next(200000000, 400000000);
-            while (s_dalEngineer!.Read(id) != null);
+            while (s_dal!.Engineer.Read(id) != null);
             int? cost = s_rand.Next(100, 500);
             string email = engineerEmails[i++];
             DO.EngineerExperience Level = (DO.EngineerExperience)s_rand.Next(1, 4);
             Engineer engineer = new(id, email, cost, name, Level);
-            s_dalEngineer!.Create(engineer);    
+            s_dal!.Engineer.Create(engineer);    
         }
     }
     //Creating initial dependencies
@@ -80,7 +78,6 @@ public static class Initialization
     {
         int randomTaskId1;
         int randomTaskId2;
-        int dependencyId;
 
         for(int i=0;i<40;i++)
         {
@@ -92,7 +89,7 @@ public static class Initialization
             Dependensy newDependency = new (
                 0, randomTaskId1, randomTaskId2
             );
-            s_dalDependensy!.Create(newDependency);
+            s_dal!.Dependensy.Create(newDependency);
         }
 
         //Added 3 dependencies on one task
@@ -107,7 +104,7 @@ public static class Initialization
                 0, randomTaskId1, randomTaskId2
             );
 
-            s_dalDependensy!.Create(newDependency);
+            s_dal!.Dependensy.Create(newDependency);
         }
 
         //Function to reating 2 tasks with 3 identical dependencies
@@ -118,7 +115,7 @@ public static class Initialization
     //Function that checks if the dependency already exists in the inversion
     private static bool IfDependensySame(int randomTaskId1,int randomTaskId2)
     {
-        var dependensys = s_dalDependensy!.ReadAll().ToArray();
+        var dependensys = s_dal!.Dependensy.ReadAll().ToArray();
         for(int i = 0; i < dependensys.Length; i++)
             if (dependensys[i].DependentTask == randomTaskId2 && dependensys[i].DependsOnTask == randomTaskId1)
                 return true;
@@ -127,16 +124,14 @@ public static class Initialization
     //Lottery for existing task ID
     private static int RandomIdTask()
     {
-        var task = s_dalTask!.ReadAll().ToArray();
+        var task = s_dal!.Task.ReadAll().ToArray();
         Task randomTask = task[s_rand.Next(0, task.Length)];
         return randomTask.Id;
     }
     //Creating initial values for entities
-    public static void Do(ITask? dalTask, IEngineer? dalEngineer, IDependensy? dalDependensy)
+    public static void Do(IDal dal)
     {
-        s_dalTask = dalTask ?? throw new NullReferenceException("DAL can not be null!");
-        s_dalEngineer = dalEngineer ?? throw new NullReferenceException("DAL can not be null!");
-        s_dalDependensy = dalDependensy ?? throw new NullReferenceException("DAL can not be null!");
+        s_dal = dal ?? throw new NullReferenceException("DAL object can not be null!"); //stage 2
         CreateTask();
         CreateEngineers();
         CreateDependencies();
@@ -148,10 +143,10 @@ public static class Initialization
          {
 
                Dependensy newDependency1 = new(0,80, numOfTask);
-               s_dalDependensy!.Create(newDependency1);
+               s_dal!.Dependensy.Create(newDependency1);
 
                Dependensy newDependency2 = new(0,90, numOfTask);
-               s_dalDependensy!.Create(newDependency2);
+               s_dal!.Dependensy.Create(newDependency2);
          }
     }
 

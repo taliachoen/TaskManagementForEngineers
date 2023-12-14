@@ -10,9 +10,7 @@ namespace DalTest
 {
     internal class Program
     {
-        private static IDependensy? s_dalDependensy = new DependensyImplementation();
-        private static IEngineer? s_dalEngineer = new EngineerImplementation();
-        private static ITask? s_dalTask = new TaskImplementation();
+        static readonly IDal s_dal = new DalList(); //stage 2
 
         // Helper method to parse integer input with validation
         private static int GetIntInput(string message)
@@ -111,19 +109,19 @@ namespace DalTest
                                 DependentTask = GetIntInput("Enter DependentTask: "),
                                 DependsOnTask = GetIntInput("Enter DependsOnTask: ")
                             };
-                            id = s_dalDependensy?.Create(dependensyCreate);
+                            id = s_dal.Dependensy?.Create(dependensyCreate);
                             Console.WriteLine("Succeeded");
                             break;
                         case 2:
                             // Read operation
                             Console.WriteLine("Enter id to read: ");
                             int idToFind = GetIntInput("Enter ID: ");
-                            Console.WriteLine(s_dalDependensy!.Read(idToFind));
+                            Console.WriteLine(s_dal.Dependensy!.Read(idToFind));
                             break;
                         case 3:
                             // ReadAll operation
                             Console.WriteLine("All Dependensies:");
-                            List<Dependensy> dependensies = s_dalDependensy!.ReadAll();
+                            List<Dependensy> dependensies = s_dal.Dependensy!.ReadAll();
                             foreach (var dependensyReadAll in dependensies)
                             {
                                 Console.WriteLine(dependensyReadAll);
@@ -138,13 +136,13 @@ namespace DalTest
                                 DependentTask = GetIntInput("Enter DependentTask: "),
                                 DependsOnTask = GetIntInput("Enter DependsOnTask: ")
                             };
-                            s_dalDependensy!.Update(dependensyUpdate);
+                            s_dal.Dependensy!.Update(dependensyUpdate);
                             break;
                         case 5:
                             // Delete operation
                             Console.WriteLine("Enter an ID to delete");
                             int DeletionID = GetIntInput("Enter ID: ");
-                            s_dalDependensy!.Delete(DeletionID);
+                            s_dal.Dependensy!.Delete(DeletionID);
                             break;
                         default:
                             Console.WriteLine("Invalid choice. Please try again.");
@@ -186,18 +184,18 @@ namespace DalTest
                                 Name = Console.ReadLine(),
                                 Level = (DO.EngineerExperience)GetIntInput("Enter Complexity: ")
                             };
-                            id = s_dalEngineer?.Create(engineerCreate);
+                            id = s_dal.Engineer?.Create(engineerCreate);
                             break;
                         case 2:
                             // Read operation
                             Console.WriteLine("Enter id to read: ");
                             int idToFind = GetIntInput("Enter ID: ");
-                            Console.WriteLine(s_dalEngineer!.Read(idToFind));
+                            Console.WriteLine(s_dal.Engineer!.Read(idToFind));
                             break;
                         case 3:
                             // ReadAll operation
                             Console.WriteLine("All Dependensies:");
-                            List<Engineer> engineers = s_dalEngineer!.ReadAll();
+                            List<Engineer> engineers = s_dal.Engineer!.ReadAll();
                             foreach (var engineerReadAll in engineers)
                             {
                                 Console.WriteLine(engineerReadAll);
@@ -214,13 +212,13 @@ namespace DalTest
                                 Name = Console.ReadLine(),
                                 Level = (DO.EngineerExperience)GetIntInput("Enter Complexity: ")
                             };
-                            s_dalEngineer!.Update(engineerUpdate);
+                            s_dal.Engineer!.Update(engineerUpdate);
                             break;
                         case 5:
                             // Delete operation
                             Console.WriteLine("Enter an ID to delete");
                             int DeletionID = GetIntInput("Enter ID: ");
-                            s_dalEngineer!.Delete(DeletionID);
+                            s_dal.Engineer!.Delete(DeletionID);
                             break;
                         default:
                             Console.WriteLine("Invalid choice. Please try again.");
@@ -271,18 +269,18 @@ namespace DalTest
                                 Remarks = Console.ReadLine(),
                                 EngineerId = GetIntInput("Enter EngineerId: ")
                             };
-                            id = s_dalTask?.Create(taskCreate);
+                            id = s_dal.Task?.Create(taskCreate);
                             break;
                         case 2:
                             // Read operation
                             Console.WriteLine("Enter id to read: ");
                             int idToFind = GetIntInput("Enter ID: ");
-                            Console.WriteLine(s_dalTask!.Read(idToFind));
+                            Console.WriteLine(s_dal.Task!.Read(idToFind));
                             break;
                         case 3:
                             // ReadAll operation
                             Console.WriteLine("All Task:");
-                            List<DO.Task> tasks = s_dalTask!.ReadAll();
+                            List<DO.Task> tasks = s_dal.Task!.ReadAll();
                             foreach (var taskReadAll in tasks)
                             {
                                 Console.WriteLine(taskReadAll);
@@ -307,13 +305,13 @@ namespace DalTest
                                 Remarks = Console.ReadLine(),
                                 EngineerId = GetIntInput("Enter EngineerId: ")
                             };
-                            s_dalTask!.Update(taskUpdate);
+                            s_dal.Task!.Update(taskUpdate);
                             break;
                         case 5:
                             // Delete operation
                             Console.WriteLine("Enter an ID to delete");
                             int DeletionID = GetIntInput("Enter ID: ");
-                            s_dalTask!.Delete(DeletionID);
+                            s_dal.Task!.Delete(DeletionID);
                             break;
                         default:
                             Console.WriteLine("Invalid choice. Please try again.");
@@ -332,7 +330,7 @@ namespace DalTest
         {
             try
             {
-                Initialization.Do(s_dalTask, s_dalEngineer, s_dalDependensy);
+                Initialization.Do(s_dal); //stage 2
                 bool exit = false;
                 while (!exit)
                 {

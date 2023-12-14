@@ -3,7 +3,7 @@ namespace Dal;
 using DalApi;
 using DO;
 //Creating the CRUD operations for the engineer
-public class EngineerImplementation : IEngineer
+internal class EngineerImplementation : IEngineer
 {
     public int Create(Engineer item)
     {
