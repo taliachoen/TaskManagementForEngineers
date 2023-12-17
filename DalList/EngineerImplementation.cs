@@ -7,9 +7,10 @@ internal class EngineerImplementation : IEngineer
 {
     public int Create(Engineer item)
     {
-        Engineer? newItem = DataSource.Engineers.Find(x => x.Id == item.Id);
-        if (newItem != null)
-            throw new Exception("Object of type Engineer with such Id does exist.");
+        if (DataSource.Engineers.Any(x => x.Id == item.Id))
+        {
+            throw new Exception("Object of type Engineer with such Id already exists.");
+        }
         else
         {
             DataSource.Engineers.Add(item);
@@ -19,27 +20,26 @@ internal class EngineerImplementation : IEngineer
 
     public void Delete(int id)
     {
-        Engineer? newItem = DataSource.Engineers.Find(x => x.Id == id);
-        if (newItem == null)
+
+        Engineer? engineerToDelete = DataSource.Engineers.FirstOrDefault(x => x.Id == id);
+
+        if (engineerToDelete == null)
         {
             throw new Exception("Object of type Engineer with such Id does not exist.");
         }
-        else
+
+        // Checking whether there are tasks that depend on this engineer
+        if (DataSource.Tasks.Any(x => x.EngineerId == id))
         {
-            //Checking whether there are tasks that depend on this engineer
-           if (DataSource.Tasks.Any(x => x.EngineerId== id))
-              throw new Exception("It is not possible to delete the engineer because he has existing tasks");
-           DataSource.Engineers.Remove(newItem);
+            throw new Exception("It is not possible to delete the engineer because he has existing tasks");
         }
-        
+
+        DataSource.Engineers.Remove(engineerToDelete);
     }
 
     public Engineer? Read(int id)
     {
-        Engineer? newItem = DataSource.Engineers.Find(x => x.Id == id);
-        if (newItem != null)
-            return newItem;
-        return null;
+        return DataSource.Engineers.FirstOrDefault(x => x.Id == id);
     }
 
     public List<Engineer> ReadAll()
@@ -49,14 +49,15 @@ internal class EngineerImplementation : IEngineer
 
     public void Update(Engineer item)
     {
-        Engineer? newItem = DataSource.Engineers.Find(x => x.Id == item.Id);
-        if (newItem == null)
-            throw new Exception("Object of type Engineer with such Id does not exist.");
-        else
+        Engineer? existingEngineer = DataSource.Engineers.FirstOrDefault(x => x.Id == item.Id);
+
+        if (existingEngineer == null)
         {
-            DataSource.Engineers.Remove(newItem);
-            DataSource.Engineers.Add(item);
+            throw new Exception("Object of type Engineer with such Id does not exist.");
         }
 
+        DataSource.Engineers.Remove(existingEngineer);
+        DataSource.Engineers.Add(item);
     }
 }
+

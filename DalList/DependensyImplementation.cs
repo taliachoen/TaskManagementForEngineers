@@ -22,23 +22,19 @@ internal class DependensyImplementation : IDependensy
 
     public void Delete(int id)
     {
-        Dependensy? newItem = DataSource.Dependensies.Find(x => x.Id == id);
-        if (newItem == null)
+        Dependensy? dependensyToDelete = DataSource.Dependensies.FirstOrDefault(x => x.Id == id);
+
+        if (dependensyToDelete == null)
         {
             throw new Exception("Object of type Dependensy with such Id does not exist.");
         }
-        else
-        {
-            DataSource.Dependensies.Remove(newItem);
-        }
+
+        DataSource.Dependensies.Remove(dependensyToDelete);
     }
 
     public Dependensy? Read(int id)
     {
-        Dependensy? newItem = DataSource.Dependensies.Find(x => x.Id == id);
-        if (newItem != null)
-            return newItem;
-        return null;
+        return DataSource.Dependensies.FirstOrDefault(x => x.Id == id);
     }
 
     public List<Dependensy> ReadAll()
@@ -47,15 +43,13 @@ internal class DependensyImplementation : IDependensy
     }
 
     public void Update(Dependensy item)
-{
-    Dependensy? newItem = DataSource.Dependensies.Find(x => x.Id == item.Id);
-    if (newItem == null)
-        throw new Exception("Object of type Dependensy with such Id does not exist.");
-    else
     {
-        DataSource.Dependensies.Remove(newItem);
+        Dependensy? existingDependensy = DataSource.Dependensies.FirstOrDefault(x => x.Id == item.Id) ?? throw new Exception("Object of type Dependensy with such Id does not exist.");
+        DataSource.Dependensies.Remove(existingDependensy);
         DataSource.Dependensies.Add(item);
     }
+}
 
-}
-}
+
+   
+
