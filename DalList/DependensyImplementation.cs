@@ -1,5 +1,4 @@
-﻿
-namespace Dal;
+﻿namespace Dal;
 using DalApi;
 using DO;
 using System.Text;
@@ -59,7 +58,4 @@ internal class DependensyImplementation : IDependensy
         return DataSource.Dependensies.FirstOrDefault(filter);
     }
 }
-
-
-
 

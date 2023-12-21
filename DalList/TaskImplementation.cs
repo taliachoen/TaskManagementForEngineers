@@ -1,5 +1,4 @@
-﻿
-namespace Dal;
+﻿namespace Dal;
 using DalApi;
 using DO;
 //Creating CRUD operations for the task
@@ -76,4 +75,3 @@ internal class TaskImplementation : ITask
         return DataSource.Tasks.FirstOrDefault(filter);
     }
 };
-

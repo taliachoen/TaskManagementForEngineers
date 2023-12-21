@@ -1,5 +1,4 @@
-﻿
-namespace Dal;
+﻿namespace Dal;
 using DalApi;
 using DO;
 internal class EngineerImplementation : IEngineer
@@ -65,4 +64,3 @@ internal class EngineerImplementation : IEngineer
         return DataSource.Engineers.FirstOrDefault(filter);
     }
 }
-
