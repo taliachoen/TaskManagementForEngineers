@@ -4,9 +4,11 @@ using DalApi;
 using DO;
 using System.Text;
 
-//Creating the CRUD operations for dependencies
+
 internal class DependensyImplementation : IDependensy
 {
+    //Creating the CRUD operations for dependencies
+
     public int Create(Dependensy item)
     {
         int newID = DataSource.Config.NextDependensyId;
@@ -22,40 +24,42 @@ internal class DependensyImplementation : IDependensy
 
     public void Delete(int id)
     {
-        Dependensy? newItem = DataSource.Dependensies.Find(x => x.Id == id);
-        if (newItem == null)
-        {
-            throw new Exception("Object of type Dependensy with such Id does not exist.");
-        }
-        else
-        {
-            DataSource.Dependensies.Remove(newItem);
-        }
+        Dependensy? dependensyToDelete = DataSource.Dependensies.FirstOrDefault(x => x.Id == id) ?? throw new DalDoesNotExistException("Object of type Dependensy with such Id does not exist.");
+        DataSource.Dependensies.Remove(dependensyToDelete);
     }
 
     public Dependensy? Read(int id)
     {
-        Dependensy? newItem = DataSource.Dependensies.Find(x => x.Id == id);
-        if (newItem != null)
-            return newItem;
-        return null;
-    }
-
-    public List<Dependensy> ReadAll()
-    {
-        return new List<Dependensy>(DataSource.Dependensies);
+        return DataSource.Dependensies.FirstOrDefault(x => x.Id == id) ?? throw new DalDoesNotExistException("Object of type Dependensy with such Id does not exist.");
     }
 
     public void Update(Dependensy item)
-{
-    Dependensy? newItem = DataSource.Dependensies.Find(x => x.Id == item.Id);
-    if (newItem == null)
-        throw new Exception("Object of type Dependensy with such Id does not exist.");
-    else
     {
-        DataSource.Dependensies.Remove(newItem);
+        Dependensy? existingDependensy = DataSource.Dependensies.FirstOrDefault(x => x.Id == item.Id) ?? throw new DalDoesNotExistException("Object of type Dependensy with such Id does not exist.");
+        DataSource.Dependensies.Remove(existingDependensy);
         DataSource.Dependensies.Add(item);
     }
 
+    // Reads all entity objects
+    public IEnumerable<Dependensy> ReadAll(Func<Dependensy, bool>? filter = null)
+    {
+        if (filter != null)
+        {
+            return from item in DataSource.Dependensies
+                   where filter(item)
+                   select item;
+        }
+        return from item in DataSource.Dependensies
+               select item;
+    }
+
+    // A read operation that receives a function
+    public Dependensy? Read(Func<Dependensy, bool> filter)
+    {
+        return DataSource.Dependensies.FirstOrDefault(filter);
+    }
 }
-}
+
+
+
+

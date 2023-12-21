@@ -7,7 +7,6 @@ internal class TaskImplementation : ITask
 {
     public int Create(Task item)
     {
-
         int newId = DataSource.Config.NextTaskId;
         Task newItem = new()
         {
@@ -32,44 +31,49 @@ internal class TaskImplementation : ITask
 
     public void Delete(int id)
     {
-        Task? newItem = DataSource.Tasks.Find(x => x.Id == id);
-        if (newItem == null)
+        Task? taskToDelete = DataSource.Tasks.FirstOrDefault(task => task.Id == id) ?? throw new DalDoesNotExistException("Object of type Task with such Id does not exist.");
+
+        //Checking whether this task has a dependency on another task
+        if (DataSource.Dependensies.Any(dependency => dependency.DependsOnTask == id))
         {
-            throw new Exception("Object of type Task with such Id does not exist.");
+            throw new DalDeletionImpossible("The task cannot be deleted because it has a dependency on another task");
         }
-        else
-        { 
-            //Checking whether this task has a dependency on another task
-            if (DataSource.Dependensies.Any(x => x.DependsOnTask == id))
-                throw new Exception("The task cannot be deleted because it has a dependency on another task");
-            DataSource.Tasks.Remove(newItem);
-        }
-       
+
+        DataSource.Tasks.Remove(taskToDelete);
     }
 
     public Task? Read(int id)
     {
-        Task? newItem = DataSource.Tasks.Find(x => x.Id == id);
-        if (newItem != null)
-            return newItem;
-        return null;
-    }
-
-    public List<Task> ReadAll()
-    {
-        return new List<Task>(DataSource.Tasks);
+        return DataSource.Tasks.FirstOrDefault(task => task.Id == id);
     }
 
     public void Update(Task item)
     {
-        Task? newItem = DataSource.Tasks.Find(x => x.Id == item.Id);
-        if (newItem == null)
-            throw new Exception("Objedt of type Task with such Id does not exist.");
-        else
-        {
-            DataSource.Tasks.Remove(newItem);
-            DataSource.Tasks.Add(item);
-        }
+        Task? existingTask = DataSource.Tasks.FirstOrDefault(task => task.Id == item.Id) ?? throw new DalDoesNotExistException("Object of type Task with such Id does not exist.");
+
+        // Your existing code for updating a task
+        DataSource.Tasks.Remove(existingTask);
+        DataSource.Tasks.Add(item);
 
     }
-}
+
+    // Reads all entity objects
+    public IEnumerable<Task> ReadAll(Func<Task, bool>? filter = null)
+    {
+        if (filter != null)
+        {
+            return from item in DataSource.Tasks
+                   where filter(item)
+                   select item;
+        }
+        return from item in DataSource.Tasks
+               select item;
+    }
+
+    // A read operation that receives a function
+    public Task? Read(Func<Task, bool> filter)
+    {
+        return DataSource.Tasks.FirstOrDefault(filter);
+    }
+};
+

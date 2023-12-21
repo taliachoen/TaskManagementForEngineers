@@ -10,13 +10,24 @@ internal static class DataSource
 
     internal static class Config
     {
-        //יצירת ערכי מזהה יחודי לתלות
+        //Project start date attribute
+        internal static DateTime? startProject = null;
+
+        //The scheduled project completion date attribute
+        internal static DateTime? endProject = null;
+
+        //Creating a unique ID value for the dependency
         internal const int IdD = 1000;
         private static int nextDependensyId = IdD;
+
+        //Returning a unique identifier value for the dependency
         internal static int NextDependensyId { get => nextDependensyId++; }
-       //יצירת ערכי מזהה יחודי למשימה
+
+        //creating a unique ID value for the task
         internal const int IdT = 10;
         private static int nextTaskId = IdT;
+
+        //Return a unique ID value for the task
         internal static int NextTaskId { get => nextTaskId++; }
     }
 

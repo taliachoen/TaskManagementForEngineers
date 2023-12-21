@@ -6,7 +6,7 @@ namespace DO;
 /// <param name="Id">Unique ID number </param>
 /// <param name="DependentTask">ID number of pending task</param>
 /// <param name="DependsOnTask">ID number of previous task</param>
- ///
+///
 
 public record Dependensy
 (
@@ -15,5 +15,5 @@ public record Dependensy
     int? DependsOnTask = null
 )
 {
-    public Dependensy(): this(0) { }
+    public Dependensy() : this(0) { }
 }

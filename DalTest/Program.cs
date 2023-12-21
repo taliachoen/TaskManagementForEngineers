@@ -10,7 +10,8 @@ namespace DalTest
 {
     internal class Program
     {
-        static readonly IDal s_dal = new DalList(); //stage 2
+        //A private, read-only, static field of the IDal interface type
+        static readonly IDal s_dal = new DalList();
 
         // Helper method to parse integer input with validation
         private static int GetIntInput(string message)
@@ -119,9 +120,11 @@ namespace DalTest
                             Console.WriteLine(s_dal.Dependensy!.Read(idToFind));
                             break;
                         case 3:
+
+
                             // ReadAll operation
                             Console.WriteLine("All Dependensies:");
-                            List<Dependensy> dependensies = s_dal.Dependensy!.ReadAll();
+                            List<Dependensy> dependensies = s_dal.Dependensy!.ReadAll().ToList();
                             foreach (var dependensyReadAll in dependensies)
                             {
                                 Console.WriteLine(dependensyReadAll);
@@ -195,7 +198,7 @@ namespace DalTest
                         case 3:
                             // ReadAll operation
                             Console.WriteLine("All Dependensies:");
-                            List<Engineer> engineers = s_dal.Engineer!.ReadAll();
+                            List<Engineer> engineers = s_dal.Engineer!.ReadAll().ToList();
                             foreach (var engineerReadAll in engineers)
                             {
                                 Console.WriteLine(engineerReadAll);
@@ -280,7 +283,7 @@ namespace DalTest
                         case 3:
                             // ReadAll operation
                             Console.WriteLine("All Task:");
-                            List<DO.Task> tasks = s_dal.Task!.ReadAll();
+                            List<DO.Task> tasks = s_dal.Task!.ReadAll().ToList();
                             foreach (var taskReadAll in tasks)
                             {
                                 Console.WriteLine(taskReadAll);

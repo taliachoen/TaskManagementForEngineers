@@ -5,6 +5,8 @@ using DalApi;
 using DO;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Security.Cryptography;
 using System.Xml.Linq;
 public static class Initialization
 {
@@ -41,7 +43,7 @@ public static class Initialization
             Task newTask = new(
                 0, taskAlias, description, createdAtDate, requiredEffortTime,
                 false, complexity, startDate, null, null,
-                completeDate, deliverables, remarks, null 
+                completeDate, deliverables, remarks, null
                 );
             s_dal!.Task.Create(newTask);
         }
@@ -60,17 +62,19 @@ public static class Initialization
         "Moshe Man", "Avi Segal", "Yeoda Shpiler", "Eliezer Disler", "Chaim Salomon", "Israel Veber"
         };
         int i = 0;
-        foreach(var name in engineerNames)
+        foreach (var name in engineerNames)
         {
             int id;
             do
                 id = s_rand.Next(200000000, 400000000);
+            //while (s_dal!.Engineer.Read(id).Id != null);
             while (s_dal!.Engineer.Read(id) != null);
+
             int? cost = s_rand.Next(100, 500);
             string email = engineerEmails[i++];
             DO.EngineerExperience Level = (DO.EngineerExperience)s_rand.Next(1, 4);
             Engineer engineer = new(id, email, cost, name, Level);
-            s_dal!.Engineer.Create(engineer);    
+            s_dal!.Engineer.Create(engineer);
         }
     }
     //Creating initial dependencies
@@ -79,14 +83,14 @@ public static class Initialization
         int randomTaskId1;
         int randomTaskId2;
 
-        for(int i=0;i<40;i++)
+        for (int i = 0; i < 40; i++)
         {
             randomTaskId1 = RandomIdTask();
             do
                 randomTaskId2 = RandomIdTask();
             while (randomTaskId2 == randomTaskId1 || IfDependensySame(randomTaskId1, randomTaskId2));
 
-            Dependensy newDependency = new (
+            Dependensy newDependency = new(
                 0, randomTaskId1, randomTaskId2
             );
             s_dal!.Dependensy.Create(newDependency);
@@ -113,10 +117,10 @@ public static class Initialization
     }
 
     //Function that checks if the dependency already exists in the inversion
-    private static bool IfDependensySame(int randomTaskId1,int randomTaskId2)
+    private static bool IfDependensySame(int randomTaskId1, int randomTaskId2)
     {
         var dependensys = s_dal!.Dependensy.ReadAll().ToArray();
-        for(int i = 0; i < dependensys.Length; i++)
+        for (int i = 0; i < dependensys.Length; i++)
             if (dependensys[i].DependentTask == randomTaskId2 && dependensys[i].DependsOnTask == randomTaskId1)
                 return true;
         return false;
@@ -139,15 +143,15 @@ public static class Initialization
     //Creating 2 tasks with 3 identical dependencies
     private static void IdentityDependency()
     {
-         for (int numOfTask = 60; numOfTask < 63; numOfTask++)
-         {
+        for (int numOfTask = 60; numOfTask < 63; numOfTask++)
+        {
 
-               Dependensy newDependency1 = new(0,80, numOfTask);
-               s_dal!.Dependensy.Create(newDependency1);
+            Dependensy newDependency1 = new(0, 80, numOfTask);
+            s_dal!.Dependensy.Create(newDependency1);
 
-               Dependensy newDependency2 = new(0,90, numOfTask);
-               s_dal!.Dependensy.Create(newDependency2);
-         }
+            Dependensy newDependency2 = new(0, 90, numOfTask);
+            s_dal!.Dependensy.Create(newDependency2);
+        }
     }
 
 }
