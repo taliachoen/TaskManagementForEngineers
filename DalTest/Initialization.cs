@@ -10,11 +10,13 @@ using System.Security.Cryptography;
 using System.Xml.Linq;
 public static class Initialization
 {
-    private static readonly Random s_rand = new();
     private static IDal? s_dal;
+    private static readonly Random s_rand = new();
 
 
-    //Creating initial tasks
+    /// <summary>
+    ///initialization the tasks 
+    /// </summary>
     private static void CreateTask()
     {
         string[] taskAliases =
@@ -36,20 +38,23 @@ public static class Initialization
             DateTime completeDate = startDate.AddDays(s_rand.Next(1, 5));
             completeDate = completeDate.Add(requiredEffortTime);
 
-            DO.EngineerExperience complexity = (DO.EngineerExperience)s_rand.Next(1, 4);
+            EngineerExperience complexity = (EngineerExperience)s_rand.Next(1, 4);
             string deliverables = "Deliverables for " + taskAlias;
             string remarks = "Remarks for " + taskAlias;
-            //int idE = RandomIdEngineer();
             Task newTask = new(
                 0, taskAlias, description, createdAtDate, requiredEffortTime,
                 false, complexity, startDate, null, null,
                 completeDate, deliverables, remarks, null
                 );
-            s_dal!.Task.Create(newTask);
+
+            s_dal?.Task.Create(newTask);
         }
 
     }
-    //Creating initial engineers
+    
+     /// <summary>
+    ///initialization the engineers
+    /// </summary>
     private static void CreateEngineers()
     {
         string[] engineerEmails =
@@ -66,19 +71,23 @@ public static class Initialization
         {
             int id;
             do
-                id = s_rand.Next(200000000, 400000000);
-            //while (s_dal!.Engineer.Read(id).Id != null);
-            while (s_dal!.Engineer.Read(id) != null);
+               id = s_rand.Next(200000000, 400000000);
+            while (s_dal?.Engineer.Read(id)!=null);
+
 
             int? cost = s_rand.Next(100, 500);
             string email = engineerEmails[i++];
-            DO.EngineerExperience Level = (DO.EngineerExperience)s_rand.Next(1, 4);
+            EngineerExperience Level = (EngineerExperience)s_rand.Next(1, 4);
             Engineer engineer = new(id, email, cost, name, Level);
-            s_dal!.Engineer.Create(engineer);
+            s_dal!.Engineer.Create(engineer);    
         }
+
     }
-    //Creating initial dependencies
-    private static void CreateDependencies()
+
+    /// <summary>
+    ///initialization the dependencies 
+    /// </summary>
+    private static void CreateDependensies()
     {
         int randomTaskId1;
         int randomTaskId2;
@@ -90,10 +99,10 @@ public static class Initialization
                 randomTaskId2 = RandomIdTask();
             while (randomTaskId2 == randomTaskId1 || IfDependensySame(randomTaskId1, randomTaskId2));
 
-            Dependensy newDependency = new(
+            Dependensy newDependensy = new (
                 0, randomTaskId1, randomTaskId2
             );
-            s_dal!.Dependensy.Create(newDependency);
+            s_dal!.Dependensy.Create(newDependensy);
         }
 
         //Added 3 dependencies on one task
@@ -104,54 +113,70 @@ public static class Initialization
                 randomTaskId2 = RandomIdTask();
             while (randomTaskId2 == randomTaskId1 || IfDependensySame(randomTaskId1, randomTaskId2));
 
-            Dependensy newDependency = new(
+            Dependensy newDependensy = new(
                 0, randomTaskId1, randomTaskId2
             );
 
-            s_dal!.Dependensy.Create(newDependency);
+            s_dal!.Dependensy.Create(newDependensy);
         }
 
         //Function to reating 2 tasks with 3 identical dependencies
-        IdentityDependency();
+        IdentityDependensy();
 
     }
 
     //Function that checks if the dependency already exists in the inversion
-    private static bool IfDependensySame(int randomTaskId1, int randomTaskId2)
+    private static bool IfDependensySame(int randomTaskId1,int randomTaskId2)
     {
         var dependensys = s_dal!.Dependensy.ReadAll().ToArray();
-        for (int i = 0; i < dependensys.Length; i++)
+        for(int i = 0; i < dependensys.Length; i++)
+        {
             if (dependensys[i].DependentTask == randomTaskId2 && dependensys[i].DependsOnTask == randomTaskId1)
+            {
                 return true;
+            }
+        }
         return false;
     }
-    //Lottery for existing task ID
+    /// <summary>
+    ///ID lottery for an existing task ID
+    /// </summary>
+    /// <returns></returns>
     private static int RandomIdTask()
     {
-        var task = s_dal!.Task.ReadAll().ToArray();
-        Task randomTask = task[s_rand.Next(0, task.Length)];
+        Task[]? temp = s_dal?.Task.ReadAll().ToArray();
+        Task randomTask = temp[s_rand.Next(0, temp.Length)];
         return randomTask.Id;
     }
-    //Creating initial values for entities
+
+    /// <summary>
+    ///Creating initial values for entities 
+    /// </summary>
+    /// <param name="dal"></param>
+    /// <exception cref="NullReferenceException"></exception>
     public static void Do(IDal dal)
     {
-        s_dal = dal ?? throw new NullReferenceException("DAL object can not be null!"); //stage 2
-        CreateTask();
+        s_dal = dal ?? throw new NullReferenceException("DAL object can not be null!");
         CreateEngineers();
-        CreateDependencies();
+        CreateTask();
+        CreateDependensies();
+
     }
-    //Creating 2 tasks with 3 identical dependencies
-    private static void IdentityDependency()
+
+    /// <summary>
+    ///Creating 2 tasks with 3 identical dependencies 
+    /// </summary>
+    private static void IdentityDependensy()
     {
         for (int numOfTask = 60; numOfTask < 63; numOfTask++)
         {
 
-            Dependensy newDependency1 = new(0, 80, numOfTask);
-            s_dal!.Dependensy.Create(newDependency1);
+               Dependensy newDependency1 = new(0,80, numOfTask);
+               s_dal!.Dependensy.Create(newDependency1);
 
-            Dependensy newDependency2 = new(0, 90, numOfTask);
-            s_dal!.Dependensy.Create(newDependency2);
-        }
+               Dependensy newDependency2 = new(0,90, numOfTask);
+               s_dal!.Dependensy.Create(newDependency2);
+         }
     }
 
 }

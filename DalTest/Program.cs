@@ -1,8 +1,7 @@
 ﻿using Dal;
 using DalApi;
 using DO;
-using System.Threading.Channels;
-using System.Threading.Tasks;
+
 
 
 //DalTest
@@ -10,10 +9,14 @@ namespace DalTest
 {
     internal class Program
     {
-        //A private, read-only, static field of the IDal interface type
-        static readonly IDal s_dal = new DalList();
-
-        // Helper method to parse integer input with validation
+        //A private, read-only, static field of the IDal interface type 
+        static readonly IDal s_dal = new DalXml(); 
+        
+        /// <summary>
+        /// Helper method to parse integer input with validation 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         private static int GetIntInput(string message)
         {
             int input;
@@ -24,8 +27,12 @@ namespace DalTest
             }
             return input;
         }
-
-        // Helper method to parse double input with validation
+        
+        /// <summary>
+        /// Helper method to parse double input with validation 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         private static double GetDoubleInput(string message)
         {
             double input;
@@ -36,8 +43,12 @@ namespace DalTest
             }
             return input;
         }
-
-        // Helper method to parse DateTime input with validation
+       
+        /// <summary>
+        /// Helper method to parse DateTime input with validation 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         private static DateTime GetDateTimeInput(string message)
         {
             DateTime input;
@@ -48,18 +59,24 @@ namespace DalTest
             }
             return input;
         }
-
-
-
-        // Action that prints the main menu
+       
+        /// <summary>
+        /// Action that prints the main menu 
+        /// </summary>
         private static void PrintMainMenu()
         {
+            Console.WriteLine("0. Exit" );
             Console.WriteLine("1. Dependensy");
             Console.WriteLine("2. Engineer");
             Console.WriteLine("3. Task");
+            Console.WriteLine("4. Initial data");
         }
-
-        // Getting the user's selection in the menu
+      
+        /// <summary>
+        /// Getting the user's selection in the menu 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         private static int GetUserChoice(string message)
         {
             Console.Write(message);
@@ -71,8 +88,11 @@ namespace DalTest
             }
             return choice;
         }
-
-        // Print CRUD menu
+      
+        /// <summary>
+        /// Print CRUD menu 
+        /// </summary>
+        /// <param name="entityName"></param>
         private static void PrintEntityMenu(string entityName)
         {
             Console.WriteLine(entityName + "  Menu:");
@@ -83,9 +103,12 @@ namespace DalTest
             Console.WriteLine("4. Update");
             Console.WriteLine("5. Delete");
         }
-
-        // Dependensy's menu
-        private static void DependensyMenu()
+       
+        /// <summary>
+        /// Dependensy's menu
+        /// </summary>
+        /// <param name="s_dal"></param>
+        private static void DependensyMenu(IDal s_dal)
         {
             try
             {
@@ -124,7 +147,7 @@ namespace DalTest
 
                             // ReadAll operation
                             Console.WriteLine("All Dependensies:");
-                            List<Dependensy> dependensies = s_dal.Dependensy!.ReadAll().ToList();
+                            List<Dependensy> dependensies = (List<Dependensy>)s_dal.Dependensy!.ReadAll();
                             foreach (var dependensyReadAll in dependensies)
                             {
                                 Console.WriteLine(dependensyReadAll);
@@ -158,8 +181,10 @@ namespace DalTest
                 Console.WriteLine($"An exception occurred: {ex.Message}");
             }
         }
-
-        // Engineer's menu
+       
+        /// <summary>
+        /// Engineer's menu 
+        /// </summary>
         private static void EngineerMenu()
         {
             try
@@ -234,8 +259,10 @@ namespace DalTest
                 Console.WriteLine($"An exception occurred: {ex.Message}");
             }
         }
-
-        // Task's menu
+      
+        /// <summary>
+        /// Task's menu 
+        /// </summary>
         private static void TaskMenu()
         {
             try
@@ -327,31 +354,43 @@ namespace DalTest
                 Console.WriteLine($"An exception occurred: {ex.Message}");
             }
         }
-
-        // Main program
+      
+        /// <summary>
+        /// Main program 
+        /// </summary>
+        /// <exception cref="FormatException"></exception>
         private static void Main()
         {
             try
             {
-                Initialization.Do(s_dal); //stage 2
                 bool exit = false;
                 while (!exit)
                 {
                     PrintMainMenu();
-                    int menuChoice = GetUserChoice("Enter the entity number you want to check or enter 0 to exit: ");
+                    int menuChoice = GetUserChoice("Enter your choice: ");
                     switch (menuChoice)
                     {
                         case 0:
                             exit = true;
                             break;
                         case 1:
-                            DependensyMenu();
+                            DependensyMenu(s_dal);
                             break;
                         case 2:
                             EngineerMenu();
                             break;
                         case 3:
                             TaskMenu();
+                            break;
+                        case 4:
+                            Console.Write("Would you like to create Initial data? (Y/N)"); 
+                            string? ans = Console.ReadLine() ?? throw new FormatException("Wrong input");
+                            if (ans == "Y"||ans=="y")
+                            {
+                                s_dal.Reset();  
+                                Initialization.Do(s_dal);
+                                Console.WriteLine("The operation was successful");
+                            }
                             break;
                         default:
                             Console.WriteLine("Invalid choice. Please try again.");
