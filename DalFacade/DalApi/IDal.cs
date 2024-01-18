@@ -2,7 +2,7 @@
 
 public interface IDal
 {
-    IDependensy Dependensy { get; }
+    IDependency Dependency { get; }
     IEngineer Engineer { get; }
     ITask Task { get; }
     //Reset all data 

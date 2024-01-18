@@ -4,7 +4,7 @@ using DalApi;
 sealed public class DalList : IDal
 {
     //Private static field for each interface
-    public IDependensy Dependensy => new DependensyImplementation();
+    public IDependency Dependency => new DependencyImplementation();
     public IEngineer Engineer => new EngineerImplementation();
     public ITask Task => new TaskImplementation();
 
@@ -14,7 +14,7 @@ sealed public class DalList : IDal
     public void Reset()
     {
         DataSource.Engineers.Clear();
-        DataSource.Dependensies.Clear();
+        DataSource.Dependencies.Clear();
         DataSource.Tasks.Clear();
     }
     /// <summary>

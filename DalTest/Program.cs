@@ -66,7 +66,7 @@ namespace DalTest
         private static void PrintMainMenu()
         {
             Console.WriteLine("0. Exit" );
-            Console.WriteLine("1. Dependensy");
+            Console.WriteLine("1. Dependency");
             Console.WriteLine("2. Engineer");
             Console.WriteLine("3. Task");
             Console.WriteLine("4. Initial data");
@@ -105,10 +105,10 @@ namespace DalTest
         }
        
         /// <summary>
-        /// Dependensy's menu
+        /// Dependency's menu
         /// </summary>
         /// <param name="s_dal"></param>
-        private static void DependensyMenu(IDal s_dal)
+        private static void DependencyMenu(IDal s_dal)
         {
             try
             {
@@ -116,11 +116,11 @@ namespace DalTest
                 bool exit = false;
                 while (!exit)
                 {
-                    string entityName = "Dependensy";
+                    string entityName = "Dependency";
                     PrintEntityMenu(entityName);
-                    int DependensyChoice = GetUserChoice("Choose a CRUD operation or 0 to exit: ");
+                    int DependencyChoice = GetUserChoice("Choose a CRUD operation or 0 to exit: ");
 
-                    switch (DependensyChoice)
+                    switch (DependencyChoice)
                     {
                         case 0:
                             exit = true;
@@ -128,47 +128,47 @@ namespace DalTest
                         case 1:
                             // Create operation
                             Console.WriteLine("Insert a DependentTask and DependsOnTask (DependentTask, DependsOnTask)");
-                            Dependensy dependensyCreate = new()
+                            Dependency DependencyCreate = new()
                             {
                                 DependentTask = GetIntInput("Enter DependentTask: "),
                                 DependsOnTask = GetIntInput("Enter DependsOnTask: ")
                             };
-                            id = s_dal.Dependensy?.Create(dependensyCreate);
+                            id = s_dal.Dependency?.Create(DependencyCreate);
                             Console.WriteLine("Succeeded");
                             break;
                         case 2:
                             // Read operation
                             Console.WriteLine("Enter id to read: ");
                             int idToFind = GetIntInput("Enter ID: ");
-                            Console.WriteLine(s_dal.Dependensy!.Read(idToFind));
+                            Console.WriteLine(s_dal.Dependency!.Read(idToFind));
                             break;
                         case 3:
 
 
                             // ReadAll operation
-                            Console.WriteLine("All Dependensies:");
-                            List<Dependensy> dependensies = (List<Dependensy>)s_dal.Dependensy!.ReadAll();
-                            foreach (var dependensyReadAll in dependensies)
+                            Console.WriteLine("All Dependencies:");
+                            List<Dependency> Dependencies = s_dal.Dependency!.ReadAll().ToList();
+                            foreach (var DependencyReadAll in Dependencies)
                             {
-                                Console.WriteLine(dependensyReadAll);
+                                Console.WriteLine(DependencyReadAll);
                             }
                             break;
                         case 4:
                             // Update operation
-                            Console.WriteLine("Enter the properties of dependensy (id, DependentTask, DependsOnTask)");
-                            Dependensy dependensyUpdate = new()
+                            Console.WriteLine("Enter the properties of Dependency (id, DependentTask, DependsOnTask)");
+                            Dependency DependencyUpdate = new()
                             {
                                 Id = GetIntInput("Enter ID: "),
                                 DependentTask = GetIntInput("Enter DependentTask: "),
                                 DependsOnTask = GetIntInput("Enter DependsOnTask: ")
                             };
-                            s_dal.Dependensy!.Update(dependensyUpdate);
+                            s_dal.Dependency!.Update(DependencyUpdate);
                             break;
                         case 5:
                             // Delete operation
                             Console.WriteLine("Enter an ID to delete");
                             int DeletionID = GetIntInput("Enter ID: ");
-                            s_dal.Dependensy!.Delete(DeletionID);
+                            s_dal.Dependency!.Delete(DeletionID);
                             break;
                         default:
                             Console.WriteLine("Invalid choice. Please try again.");
@@ -222,7 +222,7 @@ namespace DalTest
                             break;
                         case 3:
                             // ReadAll operation
-                            Console.WriteLine("All Dependensies:");
+                            Console.WriteLine("All Dependencies:");
                             List<Engineer> engineers = s_dal.Engineer!.ReadAll().ToList();
                             foreach (var engineerReadAll in engineers)
                             {
@@ -374,7 +374,7 @@ namespace DalTest
                             exit = true;
                             break;
                         case 1:
-                            DependensyMenu(s_dal);
+                            DependencyMenu(s_dal);
                             break;
                         case 2:
                             EngineerMenu();

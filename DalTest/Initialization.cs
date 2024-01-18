@@ -87,7 +87,7 @@ public static class Initialization
     /// <summary>
     ///initialization the dependencies 
     /// </summary>
-    private static void CreateDependensies()
+    private static void CreateDependencies()
     {
         int randomTaskId1;
         int randomTaskId2;
@@ -97,12 +97,12 @@ public static class Initialization
             randomTaskId1 = RandomIdTask();
             do
                 randomTaskId2 = RandomIdTask();
-            while (randomTaskId2 == randomTaskId1 || IfDependensySame(randomTaskId1, randomTaskId2));
+            while (randomTaskId2 == randomTaskId1 || IfDependencySame(randomTaskId1, randomTaskId2));
 
-            Dependensy newDependensy = new (
+            Dependency newDependency = new (
                 0, randomTaskId1, randomTaskId2
             );
-            s_dal!.Dependensy.Create(newDependensy);
+            s_dal!.Dependency.Create(newDependency);
         }
 
         //Added 3 dependencies on one task
@@ -111,27 +111,27 @@ public static class Initialization
         {
             do
                 randomTaskId2 = RandomIdTask();
-            while (randomTaskId2 == randomTaskId1 || IfDependensySame(randomTaskId1, randomTaskId2));
+            while (randomTaskId2 == randomTaskId1 || IfDependencySame(randomTaskId1, randomTaskId2));
 
-            Dependensy newDependensy = new(
+            Dependency newDependency = new(
                 0, randomTaskId1, randomTaskId2
             );
 
-            s_dal!.Dependensy.Create(newDependensy);
+            s_dal!.Dependency.Create(newDependency);
         }
 
         //Function to reating 2 tasks with 3 identical dependencies
-        IdentityDependensy();
+        IdentityDependency();
 
     }
 
     //Function that checks if the dependency already exists in the inversion
-    private static bool IfDependensySame(int randomTaskId1,int randomTaskId2)
+    private static bool IfDependencySame(int randomTaskId1,int randomTaskId2)
     {
-        var dependensys = s_dal!.Dependensy.ReadAll().ToArray();
-        for(int i = 0; i < dependensys.Length; i++)
+        var Dependencys = s_dal!.Dependency.ReadAll().ToArray();
+        for(int i = 0; i < Dependencys.Length; i++)
         {
-            if (dependensys[i].DependentTask == randomTaskId2 && dependensys[i].DependsOnTask == randomTaskId1)
+            if (Dependencys[i].DependentTask == randomTaskId2 && Dependencys[i].DependsOnTask == randomTaskId1)
             {
                 return true;
             }
@@ -144,7 +144,7 @@ public static class Initialization
     /// <returns></returns>
     private static int RandomIdTask()
     {
-        Task[]? temp = s_dal?.Task.ReadAll().ToArray();
+        Task[] temp = s_dal?.Task.ReadAll().ToArray();
         Task randomTask = temp[s_rand.Next(0, temp.Length)];
         return randomTask.Id;
     }
@@ -159,23 +159,23 @@ public static class Initialization
         s_dal = dal ?? throw new NullReferenceException("DAL object can not be null!");
         CreateEngineers();
         CreateTask();
-        CreateDependensies();
+        CreateDependencies();
 
     }
 
     /// <summary>
     ///Creating 2 tasks with 3 identical dependencies 
     /// </summary>
-    private static void IdentityDependensy()
+    private static void IdentityDependency()
     {
         for (int numOfTask = 60; numOfTask < 63; numOfTask++)
         {
 
-               Dependensy newDependency1 = new(0,80, numOfTask);
-               s_dal!.Dependensy.Create(newDependency1);
+               Dependency newDependency1 = new(0,80, numOfTask);
+               s_dal!.Dependency.Create(newDependency1);
 
-               Dependensy newDependency2 = new(0,90, numOfTask);
-               s_dal!.Dependensy.Create(newDependency2);
+               Dependency newDependency2 = new(0,90, numOfTask);
+               s_dal!.Dependency.Create(newDependency2);
          }
     }
 

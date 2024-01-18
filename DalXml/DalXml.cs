@@ -7,7 +7,7 @@ namespace Dal
     // Implementation of the IDal interface
     sealed public class DalXml : IDal
     {
-        public IDependensy Dependensy => new DependensyImplementation();
+        public IDependency Dependency => new DependencyImplementation();
         public IEngineer Engineer => new EngineerImplementation();
         public ITask Task => new TaskImplementation();
 
@@ -17,9 +17,9 @@ namespace Dal
         public void Reset()
         {
             //Opening the entity files, deleting and closing the file
-            XElement rootDependensy = XMLTools.LoadListFromXMLElement("dependensies");
-            rootDependensy.Elements().Remove();
-            XMLTools.SaveListToXMLElement(rootDependensy, "dependensies");
+            XElement rootDependency = XMLTools.LoadListFromXMLElement("dependencies");
+            rootDependency.Elements().Remove();
+            XMLTools.SaveListToXMLElement(rootDependency, "dependencies");
             XElement rootTask = XMLTools.LoadListFromXMLElement("tasks");
             rootTask.Elements().Remove();
             XMLTools.SaveListToXMLElement(rootTask, "tasks");

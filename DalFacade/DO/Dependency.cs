@@ -8,12 +8,12 @@ namespace DO;
 /// <param name="DependsOnTask">ID number of previous task</param>
 ///
 
-public record Dependensy
+public record Dependency
 (
     int Id,
     int? DependentTask = null,
     int? DependsOnTask = null
 )
 {
-    public Dependensy() : this(0) { }
+    public Dependency() : this(0) { }
 }
