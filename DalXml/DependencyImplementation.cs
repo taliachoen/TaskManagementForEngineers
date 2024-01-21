@@ -9,7 +9,7 @@ namespace Dal
     internal class DependencyImplementation : IDependency
     {
         // Constant string representing the XML element name for dependencies. 
-        const string d_Dependencies = "Dependencies";
+        const string d_Dependencies = "dependencies";
         /// <summary>
         /// Action to create a Dependency from XElement.
         /// </summary>
@@ -21,7 +21,8 @@ namespace Dal
             return new Dependency()
             {
                 Id = d.ToIntNullable("ID") ?? throw new DalXmlFormatException("Id"),
-                DependsOnTask = d.ToIntNullable("DependsOnTask")
+                DependsOnTask = d.ToIntNullable("DependsOnTask"),
+                DependentTask = d.ToIntNullable("DependentTask")
             };
         }
 

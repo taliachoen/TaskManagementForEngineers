@@ -1,8 +1,11 @@
 ﻿namespace Dal;
 using DalApi;
 
-sealed public class DalList : IDal
+sealed internal class DalList : IDal
 {
+    public static IDal Instance { get; } = new DalList();
+    private DalList() { }
+
     //Private static field for each interface
     public IDependency Dependency => new DependencyImplementation();
     public IEngineer Engineer => new EngineerImplementation();
@@ -17,8 +20,9 @@ sealed public class DalList : IDal
         DataSource.Dependencies.Clear();
         DataSource.Tasks.Clear();
     }
+    
     /// <summary>
-    ///Implementation of return operations of project start and end dates
+    ///Implementation of return operations of end dates
     /// </summary>
     /// <returns></returns>
     public DateTime? ReturnEndProject()
@@ -26,10 +30,15 @@ sealed public class DalList : IDal
         return DataSource.Config.endProject;
     }
 
+    /// <summary>
+    /// Implementation of return operations of project start
+    /// </summary>
+    /// <returns></returns>
     public DateTime? ReturnStartProject()
     {
         return DataSource.Config.startProject;
     }
+   
     /// <summary>
     ///Implementation of update operations of the start and end date of a project
     /// </summary>

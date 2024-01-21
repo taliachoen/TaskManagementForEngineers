@@ -1,12 +1,16 @@
 ﻿using DalApi;
+using System.Diagnostics;
 using System.Xml.Linq;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Dal
 {
     // Implementation of the IDal interface
-    sealed public class DalXml : IDal
+    sealed internal class DalXml : IDal
     {
+        public static IDal Instance { get; } = new DalXml();
+        private DalXml() { }
+
         public IDependency Dependency => new DependencyImplementation();
         public IEngineer Engineer => new EngineerImplementation();
         public ITask Task => new TaskImplementation();

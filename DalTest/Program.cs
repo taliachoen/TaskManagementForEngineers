@@ -10,7 +10,7 @@ namespace DalTest
     internal class Program
     {
         //A private, read-only, static field of the IDal interface type 
-        static readonly IDal s_dal = new DalXml(); 
+        static readonly IDal s_dal =Factory.Get; 
         
         /// <summary>
         /// Helper method to parse integer input with validation 
@@ -143,11 +143,9 @@ namespace DalTest
                             Console.WriteLine(s_dal.Dependency!.Read(idToFind));
                             break;
                         case 3:
-
-
                             // ReadAll operation
                             Console.WriteLine("All Dependencies:");
-                            List<Dependency> Dependencies = s_dal.Dependency!.ReadAll().ToList();
+                              List<Dependency?> Dependencies = s_dal.Dependency!.ReadAll().ToList();
                             foreach (var DependencyReadAll in Dependencies)
                             {
                                 Console.WriteLine(DependencyReadAll);
@@ -223,7 +221,7 @@ namespace DalTest
                         case 3:
                             // ReadAll operation
                             Console.WriteLine("All Dependencies:");
-                            List<Engineer> engineers = s_dal.Engineer!.ReadAll().ToList();
+                            List<Engineer?> engineers = s_dal.Engineer!.ReadAll().ToList();
                             foreach (var engineerReadAll in engineers)
                             {
                                 Console.WriteLine(engineerReadAll);
@@ -310,7 +308,7 @@ namespace DalTest
                         case 3:
                             // ReadAll operation
                             Console.WriteLine("All Task:");
-                            List<DO.Task> tasks = s_dal.Task!.ReadAll().ToList();
+                            List<DO.Task?> tasks = s_dal.Task!.ReadAll().ToList();
                             foreach (var taskReadAll in tasks)
                             {
                                 Console.WriteLine(taskReadAll);
@@ -388,7 +386,7 @@ namespace DalTest
                             if (ans == "Y"||ans=="y")
                             {
                                 s_dal.Reset();  
-                                Initialization.Do(s_dal);
+                                Initialization.Do();
                                 Console.WriteLine("The operation was successful");
                             }
                             break;

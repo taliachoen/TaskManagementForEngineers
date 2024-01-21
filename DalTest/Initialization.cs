@@ -24,7 +24,10 @@ public static class Initialization
         "Task1", "Task2", "Task3", "Task4", "Task5",
         "Task6", "Task7", "Task8", "Task9", "Task10",
         "Task11", "Task12", "Task13", "Task14", "Task15",
-        "Task16", "Task17", "Task18", "Task19", "Task20"
+        "Task16", "Task17", "Task18", "Task19", "Task20",
+        "Task21","Task22","Task23","Task24","Task25","Task26",
+        "Task27","Task28","Task29","Task30","Task31","Task32",
+        "Task33","Task34", "Task35","Task36","Task37","Task38","Task39","Task40"
     };
 
         foreach (var taskAlias in taskAliases)
@@ -131,7 +134,7 @@ public static class Initialization
         var Dependencys = s_dal!.Dependency.ReadAll().ToArray();
         for(int i = 0; i < Dependencys.Length; i++)
         {
-            if (Dependencys[i].DependentTask == randomTaskId2 && Dependencys[i].DependsOnTask == randomTaskId1)
+            if (Dependencys[i]?.DependentTask == randomTaskId2 && Dependencys[i]?.DependsOnTask == randomTaskId1)
             {
                 return true;
             }
@@ -144,9 +147,9 @@ public static class Initialization
     /// <returns></returns>
     private static int RandomIdTask()
     {
-        Task[] temp = s_dal?.Task.ReadAll().ToArray();
-        Task randomTask = temp[s_rand.Next(0, temp.Length)];
-        return randomTask.Id;
+        Task?[] temp = s_dal!.Task.ReadAll().ToArray();
+        Task ?randomTask = temp[s_rand.Next(0, temp.Length)];
+        return randomTask!.Id;
     }
 
     /// <summary>
@@ -154,9 +157,9 @@ public static class Initialization
     /// </summary>
     /// <param name="dal"></param>
     /// <exception cref="NullReferenceException"></exception>
-    public static void Do(IDal dal)
+    public static void Do()
     {
-        s_dal = dal ?? throw new NullReferenceException("DAL object can not be null!");
+        s_dal = Factory.Get ?? throw new NullReferenceException("DAL object can not be null!");
         CreateEngineers();
         CreateTask();
         CreateDependencies();
