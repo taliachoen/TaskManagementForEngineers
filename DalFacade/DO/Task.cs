@@ -24,7 +24,7 @@ public record Task
     DateTime? CreatedAtDate = null,
     TimeSpan? RequiredEffortTime = null,
     bool? IsMilestone = null,
-    DO.EngineerExperience? Copmlexity = null,
+    EngineerExperience? Copmlexity = null,
     DateTime? StartDate = null,
     DateTime? ScheduledDate = null,
     DateTime? DeadlineDate = null,
