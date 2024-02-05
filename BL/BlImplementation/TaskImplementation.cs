@@ -1,39 +1,60 @@
 ﻿
-
 using BlApi;
+
 
 namespace BlImplementation;
 
 internal class TaskImplementation : ITask
 {
-    private DalApi.IDal task_dal = DalApi.Factory.Get;
-    public void AddTask(Task newTask)
+    private readonly DalApi.IDal task_dal = DalApi.Factory.Get;
+
+    public int Create(BO.Task newTask)
     {
-        throw new NotImplementedException();
+        DO.Task task = new(newTask.Id, newTask.Alias, newTask.Description);
+        try
+        {
+            int idTask = task_dal.Task.Create(task);
+            return idTask;
+        }
+        catch (DO.DalAlreadyExistsException ex)
+        {
+            throw new BO.BlAlreadyExistsException($"Task with ID={newTask.Id} already exists", ex);
+        }
+
     }
 
-    public void DeleteTask(int taskId)
-    {
-        throw new NotImplementedException();
+    public BO.Task Read(int taskId) 
+    { 
+    
+        DO.Task? doTask = task_dal.Task.Read(taskId);
+        return doTask == null
+            ? throw new BO.BlDoesNotExistException($"Task with ID={taskId} does Not exist")
+            : new BO.Task
+            {
+            Id = doTask.Id,
+            Alias = doTask.Alias,
+            Description = doTask.Description,
+            };
     }
 
-    public Task GetTaskDetails(int taskId)
+    public void Delete(int taskId)
     {
-        throw new NotImplementedException();
+        task_dal.Task.Delete(taskId);
     }
 
-    public IEnumerable<Task> GetTasksByEngineerLevel(int engineerLevel)
+    public IEnumerable<Task> ReadAll()
     {
-        throw new NotImplementedException();
+        return (IEnumerable<Task>)task_dal.Task.ReadAll();
     }
+   
+    public void Update(DO.Task updatedTask)
+    {
+        task_dal.Task.Update(updatedTask);
+    }
+   
+    //public IEnumerable<Task> GetTasksByEngineerLevel(int engineerLevel)
+    //{
+        //    return task_dal.ReadAll().Where(task => task.EngineerLevel == engineerLevel);
+    //}
 
-    public IEnumerable<Task> GetTasksList()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void UpdateTask(Task updatedTask)
-    {
-        throw new NotImplementedException();
-    }
 }

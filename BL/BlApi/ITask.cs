@@ -9,37 +9,37 @@ public interface ITask
     /// בקשת רשימת משימות
     /// </summary>
     /// <returns>רשימת משימות</returns>
-    public IEnumerable<Task> GetTasksList();
+    public IEnumerable<Task> ReadAll();
 
     /// <summary>
     /// בקשת רשימת משימות עם סינון על פי רמת המהנדס
     /// </summary>
     /// <param name="engineerLevel">הרמה של המהנדס</param>
     /// <returns>רשימת משימות לפי הסינון</returns>
-    public IEnumerable<Task> GetTasksByEngineerLevel(int engineerLevel);
+   // public IEnumerable<Task> GetTasksByEngineerLevel(int engineerLevel);
 
     /// <summary>
     /// בקשת פרטי משימה
     /// </summary>
     /// <param name="taskId">מזהה המשימה</param>
     /// <returns>אובייקט משימה שלפי מזהה</returns>
-    public Task GetTaskDetails(int taskId);
+    public BO.Task Read(int taskId);
     /// <summary>
     /// הוספת משימה
     /// </summary>
     /// <param name="newTask">אובייקט משימה להוספה</param>
-    public void AddTask(Task newTask);
+    public int Create(BO.Task newTask);
 
     /// <summary>
     /// עדכון משימה
     /// </summary>
     /// <param name="updatedTask">אובייקט משימה עם הנתונים המעודנים</param>
-    public void UpdateTask(Task updatedTask);
+    public void Update(DO.Task updatedTask);
 
     /// <summary>
     /// מחיקת משימה
     /// </summary>
     /// <param name="taskId">מזהה המשימה למחיקה</param>
-    public void DeleteTask(int taskId);
+    public void Delete(int taskId);
 
 }
