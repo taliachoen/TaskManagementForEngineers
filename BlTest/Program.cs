@@ -1,12 +1,4 @@
-﻿
-
-
-
-
-using BlApi;
-using DalApi;
-
-namespace BlTest
+﻿namespace BlTest
 {
     internal class Program
     {
@@ -106,82 +98,6 @@ namespace BlTest
         }
 
         /// <summary>
-        /// Dependency's menu
-        /// </summary>
-        /// <param name="s_bl"></param>
-        //private static void DependencyMenu(IBl s_bl)
-        //{
-        //    try
-        //    {
-        //        int? id;
-        //        bool exit = false;
-        //        while (!exit)
-        //        {
-        //            string entityName = "Dependency";
-        //            PrintEntityMenu(entityName);
-        //            int DependencyChoice = GetUserChoice("Choose a CRUD operation or 0 to exit: ");
-
-        //            switch (DependencyChoice)
-        //            {
-        //                case 0:
-        //                    exit = true;
-        //                    break;
-        //                case 1:
-        //                    // Create operation
-        //                    Console.WriteLine("Insert a DependentTask and DependsOnTask (DependentTask, DependsOnTask)");
-        //                    Dependency DependencyCreate = new()
-        //                    {
-        //                        DependentTask = GetIntInput("Enter DependentTask: "),
-        //                        DependsOnTask = GetIntInput("Enter DependsOnTask: ")
-        //                    };
-        //                    id = s_bl.Dependency?.Create(DependencyCreate);
-        //                    Console.WriteLine("Succeeded");
-        //                    break;
-        //                case 2:
-        //                    // Read operation
-        //                    Console.WriteLine("Enter id to read: ");
-        //                    int idToFind = GetIntInput("Enter ID: ");
-        //                    Console.WriteLine(s_bl.Dependency!.Read(idToFind));
-        //                    break;
-        //                case 3:
-        //                    // ReadAll operation
-        //                    Console.WriteLine("All Dependencies:");
-        //                    List<Dependency?> Dependencies = s_bl.Dependency!.ReadAll().ToList();
-        //                    foreach (var DependencyReadAll in Dependencies)
-        //                    {
-        //                        Console.WriteLine(DependencyReadAll);
-        //                    }
-        //                    break;
-        //                case 4:
-        //                    // Update operation
-        //                    Console.WriteLine("Enter the properties of Dependency (id, DependentTask, DependsOnTask)");
-        //                    Dependency DependencyUpdate = new()
-        //                    {
-        //                        Id = GetIntInput("Enter ID: "),
-        //                        DependentTask = GetIntInput("Enter DependentTask: "),
-        //                        DependsOnTask = GetIntInput("Enter DependsOnTask: ")
-        //                    };
-        //                    s_bl.Dependency!.Update(DependencyUpdate);
-        //                    break;
-        //                case 5:
-        //                    // Delete operation
-        //                    Console.WriteLine("Enter an ID to delete");
-        //                    int DeletionID = GetIntInput("Enter ID: ");
-        //                    s_bl.Dependency!.Delete(DeletionID);
-        //                    break;
-        //                default:
-        //                    Console.WriteLine("Invalid choice. Please try again.");
-        //                    break;
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine($"An exception occurred: {ex.Message}");
-        //    }
-        //}
-
-        /// <summary>
         /// Engineer's menu 
         /// </summary>
         private static void EngineerMenu()
@@ -209,7 +125,8 @@ namespace BlTest
                                 Email = Console.ReadLine(),
                                 Cost = GetDoubleInput("Enter Cost: "),
                                 Name = Console.ReadLine(),
-                                Level = (BO.EngineerExperience)GetIntInput("Enter Complexity: ")
+                                Level = (BO.EngineerExperience)GetIntInput("Enter Complexity: "),
+                                Task=null
                             };
                             id = s_bl.Engineer.Create(engineerCreate);
                             break;
@@ -222,7 +139,7 @@ namespace BlTest
                         case 3:
                             // ReadAll operation
                             Console.WriteLine("All Dependencies:");
-                            List<BO.Engineer?> engineers = s_bl.Engineer!.ReadAll().ToList();
+                            List<BO.Engineer> engineers = s_bl.Engineer!.ReadAll().ToList();
                             foreach (var engineerReadAll in engineers)
                             {
                                 Console.WriteLine(engineerReadAll);
@@ -230,14 +147,15 @@ namespace BlTest
                             break;
                         case 4:
                             // Update operation
-                            Console.WriteLine("Enter the properties of engineer (id, email, cost, name,level)");
+                            Console.WriteLine("Enter the properties of engineer (id, email, cost, name,level,task {id, alias} )");
                             BO.Engineer engineerUpdate = new()
                             {
                                 Id = GetIntInput("Enter ID: "),
                                 Email = Console.ReadLine(),
                                 Cost = GetDoubleInput("Enter Cost: "),
                                 Name = Console.ReadLine(),
-                                Level = (BO.EngineerExperience)GetIntInput("Enter Complexity: ")
+                                Level = (BO.EngineerExperience)GetIntInput("Enter Complexity: "),
+                                Task =  new BO.TaskInEngineer { Id = GetIntInput("Enter id and alias of your task: "), Alias = Console.ReadLine() }
                             };
                             s_bl.Engineer!.Update(engineerUpdate);
                             break;
@@ -262,97 +180,95 @@ namespace BlTest
         /// <summary>
         /// Task's menu 
         /// </summary>
-        //private static void TaskMenu()
-        //{
-        //    try
-        //    {
-        //        int? id;
-        //        bool exit = false;
-        //        while (!exit)
-        //        {
-        //            string entityName = "Task";
-        //            PrintEntityMenu(entityName);
-        //            int entityChoice = GetUserChoice("Choose a CRUD operation or exit: ");
+        private static void TaskMenu()
+        {
+            try
+            {
+                int? id;
+                bool exit = false;
+                while (!exit)
+                {
+                    string entityName = "Task";
+                    PrintEntityMenu(entityName);
+                    int entityChoice = GetUserChoice("Choose a CRUD operation or exit: ");
 
-        //            switch (entityChoice)
-        //            {
-        //                case 0:
-        //                    exit = true;
-        //                    break;
-        //                case 1:
-        //                    // Create operation
-        //                    Console.WriteLine("Enter the properties of task");
-        //                    Console.WriteLine("(Alias, Description, RequiredEffortTime, IsMilestone, StartDate, ScheduledDate, DeadlineDate, CompleteDate, Deliverables, Remarks, EngineerId)");
-        //                    BO.Task taskCreate = new()
-        //                    {
-        //                        Alias = Console.ReadLine(),
-        //                        Description = Console.ReadLine(),
-        //                        RequiredEffortTime = TimeSpan.FromHours(GetDoubleInput("Enter RequiredEffortTime (in hours): ")),
-        //                        IsMilestone = GetIntInput("Enter IsMilestone (1 for true, 0 for false): ") == 1,
-        //                        Copmlexity = (BO.EngineerExperience)GetIntInput("Enter Complexity: "),
-        //                        StartDate = GetDateTimeInput("Enter StartDate: "),
-        //                        ScheduledDate = GetDateTimeInput("Enter ScheduledDate: "),
-        //                        DeadlineDate = GetDateTimeInput("Enter DeadlineDate: "),
-        //                        CompleteDate = GetDateTimeInput("Enter CompleteDate: "),
-        //                        Deliverables = Console.ReadLine(),
-        //                        Remarks = Console.ReadLine(),
-        //                        EngineerId = GetIntInput("Enter EngineerId: ")
-        //                    };
-        //                    id = s_bl.Task?.Create(taskCreate);
-        //                    break;
-        //                case 2:
-        //                    // Read operation
-        //                    Console.WriteLine("Enter id to read: ");
-        //                    int idToFind = GetIntInput("Enter ID: ");
-        //                    Console.WriteLine(s_bl.Task!.Read(idToFind));
-        //                    break;
-        //                case 3:
-        //                    // ReadAll operation
-        //                    Console.WriteLine("All Task:");
-        //                    List<BO.Task?> tasks = s_bl.Task!.ReadAll().ToList();
-        //                    foreach (var taskReadAll in tasks)
-        //                    {
-        //                        Console.WriteLine(taskReadAll);
-        //                    }
-        //                    break;
-        //                case 4:
-        //                    // Update operation
-        //                    Console.WriteLine("Enter the properties of task");
-        //                    BO.Task taskUpdate = new()
-        //                    {
-        //                        Id = GetIntInput("Enter ID: "),
-        //                        Alias = Console.ReadLine(),
-        //                        Description = Console.ReadLine(),
-        //                        RequiredEffortTime = TimeSpan.FromHours(GetDoubleInput("Enter RequiredEffortTime (in hours): ")),
-        //                        IsMilestone = GetIntInput("Enter IsMilestone (1 for true, 0 for false): ") == 1,
-        //                        Copmlexity = (BO.EngineerExperience)GetIntInput("Enter Complexity: "),
-        //                        StartDate = GetDateTimeInput("Enter StartDate: "),
-        //                        ScheduledDate = GetDateTimeInput("Enter ScheduledDate: "),
-        //                        DeadlineDate = GetDateTimeInput("Enter DeadlineDate: "),
-        //                        CompleteDate = GetDateTimeInput("Enter CompleteDate: "),
-        //                        Deliverables = Console.ReadLine(),
-        //                        Remarks = Console.ReadLine(),
-        //                        EngineerId = GetIntInput("Enter EngineerId: ")
-        //                    };
-        //                    s_bl.Task!.Update(taskUpdate);
-        //                    break;
-        //                case 5:
-        //                    // Delete operation
-        //                    Console.WriteLine("Enter an ID to delete");
-        //                    int DeletionID = GetIntInput("Enter ID: ");
-        //                    s_bl.Task!.Delete(DeletionID);
-        //                    break;
-        //                default:
-        //                    Console.WriteLine("Invalid choice. Please try again.");
-        //                    break;
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine($"An exception occurred: {ex.Message}");
-        //    }
-        //}
+                    switch (entityChoice)
+                    {
+                        case 0:
+                            exit = true;
+                            break;
+                        case 1:
+                            // Create operation
+                            Console.WriteLine("Enter the properties of task");
+                            Console.WriteLine("(Alias, Description, RequiredEffortTime, StartDate, ScheduledDate, DeadlineDate, CompleteDate, Deliverables, Remarks, EngineerId)");
+                            BO.Task taskCreate = new()
+                            {
+                                Alias = Console.ReadLine(),
+                                Description = Console.ReadLine(),
+                                RequiredEffortTime = TimeSpan.FromHours(GetDoubleInput("Enter RequiredEffortTime (in hours): ")),
+                                Copmlexity = (BO.EngineerExperience)GetIntInput("Enter Complexity: "),
+                                StartDate = GetDateTimeInput("Enter StartDate: "),
+                                ScheduledDate = GetDateTimeInput("Enter ScheduledDate: "),
+                                DeadlineDate = GetDateTimeInput("Enter DeadlineDate: "),
+                                CompleteDate = GetDateTimeInput("Enter CompleteDate: "),
+                                Deliverables = Console.ReadLine(),
+                                Remarks = Console.ReadLine(),
+                                Engineer = new BO.EngineerInTask { Id = GetIntInput("Enter EngineerId and Engineer name: "), Name = Console.ReadLine() }
+                            };
+                            id = s_bl.Task?.Create(taskCreate);
+                            break;
+                        case 2:
+                            // Read operation
+                            Console.WriteLine("Enter id to read: ");
+                            int idToFind = GetIntInput("Enter ID: ");
+                            Console.WriteLine(s_bl.Task!.Read(idToFind));
+                            break;
+                        case 3:
+                            // ReadAll operation
+                            Console.WriteLine("All Task:");
+                            List<BO.Task?> tasks = s_bl.Task.ReadAll().ToList();
+                            foreach (var taskReadAll in tasks)
+                            {
+                                Console.WriteLine(taskReadAll);
+                            }
+                            break;
+                        case 4:
+                            // Update operation
+                            Console.WriteLine("Enter the properties of task");
+                            BO.Task taskUpdate = new()
+                            {
+                                Id = GetIntInput("Enter ID: "),
+                                Alias = Console.ReadLine(),
+                                Description = Console.ReadLine(),
+                                RequiredEffortTime = TimeSpan.FromHours(GetDoubleInput("Enter RequiredEffortTime (in hours): ")),
+                                Copmlexity = (BO.EngineerExperience)GetIntInput("Enter Complexity: "),
+                                StartDate = GetDateTimeInput("Enter StartDate: "),
+                                ScheduledDate = GetDateTimeInput("Enter ScheduledDate: "),
+                                DeadlineDate = GetDateTimeInput("Enter DeadlineDate: "),
+                                CompleteDate = GetDateTimeInput("Enter CompleteDate: "),
+                                Deliverables = Console.ReadLine(),
+                                Remarks = Console.ReadLine(),
+                                Engineer = new BO.EngineerInTask { Id = GetIntInput("Enter EngineerId and Engineer name: "), Name = Console.ReadLine() }
+                            };
+                            s_bl.Task!.Update(taskUpdate);
+                            break;
+                        case 5:
+                            // Delete operation
+                            Console.WriteLine("Enter an ID to delete");
+                            int DeletionID = GetIntInput("Enter ID: ");
+                            s_bl.Task!.Delete(DeletionID);
+                            break;
+                        default:
+                            Console.WriteLine("Invalid choice. Please try again.");
+                            break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+            }
+        }
 
         /// <summary>
         /// Main program 
@@ -379,7 +295,7 @@ namespace BlTest
                             EngineerMenu();
                             break;
                         case 3:
-                            //TaskMenu();
+                            TaskMenu();
                             break;
                         case 4:
                             Console.Write("Would you like to create Initial data? (Y/N)");

@@ -14,7 +14,6 @@ internal class TaskImplementation : ITask
             Description = item.Description,
             CreatedAtDate = item.CreatedAtDate,
             RequiredEffortTime = item.RequiredEffortTime,
-            IsMilestone = item.IsMilestone,
             Copmlexity = item.Copmlexity,
             StartDate = item.StartDate,
             ScheduledDate = item.ScheduledDate,

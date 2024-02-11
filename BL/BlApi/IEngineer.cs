@@ -8,7 +8,7 @@ public interface IEngineer
     /// בקשת רשימת מהנדסים
     /// </summary>
     /// <returns>רשימת מהנדסים</returns>
-    public IEnumerable<BO.Engineer> ReadAll();
+    public IEnumerable<BO.Engineer> ReadAll(Func<BO.Engineer, bool>? filter = null);
 
     /// <summary>
     /// בקשת רשימת מהנדסים עם סינון על פי רמה מסוימת

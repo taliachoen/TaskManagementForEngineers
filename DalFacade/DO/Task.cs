@@ -7,7 +7,6 @@
 /// <param name="Description">Description</param>
 /// <param name="CreatedAtDate">Task creation date</param>
 /// <param name="RequiredEffortTime">The amount of time required to perform the task.</param>
-/// <param name="IsMilestone">Milestone</param>
 /// <param name="Copmlexity">The difficulty level of the task</param>
 /// <param name="StartDate">Date of commencement of work on the assignment</param>
 /// <param name="ScheduledDate">Planned date for starting work</param>
@@ -23,7 +22,6 @@ public record Task
     string? Description = null,
     DateTime? CreatedAtDate = null,
     TimeSpan? RequiredEffortTime = null,
-    bool? IsMilestone = null,
     EngineerExperience? Copmlexity = null,
     DateTime? StartDate = null,
     DateTime? ScheduledDate = null,

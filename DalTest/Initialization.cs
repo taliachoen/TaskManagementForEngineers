@@ -46,7 +46,7 @@ public static class Initialization
             string remarks = "Remarks for " + taskAlias;
             Task newTask = new(
                 0, taskAlias, description, createdAtDate, requiredEffortTime,
-                false, complexity, startDate, null, null,
+                complexity, startDate, null, null,
                 completeDate, deliverables, remarks, null
                 );
 

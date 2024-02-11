@@ -8,13 +8,6 @@
     <Level>Proficient</Level>
   </Engineer>
   <Engineer>
-    <Id>240244526</Id>
-    <Email>AviSegal@gmail.com</Email>
-    <Cost>383</Cost>
-    <Name>Avi Segal</Name>
-    <Level>Competent</Level>
-  </Engineer>
-  <Engineer>
     <Id>363515724</Id>
     <Email>YeodaShpiler@gmail.com</Email>
     <Cost>261</Cost>
@@ -33,13 +26,6 @@
     <Email>ChaimSalomon@gmail.com</Email>
     <Cost>245</Cost>
     <Name>Chaim Salomon</Name>
-    <Level>AdvanceedBeginner</Level>
-  </Engineer>
-  <Engineer>
-    <Id>293931542</Id>
-    <Email>IsraelVeber@gmail.com</Email>
-    <Cost>349</Cost>
-    <Name>Israel Veber</Name>
     <Level>AdvanceedBeginner</Level>
   </Engineer>
 </ArrayOfEngineer>

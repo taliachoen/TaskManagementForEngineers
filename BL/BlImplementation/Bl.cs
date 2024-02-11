@@ -10,9 +10,10 @@ internal class Bl : IBl
 {
     public IEngineer Engineer => new EngineerImplementation();
 
-    public IMilestone Milestone => new MilestoneImplementation();
-
     public ITask Task => new TaskImplementation();
+
+    public DateTime? StartProject { get => StartProject; set => StartProject = value; }
+    public DateTime? EndProject { get => EndProject; set => EndProject = value; }
 
     /// <summary>
     /// Action to delete entity data from the files. 

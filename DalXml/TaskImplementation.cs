@@ -23,7 +23,7 @@ namespace Dal
             //throw new Exception("id already exists");
 
             int newId = Config.NextTaskId;
-            DO.Task t = new DO.Task(newId,task.Alias, task.Description, task.CreatedAtDate,task.RequiredEffortTime,task.IsMilestone ,task.Copmlexity ,task.StartDate, task.ScheduledDate, task.DeadlineDate, task.CompleteDate, task.Deliverables ,task.Remarks, task.EngineerId );
+            DO.Task t = new (newId,task.Alias, task.Description, task.CreatedAtDate,task.RequiredEffortTime,task.Copmlexity ,task.StartDate, task.ScheduledDate, task.DeadlineDate, task.CompleteDate, task.Deliverables ,task.Remarks, task.EngineerId );
 
             listTasks.Add(t);
             XMLTools.SaveListToXMLSerializer(listTasks, s_tasks);

@@ -281,13 +281,12 @@ namespace DalTest
                         case 1:
                             // Create operation
                             Console.WriteLine("Enter the properties of task");
-                            Console.WriteLine("(Alias, Description, RequiredEffortTime, IsMilestone, StartDate, ScheduledDate, DeadlineDate, CompleteDate, Deliverables, Remarks, EngineerId)");
+                            Console.WriteLine("(Alias, Description, RequiredEffortTime, StartDate, ScheduledDate, DeadlineDate, CompleteDate, Deliverables, Remarks, EngineerId)");
                             DO.Task taskCreate = new()
                             {
                                 Alias = Console.ReadLine(),
                                 Description = Console.ReadLine(),
                                 RequiredEffortTime = TimeSpan.FromHours(GetDoubleInput("Enter RequiredEffortTime (in hours): ")),
-                                IsMilestone = GetIntInput("Enter IsMilestone (1 for true, 0 for false): ") == 1,
                                 Copmlexity = (DO.EngineerExperience)GetIntInput("Enter Complexity: "),
                                 StartDate = GetDateTimeInput("Enter StartDate: "),
                                 ScheduledDate = GetDateTimeInput("Enter ScheduledDate: "),
@@ -323,7 +322,6 @@ namespace DalTest
                                 Alias = Console.ReadLine(),
                                 Description = Console.ReadLine(),
                                 RequiredEffortTime = TimeSpan.FromHours(GetDoubleInput("Enter RequiredEffortTime (in hours): ")),
-                                IsMilestone = GetIntInput("Enter IsMilestone (1 for true, 0 for false): ") == 1,
                                 Copmlexity = (DO.EngineerExperience)GetIntInput("Enter Complexity: "),
                                 StartDate = GetDateTimeInput("Enter StartDate: "),
                                 ScheduledDate = GetDateTimeInput("Enter ScheduledDate: "),
