@@ -20,8 +20,8 @@ internal class Bl : IBl
     /// </summary>
     public void Reset()
     {
-        //DataSource.Engineers.Clear();
-        //DataSource.Dependencies.Clear();
-        //DataSource.Tasks.Clear();
+        DalApi.Factory.Get.Reset();
     }
+
+  
 }

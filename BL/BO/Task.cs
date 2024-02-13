@@ -13,7 +13,6 @@ public class Task
     public DateTime ?StartDate { get; set; }
     public DateTime ?ScheduledDate { get; set; }
     public DateTime ?ForecastDate { get; set; }
-    public DateTime ?DeadlineDate { get; set; }
     public DateTime ?CompleteDate { get; set; }
     public string ?Deliverables { get; set; }
     public string ?Remarks { get; set; }

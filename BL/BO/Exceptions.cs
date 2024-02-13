@@ -20,7 +20,7 @@ public class BlNullPropertyException : Exception
                 : base(message, innerException) { }
 }
 
-//מספר מזהה כבר קיים
+//כבר קיים
 [Serializable]
 public class BlAlreadyExistsException : Exception
 {
@@ -29,7 +29,6 @@ public class BlAlreadyExistsException : Exception
     public BlAlreadyExistsException(string message, Exception innerException)
                 : base(message, innerException) { }
 }
-
 
 //המחיקה לא מתאפשרת
 [Serializable]
@@ -42,11 +41,32 @@ public class BlDeletionImpossible : Exception
 
 }
 
+//נתונים לא חוקיים
 [Serializable]
 public class BlInvalidDataException : Exception
 {
     public BlInvalidDataException(string? message) : base(message) { }
 
     public BlInvalidDataException(string message, Exception innerException)
+                : base(message, innerException) { }
+}
+
+//לא בוצע עידכון
+[Serializable]
+public class BlNoUpdateWasMadeException: Exception
+{
+    public BlNoUpdateWasMadeException(string? message) : base(message) { }
+
+    public BlNoUpdateWasMadeException(string message, Exception innerException)
+                : base(message, innerException) { }
+}
+
+//לא הצליח לעדכן
+[Serializable]
+public class BlUnableToUpdateException : Exception
+{
+    public BlUnableToUpdateException(string? message) : base(message) { }
+
+    public BlUnableToUpdateException(string message, Exception innerException)
                 : base(message, innerException) { }
 }

@@ -1,5 +1,7 @@
 ﻿namespace BlTest
 {
+
+    //בדיקת תקינות למחרוזת
     internal class Program
     {
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
@@ -126,7 +128,7 @@
                                 Cost = GetDoubleInput("Enter Cost: "),
                                 Name = Console.ReadLine(),
                                 Level = (BO.EngineerExperience)GetIntInput("Enter Complexity: "),
-                                Task=null
+                                Task = null
                             };
                             id = s_bl.Engineer.Create(engineerCreate);
                             break;
@@ -147,16 +149,36 @@
                             break;
                         case 4:
                             // Update operation
-                            Console.WriteLine("Enter the properties of engineer (id, email, cost, name,level,task {id, alias} )");
-                            BO.Engineer engineerUpdate = new()
+
+                            BO.Engineer engineerUpdate;
+                            Console.WriteLine("   y / n  האם אתה רוצה לעדכן את המשימות שלך בנוסף??");
+                            string ?YORn = Console.ReadLine();
+                            if (YORn == "n" || YORn=="N")
                             {
-                                Id = GetIntInput("Enter ID: "),
-                                Email = Console.ReadLine(),
-                                Cost = GetDoubleInput("Enter Cost: "),
-                                Name = Console.ReadLine(),
-                                Level = (BO.EngineerExperience)GetIntInput("Enter Complexity: "),
-                                Task =  new BO.TaskInEngineer { Id = GetIntInput("Enter id and alias of your task: "), Alias = Console.ReadLine() }
-                            };
+                               Console.WriteLine("Enter the properties of engineer (id, email, cost, name,level )");
+                                engineerUpdate = new()
+                                {
+                                    Id = GetIntInput("Enter ID: "),
+                                    Email = Console.ReadLine(),
+                                    Cost = GetDoubleInput("Enter Cost: "),
+                                    Name = Console.ReadLine(),
+                                    Level = (BO.EngineerExperience)GetIntInput("Enter Complexity: "),
+                                };
+                            }
+                            else
+                            {
+                                Console.WriteLine("Enter the properties of engineer (id, email, cost, name,level,task {id, alias} )");
+                                engineerUpdate = new()
+                                {
+                                    Id = GetIntInput("Enter ID: "),
+                                    Email = Console.ReadLine(),
+                                    Cost = GetDoubleInput("Enter Cost: "),
+                                    Name = Console.ReadLine(),
+                                    Level = (BO.EngineerExperience)GetIntInput("Enter Complexity: "),
+                                    Task = new BO.TaskInEngineer { Id = GetIntInput("Enter id and alias of your task: "), Alias = Console.ReadLine() }
+                                };
+
+                            }
                             s_bl.Engineer!.Update(engineerUpdate);
                             break;
                         case 5:

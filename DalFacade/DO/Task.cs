@@ -10,7 +10,6 @@
 /// <param name="Copmlexity">The difficulty level of the task</param>
 /// <param name="StartDate">Date of commencement of work on the assignment</param>
 /// <param name="ScheduledDate">Planned date for starting work</param>
-/// <param name="DeadlineDate"> Possible final end date(deadline)</param>
 /// <param name="CompleteDate">Actual end date</param>
 /// <param name="Deliverables">product</param               
 /// <param name="Remarks">Remarks</param>
@@ -25,7 +24,6 @@ public record Task
     EngineerExperience? Copmlexity = null,
     DateTime? StartDate = null,
     DateTime? ScheduledDate = null,
-    DateTime? DeadlineDate = null,
     DateTime? CompleteDate = null,
     string? Deliverables = null,
     string? Remarks = null,
