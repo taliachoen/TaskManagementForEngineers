@@ -17,7 +17,6 @@ internal class TaskImplementation : ITask
             Copmlexity = item.Copmlexity,
             StartDate = item.StartDate,
             ScheduledDate = item.ScheduledDate,
-            DeadlineDate = item.DeadlineDate,
             CompleteDate = item.CompleteDate,
             Deliverables = item.Deliverables,
             Remarks = item.Remarks,
@@ -52,7 +51,6 @@ internal class TaskImplementation : ITask
         // Your existing code for updating a task
         DataSource.Tasks.Remove(existingTask);
         DataSource.Tasks.Add(item);
-
     }
 
     // Reads all entity objects

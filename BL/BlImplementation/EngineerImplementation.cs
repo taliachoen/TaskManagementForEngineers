@@ -139,7 +139,7 @@ namespace BlImplementation
                 //יש למהנדס משימה שהוא עובד עליה
                 if (dal.Task.Read(x=>x.EngineerId==engineerId)!=null)
                 {
-                    throw new BO.BlDeletionImpossible($"Engineer with ID={engineerId} is assigned to a task and cannot be deleted.");
+                    throw new BO.BlDeletionImpossibleException($"Engineer with ID={engineerId} is assigned to a task and cannot be deleted.");
                 }
                 dal.Engineer.Delete(engineerId);
             }
@@ -154,7 +154,7 @@ namespace BlImplementation
             BO.Engineer engineer = Read(updatedEngineer.Id);
            
             // בדיקת תקינות הנתונים של המהנדס
-            if (updatedEngineer.Level < engineer.Level || !ValidateEngineer(updatedEngineer))
+            if (updatedEngineer.Level > engineer.Level || !ValidateEngineer(updatedEngineer))
             {
                 throw new BO.BlInvalidDataException("נתוני המהנדס אינם תקינים.");
             }
@@ -177,7 +177,9 @@ namespace BlImplementation
                     DO.Task? NewTask = dal.Task.Read(updatedEngineer.Task.Id);
                     DO.Task? oldTask;// dal.Task.Read(updatedEngineer.Id);
                     // קבלת המטחלה הפעילה של המהנדס אם קיימת
-                    oldTask = dal.Task.Read(x => x.EngineerId == updatedEngineer.Id && x.CompleteDate == null);
+                    try { oldTask = dal.Task.Read(x => x.EngineerId == updatedEngineer.Id && x.CompleteDate == null); }
+                    catch (DO.DalDoesNotExistException) { }
+
                     //האם יש מהנדס אחר שעובד על המשימה הזאת
                     if (NewTask != null && NewTask.EngineerId != null && NewTask.EngineerId != updatedEngineer.Id)
                     {
@@ -189,10 +191,10 @@ namespace BlImplementation
                         throw new BO.BlNoUpdateWasMadeException("לא בוצע שינוי במשימה");
                     }
                     //האם אני עובד על משימה אחרת
-                    if (oldTask != null)
-                    {
-                        throw new BO.BlUnableToUpdateException("לא ניתן לשנות משימה במהלך משימה אחרת");
-                    }
+                    //if (oldTask != null)
+                    //{
+                    //    throw new BO.BlUnableToUpdateException("לא ניתן לשנות משימה במהלך משימה אחרת");
+                    //}
                     //המשימה פנויה ואפשר לעבוד עליה ואני לא עובד על משימה אחרת
                     var taskToUpdate = NewTask! with { EngineerId = updatedEngineer.Id, StartDate = DateTime.Now };
                     dal.Task.Update(taskToUpdate);

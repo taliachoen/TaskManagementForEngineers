@@ -31,23 +31,23 @@ internal class TaskImplementation : ITask
 
     private List<BO.TaskInList> Dependencies(int taskId)
     {
-        var v = dal.Dependency.ReadAll(e => e.DependsOnTask == taskId);
-        List<BO.TaskInList>? taskInLists = null;
+        var v = dal.Dependency.ReadAll(e => e.DependentTask == taskId);
+        List<BO.TaskInList>? taskInLists = new List<BO.TaskInList>(); ;
         foreach (var dep in v)
         {
-            var task = dal.Task.Read(e => e.Id == dep?.DependsOnTask) ?? throw new BO.BlDoesNotExistException("מזהה משימה לא נמצא");
+            var task = dal.Task.Read((int)dep.DependsOnTask) ?? throw new BO.BlDoesNotExistException("מזהה משימה לא נמצא");
             BO.TaskInList taskInList = new()
             {
                 Id = task!.Id,
                 Alias = task.Alias,
                 Description = task.Description,
-                Status = TipeStatus(task.Id)
+                Status = TipeOfStatus(task.Id)
             };
             taskInLists?.Add(taskInList);
         }
-        return taskInLists ?? new List<BO.TaskInList>();
+        return taskInLists ?? null;
     }
-
+   
     private BO.EngineerInTask EngineerInTask(int taskId)
     {
         DO.Task? task = dal.Task.Read(x => x.Id == taskId);
@@ -55,26 +55,28 @@ internal class TaskImplementation : ITask
         BO.EngineerInTask? engineerInTask = null;
         if (task?.CompleteDate == null)
         {
-            try {
+            try
+            {
                 engineer = dal.Engineer.Read(x => x.Id == task?.EngineerId);
                 if (engineer != null)
                 {
                     engineerInTask = new() { Id = engineer.Id, Name = engineer.Name };
                 }
             }
-            catch(Exception) {
-                throw new BO.BlDoesNotExistException("מזהה מהנדס לא נמצא")
+            catch (Exception)
+            {
+                throw new BO.BlCreateImpossibleException("לא נוצר engineerInTask ");
             }
         }
-        return engineerInTask;
+        return engineerInTask ?? throw new BO.BlDoesNotExistException(" לא קיים למהנדס משימה בפעולה "); ;
     }
+
     private static bool CanDeleteTask(int taskId)
     {
         return taskId == 0;
         //בדיקה האם המשימה לא קודמת למשימות אחרות או האם אנחנו לאחר יצירת לוז
     }
 
-    //private  static BO.Status Status() {}
     public IEnumerable<BO.Task> ReadAll(Func<BO.Task, bool>? filter = null)
     {
         if (filter == null)
@@ -87,42 +89,58 @@ internal class TaskImplementation : ITask
         }
     }
 
-    //הוספת פונקציות פרטיות להשלמת הפרטים ב-דו
     public BO.Task Read(int taskId)
     {
         DO.Task? doTask = dal.Task.Read(taskId);
-        return doTask == null
-            ? throw new BO.BlDoesNotExistException($"Task with ID={taskId} does Not exist")
-            : new BO.Task
-            {
-                Id = doTask.Id,
-                Description = doTask.Description,
-                Alias = doTask.Alias,
-                CreatedAtDate = doTask.CreatedAtDate,
-                Status = TipeOfStatus(doTask.Id),
-                Dependencies = Dependencies(doTask.Id),
-                RequiredEffortTime = doTask.RequiredEffortTime,
-                StartDate = doTask.StartDate,
-                ScheduledDate = doTask.ScheduledDate,
-                //ForecastDate = doTask.ForecastDate,
-                ForecastDate = null,
-                CompleteDate = doTask.CompleteDate,
-                Deliverables = doTask.Deliverables,
-                Remarks = doTask.Remarks,
-                Engineer = EngineerInTask(doTask.Id),
-                Copmlexity = (BO.EngineerExperience?)doTask.Copmlexity
-            };
+
+
+        try
+        {
+            return doTask == null
+               ? throw new BO.BlDoesNotExistException($"Task with ID={taskId} does Not exist")
+               : new BO.Task
+               {
+                   Id = doTask.Id,
+                   Description = doTask.Description,
+                   Alias = doTask.Alias,
+                   CreatedAtDate = doTask.CreatedAtDate,
+                   Status = TipeOfStatus(doTask.Id),
+                   Dependencies = Dependencies(doTask.Id),
+                   RequiredEffortTime = doTask.RequiredEffortTime,
+                   StartDate = doTask.StartDate,
+                   ScheduledDate = doTask.ScheduledDate,
+                   //ForecastDate = doTask.ForecastDate,
+                   ForecastDate = null,
+                   CompleteDate = doTask.CompleteDate,
+                   Deliverables = doTask.Deliverables,
+                   Remarks = doTask.Remarks,
+                   Engineer = EngineerInTask(doTask.Id),
+                   Copmlexity = (BO.EngineerExperience?)doTask.Copmlexity
+               };
+
+        }
+        catch (Exception)
+        {
+            throw new BO.BlReadImpossibleException($"Task with ID={taskId} does Succeeded to Read");
+        }
     }
 
     public int Create(BO.Task newTask)
     {
-
         if (!ValidateTask(newTask))
         {
             throw new BO.BlInvalidDataException("Invalid engineer data.");
         }
         try
         {
+            //להכניס לפונקציית עזר
+            //להוסיף פילטר לפי - רשימת המשימות הקודמות
+            var tasks = dal.Task.ReadAll();
+            foreach (var depTask in tasks)
+            {
+                DO.Dependency doDep = new(newTask.Id, depTask?.Id);
+            }
+
             int idTask = dal.Task.Create(new DO.Task
             {
                 Id = newTask.Id,
@@ -139,14 +157,8 @@ internal class TaskImplementation : ITask
                 EngineerId = newTask?.Engineer?.Id
             });
 
-            //להכניס לפונקציית עזר
-            //להוסיף פילטר לפי - רשימת המשימות הקיימת
-            var tasks = dal.Task.ReadAll();
-            foreach(var depTask in tasks)
-            {
-                DO.Dependency doDep = new(newTask.Id, depTask.Id);
-            }
             return idTask;
+        
         }
         catch (DO.DalAlreadyExistsException ex)
         {
@@ -161,15 +173,13 @@ internal class TaskImplementation : ITask
         //UpdateDependencies(updatedTask); // עדכון תלויות
         try
         {
-            DO.Task? existingTask = dal.Task.Read(updatedTask.Id);
+            DO.Task existingTask = dal.Task.Read(updatedTask.Id);
             dal.Task.Update(existingTask);
         }
         catch (DO.DalDoesNotExistException ex)
         {
             throw new BO.BlDoesNotExistException($"Task with ID={updatedTask.Id} does not exist", ex);
         }
-
-
     }
 
     public void Delete(int taskId)
@@ -180,7 +190,7 @@ internal class TaskImplementation : ITask
         }
         else
         {
-            throw new BO.BlDeletionImpossible($"Task with ID={taskId} cannot be deleted");
+            throw new BO.BlDeletionImpossibleException($"Task with ID={taskId} cannot be deleted");
         }
     }
 

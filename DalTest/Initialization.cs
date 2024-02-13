@@ -20,7 +20,7 @@ public static class Initialization
     private static void CreateTask()
     {
         string[] taskAliases =
-    {
+        {
         "Task1", "Task2", "Task3", "Task4", "Task5",
         "Task6", "Task7", "Task8", "Task9", "Task10",
         "Task11", "Task12", "Task13", "Task14", "Task15",
@@ -28,26 +28,32 @@ public static class Initialization
         "Task21","Task22","Task23","Task24","Task25","Task26",
         "Task27","Task28","Task29","Task30","Task31","Task32",
         "Task33","Task34", "Task35","Task36","Task37","Task38","Task39","Task40"
-    };
+        };
 
+        List<Engineer> engineers = s_dal.Engineer.ReadAll().ToList();
         foreach (var taskAlias in taskAliases)
         {
+            int randomEngineerIndex = s_rand.Next(engineers.Count);
+            int? engineerId = null;
+            // אם המספר האקראי גדול מ-0.5, נבחר במהנדס
+            if (s_rand.NextDouble() > 0.5)
+            {
+                engineerId = engineers[randomEngineerIndex].Id;
+            }
             string description = "Description for " + taskAlias;
             DateTime createdAtDate = DateTime.Now;
             TimeSpan requiredEffortTime = TimeSpan.FromDays(s_rand.Next(1, 10));
             DateTime startDate = createdAtDate.AddDays(s_rand.Next(1, 5));
             /*Updating the end of the task according to the start of the task
             and the estimated time to work on the task and another range of days  by lottery*/
-            DateTime completeDate = startDate.AddDays(s_rand.Next(1, 5));
-            completeDate = completeDate.Add(requiredEffortTime);
-
+            DateTime ?completeDate = null;
             EngineerExperience complexity = (EngineerExperience)s_rand.Next(1, 4);
             string deliverables = "Deliverables for " + taskAlias;
             string remarks = "Remarks for " + taskAlias;
             Task newTask = new(
                 0, taskAlias, description, createdAtDate, requiredEffortTime,
-                complexity, startDate, null, null,
-                completeDate, deliverables, remarks, null
+                complexity, startDate, null, 
+                completeDate, deliverables, remarks, engineerId
                 );
 
             s_dal?.Task.Create(newTask);

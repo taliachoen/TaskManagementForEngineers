@@ -32,14 +32,27 @@ public class BlAlreadyExistsException : Exception
 
 //המחיקה לא מתאפשרת
 [Serializable]
-public class BlDeletionImpossible : Exception
+public class BlDeletionImpossibleException : Exception
 {
-    public BlDeletionImpossible(string? message) : base(message) { }
+    public BlDeletionImpossibleException(string? message) : base(message) { }
 
-    public BlDeletionImpossible(string message, Exception innerException)
+    public BlDeletionImpossibleException(string message, Exception innerException)
                 : base(message, innerException) { }
 
 }
+
+
+//הקריאה לא מתאפשרת
+[Serializable]
+public class BlReadImpossibleException : Exception
+{
+    public BlReadImpossibleException(string? message) : base(message) { }
+
+    public BlReadImpossibleException(string message, Exception innerException)
+                : base(message, innerException) { }
+
+}
+
 
 //נתונים לא חוקיים
 [Serializable]
@@ -69,4 +82,16 @@ public class BlUnableToUpdateException : Exception
 
     public BlUnableToUpdateException(string message, Exception innerException)
                 : base(message, innerException) { }
+}
+
+
+//לא הצליח ליצור אוביקט
+[Serializable]
+public class BlCreateImpossibleException : Exception
+{
+    public BlCreateImpossibleException(string? message) : base(message) { }
+
+    public BlCreateImpossibleException(string message, Exception innerException)
+                : base(message, innerException) { }
+
 }

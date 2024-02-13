@@ -206,7 +206,7 @@
         {
             try
             {
-                int? id;
+                int id;
                 bool exit = false;
                 while (!exit)
                 {
@@ -231,24 +231,23 @@
                                 Copmlexity = (BO.EngineerExperience)GetIntInput("Enter Complexity: "),
                                 StartDate = GetDateTimeInput("Enter StartDate: "),
                                 ScheduledDate = GetDateTimeInput("Enter ScheduledDate: "),
-                                DeadlineDate = GetDateTimeInput("Enter DeadlineDate: "),
                                 CompleteDate = GetDateTimeInput("Enter CompleteDate: "),
                                 Deliverables = Console.ReadLine(),
                                 Remarks = Console.ReadLine(),
                                 Engineer = new BO.EngineerInTask { Id = GetIntInput("Enter EngineerId and Engineer name: "), Name = Console.ReadLine() }
                             };
-                            id = s_bl.Task?.Create(taskCreate);
+                            id = s_bl.Task.Create(taskCreate);
                             break;
                         case 2:
                             // Read operation
                             Console.WriteLine("Enter id to read: ");
                             int idToFind = GetIntInput("Enter ID: ");
-                            Console.WriteLine(s_bl.Task!.Read(idToFind));
+                            Console.WriteLine(s_bl.Task.Read(idToFind));
                             break;
                         case 3:
                             // ReadAll operation
                             Console.WriteLine("All Task:");
-                            List<BO.Task?> tasks = s_bl.Task.ReadAll().ToList();
+                            List<BO.Task> tasks = s_bl.Task.ReadAll().ToList();
                             foreach (var taskReadAll in tasks)
                             {
                                 Console.WriteLine(taskReadAll);
@@ -266,7 +265,6 @@
                                 Copmlexity = (BO.EngineerExperience)GetIntInput("Enter Complexity: "),
                                 StartDate = GetDateTimeInput("Enter StartDate: "),
                                 ScheduledDate = GetDateTimeInput("Enter ScheduledDate: "),
-                                DeadlineDate = GetDateTimeInput("Enter DeadlineDate: "),
                                 CompleteDate = GetDateTimeInput("Enter CompleteDate: "),
                                 Deliverables = Console.ReadLine(),
                                 Remarks = Console.ReadLine(),

@@ -18,6 +18,17 @@ public static class Tools
             {
                 if (property.PropertyType.IsClass && property.PropertyType != typeof(string))
                 {
+                    if (typeof(IEnumerable).IsAssignableFrom(property.PropertyType))
+                    {
+                        // If the property is IEnumerable, handle its elements
+                        result.Append($"{property.Name}=[ ");
+                        foreach (var item in (IEnumerable)value)
+                        {
+                            result.Append($"{ToStringProperty(item)}, ");
+                        }
+                        result.Append("] ");
+                    }
+                    else
                     // If the property is a class (not string), recursively call ToStringProperty
                     result.Append($"{property.Name}={{ {ToStringProperty(value)} }} ");
                 }
