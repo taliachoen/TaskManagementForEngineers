@@ -41,7 +41,6 @@ public class BlDeletionImpossibleException : Exception
 
 }
 
-
 //הקריאה לא מתאפשרת
 [Serializable]
 public class BlReadImpossibleException : Exception
@@ -52,7 +51,6 @@ public class BlReadImpossibleException : Exception
                 : base(message, innerException) { }
 
 }
-
 
 //נתונים לא חוקיים
 [Serializable]
@@ -83,7 +81,6 @@ public class BlUnableToUpdateException : Exception
     public BlUnableToUpdateException(string message, Exception innerException)
                 : base(message, innerException) { }
 }
-
 
 //לא הצליח ליצור אוביקט
 [Serializable]

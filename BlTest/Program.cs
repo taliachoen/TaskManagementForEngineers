@@ -56,18 +56,6 @@
         }
 
         /// <summary>
-        /// Action that prints the main menu 
-        /// </summary>
-        private static void PrintMainMenu()
-        {
-            Console.WriteLine("0. Exit");
-            Console.WriteLine("1. Dependency");
-            Console.WriteLine("2. Engineer");
-            Console.WriteLine("3. Task");
-            Console.WriteLine("4. Initial data");
-        }
-
-        /// <summary>
         /// Getting the user's selection in the menu 
         /// </summary>
         /// <param name="message"></param>
@@ -82,6 +70,17 @@
                 Console.Write(message);
             }
             return choice;
+        }
+
+        /// <summary>
+        /// Action that prints the main menu 
+        /// </summary>
+        private static void PrintMainMenu()
+        {
+            Console.WriteLine("0. Exit");
+            Console.WriteLine("1. Engineer");
+            Console.WriteLine("2. Task");
+            Console.WriteLine("3. Initial data");
         }
 
         /// <summary>
@@ -140,7 +139,7 @@
                             break;
                         case 3:
                             // ReadAll operation
-                            Console.WriteLine("All Dependencies:");
+                            Console.WriteLine("All Engineer:");
                             List<BO.Engineer> engineers = s_bl.Engineer!.ReadAll().ToList();
                             foreach (var engineerReadAll in engineers)
                             {
@@ -149,7 +148,6 @@
                             break;
                         case 4:
                             // Update operation
-
                             BO.Engineer engineerUpdate;
                             Console.WriteLine("   y / n  האם אתה רוצה לעדכן את המשימות שלך בנוסף??");
                             string ?YORn = Console.ReadLine();
@@ -167,7 +165,7 @@
                             }
                             else
                             {
-                                Console.WriteLine("Enter the properties of engineer (id, email, cost, name,level,task {id, alias} )");
+                                Console.WriteLine("Enter the properties of engineer (id, email, cost, name,level, alias of task )");
                                 engineerUpdate = new()
                                 {
                                     Id = GetIntInput("Enter ID: "),
@@ -175,7 +173,7 @@
                                     Cost = GetDoubleInput("Enter Cost: "),
                                     Name = Console.ReadLine(),
                                     Level = (BO.EngineerExperience)GetIntInput("Enter Complexity: "),
-                                    Task = new BO.TaskInEngineer { Id = GetIntInput("Enter id and alias of your task: "), Alias = Console.ReadLine() }
+                                    Task = new BO.TaskInEngineer { Alias = Console.ReadLine() }
                                 };
 
                             }
@@ -222,7 +220,7 @@
                         case 1:
                             // Create operation
                             Console.WriteLine("Enter the properties of task");
-                            Console.WriteLine("(Alias, Description, RequiredEffortTime, StartDate, ScheduledDate, DeadlineDate, CompleteDate, Deliverables, Remarks, EngineerId)");
+                            Console.WriteLine("(Alias, Description, RequiredEffortTime, StartDate, ScheduledDate, DeadlineDate, Deliverables, Remarks, EngineerId)");
                             BO.Task taskCreate = new()
                             {
                                 Alias = Console.ReadLine(),
@@ -231,7 +229,6 @@
                                 Copmlexity = (BO.EngineerExperience)GetIntInput("Enter Complexity: "),
                                 StartDate = GetDateTimeInput("Enter StartDate: "),
                                 ScheduledDate = GetDateTimeInput("Enter ScheduledDate: "),
-                                CompleteDate = GetDateTimeInput("Enter CompleteDate: "),
                                 Deliverables = Console.ReadLine(),
                                 Remarks = Console.ReadLine(),
                                 Engineer = new BO.EngineerInTask { Id = GetIntInput("Enter EngineerId and Engineer name: "), Name = Console.ReadLine() }
@@ -309,22 +306,21 @@
                             exit = true;
                             break;
                         case 1:
-                            //DependencyMenu(s_bl);
-                            break;
-                        case 2:
                             EngineerMenu();
                             break;
-                        case 3:
+                        case 2:
                             TaskMenu();
                             break;
-                        case 4:
-                            Console.Write("Would you like to create Initial data? (Y/N)");
-                            string? ans = Console.ReadLine() ?? throw new FormatException("Wrong input");
-                            if (ans == "Y" || ans == "y")
+                        case 3:
                             {
-                                s_bl.Reset();
-                                DalTest.Initialization.Do();
-                                Console.WriteLine("The operation was successful");
+                                Console.Write("Would you like to create Initial data? (Y/N)");
+                                string? ans = Console.ReadLine() ?? throw new FormatException("Wrong input");
+                                if (ans == "Y" || ans == "y")
+                                {
+                                    s_bl.Reset();
+                                    DalTest.Initialization.Do();
+                                    Console.WriteLine("The operation was successful");
+                                }
                             }
                             break;
                         default:

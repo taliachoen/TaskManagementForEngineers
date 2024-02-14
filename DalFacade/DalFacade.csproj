@@ -12,4 +12,8 @@
 	  <RootNamespace />
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Stage0\Stage0.csproj" />
+  </ItemGroup>
+
 </Project>

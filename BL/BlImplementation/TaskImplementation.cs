@@ -1,204 +1,294 @@
 ﻿using BlApi;
 
-namespace BlImplementation;
-
-internal class TaskImplementation : ITask
+namespace BlImplementation
 {
-    private readonly DalApi.IDal dal = DalApi.Factory.Get;
-
-    private static bool ValidateTask(BO.Task newTask)
+    internal class TaskImplementation : ITask
     {
-        if (newTask.Id <= 0)
-            throw new BO.BlInvalidDataException("Task ID must be a positive integer.");
+        private readonly DalApi.IDal dal = DalApi.Factory.Get;
 
-        if (string.IsNullOrEmpty(newTask.Alias))
-            throw new BO.BlInvalidDataException("Alias cannot be null or empty.");
-
-        return true;
-    }
-
-    //לבדוק את מצב הסטטוס האמיתי
-    private BO.Status TipeOfStatus(int taskId)
-    {
-        DO.Task? doTask = dal.Task.Read(taskId);
-        return doTask == null
-            ? throw new BO.BlDoesNotExistException("מזהה משימה לא נמצא")
-            : (BO.Status)(doTask!.StartDate is null ? 0
-                            : doTask!.ScheduledDate is null ? 1
-                            : doTask.CompleteDate is null ? 2
-                            : 3);
-    }
-
-    private List<BO.TaskInList> Dependencies(int taskId)
-    {
-        var v = dal.Dependency.ReadAll(e => e.DependentTask == taskId);
-        List<BO.TaskInList>? taskInLists = new List<BO.TaskInList>(); ;
-        foreach (var dep in v)
+        private static bool ValidateTask(BO.Task newTask)
         {
-            var task = dal.Task.Read((int)dep.DependsOnTask) ?? throw new BO.BlDoesNotExistException("מזהה משימה לא נמצא");
-            BO.TaskInList taskInList = new()
-            {
-                Id = task!.Id,
-                Alias = task.Alias,
-                Description = task.Description,
-                Status = TipeOfStatus(task.Id)
-            };
-            taskInLists?.Add(taskInList);
+            if (string.IsNullOrEmpty(newTask.Alias))
+                throw new BO.BlInvalidDataException("Alias cannot be null or empty.");
+
+            if (string.IsNullOrEmpty(newTask.Description))
+                throw new BO.BlInvalidDataException("Description cannot be null or empty.");
+
+            if (string.IsNullOrEmpty(newTask.Deliverables))
+                throw new BO.BlInvalidDataException("Deliverables must be provided and cannot be empty.");
+
+            if (newTask.Engineer == null)
+                throw new BO.BlInvalidDataException("An engineer must be assigned to the task.");
+
+            if (newTask.Copmlexity == null)
+                throw new BO.BlInvalidDataException("Complexity must be provided.");
+
+            return true;
         }
-        return taskInLists ?? null;
-    }
-   
-    private BO.EngineerInTask EngineerInTask(int taskId)
-    {
-        DO.Task? task = dal.Task.Read(x => x.Id == taskId);
-        DO.Engineer? engineer;
-        BO.EngineerInTask? engineerInTask = null;
-        if (task?.CompleteDate == null)
+
+        private BO.Status TipeOfStatus(int taskId)
         {
             try
             {
-                engineer = dal.Engineer.Read(x => x.Id == task?.EngineerId);
-                if (engineer != null)
+                DO.Task? doTask = dal.Task.Read(taskId);
+                return doTask == null
+                    ? throw new BO.BlDoesNotExistException("Task ID not found")
+                    : (BO.Status)(doTask!.StartDate is null ? 0
+                                    : doTask!.ScheduledDate is null ? 1
+                                    : doTask.CompleteDate is null ? 2
+                                    : 3);
+            }
+            catch (Exception ex)
+            {
+                throw new BO.BlReadImpossibleException("Error occurred while fetching task status", ex);
+            }
+        }
+
+        private List<BO.TaskInList> Dependencies(int taskId)
+        {
+            try
+            {
+                var v = dal.Dependency.ReadAll(e => e.DependentTask == taskId);
+                List<BO.TaskInList>? taskInLists = new List<BO.TaskInList>(); ;
+                foreach (var dep in v)
                 {
-                    engineerInTask = new() { Id = engineer.Id, Name = engineer.Name };
+                    var task = dal.Task.Read((int)dep.DependsOnTask) ?? throw new BO.BlDoesNotExistException("מזהה משימה לא נמצא");
+                    BO.TaskInList taskInList = new()
+                    {
+                        Id = task!.Id,
+                        Alias = task.Alias,
+                        Description = task.Description,
+                        Status = TipeOfStatus(task.Id)
+                    };
+                    taskInLists?.Add(taskInList);
+                }
+                return taskInLists ?? new List<BO.TaskInList>();
+
+            }
+            catch (Exception ex)
+            {
+                throw new BO.BlReadImpossibleException("Error occurred while fetching dependencies", ex);
+            }
+        }
+
+        private BO.EngineerInTask EngineerInTask(int taskId)
+        {
+            try
+            {
+                DO.Task? task = dal.Task.Read(taskId);
+                DO.Engineer? engineer = null;
+                BO.EngineerInTask? engineerInTask = null;
+                if (task.EngineerId != null && task?.CompleteDate == null)
+                {
+                    engineer = dal.Engineer.Read((int)task.EngineerId);
+                    if (engineer != null)
+                    {
+                        engineerInTask = new() { Id = engineer.Id, Name = engineer.Name };
+                    }
+                }
+                return engineerInTask ?? new BO.EngineerInTask();
+            }
+            catch (Exception ex)
+            {
+                throw new BO.BlCreateImpossibleException("Error occurred while fetching engineer task", ex);
+            }
+        }
+
+        private bool CanDeleteTask(int taskId)
+        {
+            try
+            {
+                IEnumerable<DO.Dependency?> v = dal.Dependency.ReadAll(e => e.DependsOnTask == taskId);
+                return !v.Any();
+            }
+            catch (Exception ex)
+            {
+                throw new BO.BlReadImpossibleException($"Error occurred while checking if task can be deleted: {ex.Message}", ex);
+            }
+        }
+
+        //linqToObject
+        public IEnumerable<BO.Task> ReadAll(Func<BO.Task, bool>? filter = null)
+        {
+            try
+            {
+                if (filter == null)
+                {
+                    return dal.Task.ReadAll().Select(task => Read(task!.Id));
+                }
+                else
+                {
+                    return ReadAll().Where(filter);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new BO.BlCreateImpossibleException("לא נוצר engineerInTask ");
+                throw new BO.BlReadImpossibleException("Error occurred while fetching all tasks", ex);
             }
         }
-        return engineerInTask ?? throw new BO.BlDoesNotExistException(" לא קיים למהנדס משימה בפעולה "); ;
-    }
 
-    private static bool CanDeleteTask(int taskId)
-    {
-        return taskId == 0;
-        //בדיקה האם המשימה לא קודמת למשימות אחרות או האם אנחנו לאחר יצירת לוז
-    }
-
-    public IEnumerable<BO.Task> ReadAll(Func<BO.Task, bool>? filter = null)
-    {
-        if (filter == null)
+        public BO.Task Read(int taskId)
         {
-            return dal.Task.ReadAll().Select(task => Read(task!.Id));
-        }
-        else
-        {
-            return ReadAll().Where(filter);
-        }
-    }
-
-    public BO.Task Read(int taskId)
-    {
-        DO.Task? doTask = dal.Task.Read(taskId);
-
-
-        try
-        {
-            return doTask == null
-               ? throw new BO.BlDoesNotExistException($"Task with ID={taskId} does Not exist")
-               : new BO.Task
-               {
-                   Id = doTask.Id,
-                   Description = doTask.Description,
-                   Alias = doTask.Alias,
-                   CreatedAtDate = doTask.CreatedAtDate,
-                   Status = TipeOfStatus(doTask.Id),
-                   Dependencies = Dependencies(doTask.Id),
-                   RequiredEffortTime = doTask.RequiredEffortTime,
-                   StartDate = doTask.StartDate,
-                   ScheduledDate = doTask.ScheduledDate,
-                   //ForecastDate = doTask.ForecastDate,
-                   ForecastDate = null,
-                   CompleteDate = doTask.CompleteDate,
-                   Deliverables = doTask.Deliverables,
-                   Remarks = doTask.Remarks,
-                   Engineer = EngineerInTask(doTask.Id),
-                   Copmlexity = (BO.EngineerExperience?)doTask.Copmlexity
-               };
-
-        }
-        catch (Exception)
-        {
-            throw new BO.BlReadImpossibleException($"Task with ID={taskId} does Succeeded to Read");
-        }
-    }
-
-    public int Create(BO.Task newTask)
-    {
-        if (!ValidateTask(newTask))
-        {
-            throw new BO.BlInvalidDataException("Invalid engineer data.");
-        }
-        try
-        {
-            //להכניס לפונקציית עזר
-            //להוסיף פילטר לפי - רשימת המשימות הקודמות
-            var tasks = dal.Task.ReadAll();
-            foreach (var depTask in tasks)
+            try
             {
-                DO.Dependency doDep = new(newTask.Id, depTask?.Id);
+                DO.Task? doTask = dal.Task.Read(taskId);
+                return doTask == null
+                   ? throw new BO.BlDoesNotExistException($"Task with ID={taskId} does Not exist")
+                   : new BO.Task
+                   {
+                       Id = doTask.Id,
+                       Description = doTask.Description,
+                       Alias = doTask.Alias,
+                       CreatedAtDate = doTask.CreatedAtDate,
+                       Status = TipeOfStatus(doTask.Id),
+                       Dependencies = Dependencies(doTask.Id),
+                       RequiredEffortTime = doTask.RequiredEffortTime,
+                       StartDate = doTask.StartDate,
+                       ScheduledDate = doTask.ScheduledDate,
+                       ForecastDate = null,
+                       CompleteDate = doTask.CompleteDate,
+                       Deliverables = doTask.Deliverables,
+                       Remarks = doTask.Remarks,
+                       Engineer = EngineerInTask(doTask.Id),
+                       Copmlexity = (BO.EngineerExperience?)doTask.Copmlexity
+                   };
+            }
+            catch (Exception ex)
+            {
+                throw new BO.BlReadImpossibleException($"Task with ID={taskId} does Succeeded to Read", ex);
+            }
+        }
+
+        public int Create(BO.Task newTask)
+        {
+            if (!ValidateTask(newTask))
+            {
+                throw new BO.BlInvalidDataException("Invalid engineer data.");
+            }
+            try
+            {
+                int idTask = dal.Task.Create(new DO.Task
+                {
+                    Id = newTask.Id,
+                    Alias = newTask.Alias,
+                    Description = newTask.Description,
+                    CreatedAtDate = newTask.CreatedAtDate,
+                    RequiredEffortTime = newTask.RequiredEffortTime,
+                    Copmlexity = (DO.EngineerExperience?)newTask.Copmlexity,
+                    StartDate = newTask.StartDate,
+                    ScheduledDate = newTask.ScheduledDate,
+                    CompleteDate = null,
+                    Deliverables = newTask.Deliverables,
+                    Remarks = newTask.Remarks,
+                    EngineerId = newTask?.Engineer?.Id
+                });
+                Dependencies(idTask);
+                return idTask;
+            }
+            catch (DO.DalAlreadyExistsException ex)
+            {
+                throw new BO.BlAlreadyExistsException($"Task with ID={newTask.Id} already exists", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new BO.BlCreateImpossibleException("Error occurred while creating task", ex);
+            }
+        }
+
+        public void Update(BO.Task updatedTask)
+        {
+            if (ValidateTask(updatedTask) && updatedTask != null)
+            {
+                DO.Task? task = new();
+                try
+                {
+                    task = dal.Task.Read(updatedTask.Id);
+                }
+                catch
+                {
+                    throw new BO.BlDoesNotExistException($"Task with ID={updatedTask.Id} does not exist");
+                }
+                try
+                {
+                    //לפני יצירת הלו"ז
+                    if (Factory.Get().StartProject == null)
+                    {
+                        dal.Task.Update(new DO.Task
+                        {
+                            Id = updatedTask.Id,
+                            Alias = updatedTask.Alias,
+                            Description = updatedTask.Description,
+                            CreatedAtDate = updatedTask.CreatedAtDate,
+                            RequiredEffortTime = updatedTask.RequiredEffortTime,
+                            Copmlexity = (DO.EngineerExperience?)updatedTask.Copmlexity,
+                            StartDate = updatedTask.StartDate,
+                            ScheduledDate = updatedTask.ScheduledDate,
+                            CompleteDate = updatedTask.CompleteDate,
+                            Deliverables = updatedTask.Deliverables,
+                            Remarks = updatedTask.Remarks,
+                            EngineerId = updatedTask?.Engineer?.Id
+                        });
+                    }
+                    //לאחר יצירת הלו"ז
+                    else
+                    {
+                        dal.Task.Update(new DO.Task
+                        {
+                            Id = task!.Id,
+                            Alias = updatedTask.Alias,
+                            Description = updatedTask.Description,
+                            CreatedAtDate = task.CreatedAtDate,
+                            RequiredEffortTime = task.RequiredEffortTime,
+                            Copmlexity = (DO.EngineerExperience?)task.Copmlexity,
+                            StartDate = task.StartDate,
+                            ScheduledDate = task.ScheduledDate,
+                            CompleteDate = task.CompleteDate,
+                            Deliverables = updatedTask.Deliverables,
+                            Remarks = updatedTask.Remarks,
+                            EngineerId = updatedTask?.Engineer?.Id
+                        });
+                    }
+
+                }
+                catch (DO.DalDoesNotExistException ex)
+                {
+                    throw new BO.BlDoesNotExistException($"Task with ID={updatedTask.Id} does not exist", ex);
+                }
+                catch (Exception ex)
+                {
+                    throw new BO.BlUnableToUpdateException($"Error occurred while updating task", ex);
+                }
             }
 
-            int idTask = dal.Task.Create(new DO.Task
+        }
+
+        public void Delete(int taskId)
+        {
+            try
             {
-                Id = newTask.Id,
-                Alias = newTask.Alias,
-                Description = newTask.Description,
-                CreatedAtDate = newTask.CreatedAtDate,
-                RequiredEffortTime = newTask.RequiredEffortTime,
-                Copmlexity = (DO.EngineerExperience?)newTask.Copmlexity,
-                StartDate = newTask.StartDate,
-                ScheduledDate = newTask.ScheduledDate,
-                CompleteDate = newTask.CompleteDate,
-                Deliverables = newTask.Deliverables,
-                Remarks = newTask.Remarks,
-                EngineerId = newTask?.Engineer?.Id
-            });
-
-            return idTask;
-        
-        }
-        catch (DO.DalAlreadyExistsException ex)
-        {
-            throw new BO.BlAlreadyExistsException($"Task with ID={newTask.Id} already exists", ex);
+                if (CanDeleteTask(taskId))
+                {
+                    dal.Task.Delete(taskId);
+                    var dependencies = dal.Dependency.ReadAll().Where(dep => dep.DependentTask != taskId).ToList();
+                    foreach (var dependency in dependencies)
+                    {
+                        dal.Dependency.Delete(dependency.Id);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Task with ID={taskId} cannot be deleted");
+                }
+            }
+            catch (DO.DalDoesNotExistException ex)
+            {
+                throw new BO.BlDoesNotExistException($"Task with ID={taskId} does not exist", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new BO.BlDeletionImpossibleException($"Error occurred while deleting task with ID={taskId}", ex);
+            }
         }
 
     }
-
-    public void Update(BO.Task updatedTask)
-    {
-        ValidateTask(updatedTask);
-        //UpdateDependencies(updatedTask); // עדכון תלויות
-        try
-        {
-            DO.Task existingTask = dal.Task.Read(updatedTask.Id);
-            dal.Task.Update(existingTask);
-        }
-        catch (DO.DalDoesNotExistException ex)
-        {
-            throw new BO.BlDoesNotExistException($"Task with ID={updatedTask.Id} does not exist", ex);
-        }
-    }
-
-    public void Delete(int taskId)
-    {
-        if (CanDeleteTask(taskId))
-        {
-            dal.Task.Delete(taskId);
-        }
-        else
-        {
-            throw new BO.BlDeletionImpossibleException($"Task with ID={taskId} cannot be deleted");
-        }
-    }
-
-    //public IEnumerable<Task> GetTasksByEngineerLevel(int engineerLevel)
-    //{
-    //    return dal.ReadAll().Where(task => task.EngineerLevel == engineerLevel);
-    //}
-
 }
-
-
