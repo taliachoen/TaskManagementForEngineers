@@ -1,4 +1,8 @@
-﻿namespace BlTest
+﻿using BL;
+using BlImplementation;
+using BlApi;
+
+namespace BlTest
 {
 
     //בדיקת תקינות למחרוזת
@@ -149,11 +153,9 @@
                         case 4:
                             // Update operation
                             BO.Engineer engineerUpdate;
-                            Console.WriteLine("   y / n  האם אתה רוצה לעדכן את המשימות שלך בנוסף??");
-                            string ?YORn = Console.ReadLine();
-                            if (YORn == "n" || YORn=="N")
+                            if (Factory.Get().StartProject == null) 
                             {
-                               Console.WriteLine("Enter the properties of engineer (id, email, cost, name,level )");
+                                Console.WriteLine("Enter the properties of engineer (id, email, cost, name,level )");
                                 engineerUpdate = new()
                                 {
                                     Id = GetIntInput("Enter ID: "),
@@ -220,7 +222,7 @@
                         case 1:
                             // Create operation
                             Console.WriteLine("Enter the properties of task");
-                            Console.WriteLine("(Alias, Description, RequiredEffortTime, StartDate, ScheduledDate, DeadlineDate, Deliverables, Remarks, EngineerId)");
+                            Console.WriteLine("(Alias, Description, RequiredEffortTime, StartDate, DeadlineDate, Deliverables, Remarks)");
                             BO.Task taskCreate = new()
                             {
                                 Alias = Console.ReadLine(),
@@ -228,10 +230,9 @@
                                 RequiredEffortTime = TimeSpan.FromHours(GetDoubleInput("Enter RequiredEffortTime (in hours): ")),
                                 Copmlexity = (BO.EngineerExperience)GetIntInput("Enter Complexity: "),
                                 StartDate = GetDateTimeInput("Enter StartDate: "),
-                                ScheduledDate = GetDateTimeInput("Enter ScheduledDate: "),
+                                ScheduledDate =null,
                                 Deliverables = Console.ReadLine(),
                                 Remarks = Console.ReadLine(),
-                                Engineer = new BO.EngineerInTask { Id = GetIntInput("Enter EngineerId and Engineer name: "), Name = Console.ReadLine() }
                             };
                             id = s_bl.Task.Create(taskCreate);
                             break;
@@ -252,21 +253,44 @@
                             break;
                         case 4:
                             // Update operation
+                            BO.Task taskUpdate = null;
                             Console.WriteLine("Enter the properties of task");
-                            BO.Task taskUpdate = new()
+                            //לפני הלו"ז
+                            if (Factory.Get().StartProject == null)
                             {
-                                Id = GetIntInput("Enter ID: "),
-                                Alias = Console.ReadLine(),
-                                Description = Console.ReadLine(),
-                                RequiredEffortTime = TimeSpan.FromHours(GetDoubleInput("Enter RequiredEffortTime (in hours): ")),
-                                Copmlexity = (BO.EngineerExperience)GetIntInput("Enter Complexity: "),
-                                StartDate = GetDateTimeInput("Enter StartDate: "),
-                                ScheduledDate = GetDateTimeInput("Enter ScheduledDate: "),
-                                CompleteDate = GetDateTimeInput("Enter CompleteDate: "),
-                                Deliverables = Console.ReadLine(),
-                                Remarks = Console.ReadLine(),
-                                Engineer = new BO.EngineerInTask { Id = GetIntInput("Enter EngineerId and Engineer name: "), Name = Console.ReadLine() }
-                            };
+                               Console.WriteLine("(Alias, Description, RequiredEffortTime, StartDate, DeadlineDate, Deliverables, Remarks)");
+                                taskUpdate = new()
+                                {
+                                    Id = GetIntInput("Enter ID: "),
+                                    Alias = Console.ReadLine(),
+                                    Description = Console.ReadLine(),
+                                    RequiredEffortTime = TimeSpan.FromHours(GetDoubleInput("Enter RequiredEffortTime (in hours): ")),
+                                    Copmlexity = (BO.EngineerExperience)GetIntInput("Enter Complexity: "),
+                                    StartDate = GetDateTimeInput("Enter StartDate: "),
+                                    ScheduledDate = null,
+                                    CompleteDate = GetDateTimeInput("Enter CompleteDate: "),
+                                    Deliverables = Console.ReadLine(),
+                                    Remarks = Console.ReadLine(),
+                                };
+                            }
+                            else
+                            {
+                                Console.WriteLine("(Alias, Description, RequiredEffortTime, StartDate, DeadlineDate, Deliverables, Remarks, EngineerId)");
+                                taskUpdate = new()
+                                {
+                                    Id = GetIntInput("Enter ID: "),
+                                    Alias = Console.ReadLine(),
+                                    Description = Console.ReadLine(),
+                                    RequiredEffortTime = TimeSpan.FromHours(GetDoubleInput("Enter RequiredEffortTime (in hours): ")),
+                                    Copmlexity = (BO.EngineerExperience)GetIntInput("Enter Complexity: "),
+                                    StartDate = GetDateTimeInput("Enter StartDate: "),
+                                    ScheduledDate = null,
+                                    CompleteDate = GetDateTimeInput("Enter CompleteDate: "),
+                                    Deliverables = Console.ReadLine(),
+                                    Remarks = Console.ReadLine(),
+                                    Engineer = new BO.EngineerInTask { Id = GetIntInput("Enter EngineerId and Engineer name: "), Name = Console.ReadLine() }
+                                };
+                            }
                             s_bl.Task!.Update(taskUpdate);
                             break;
                         case 5:

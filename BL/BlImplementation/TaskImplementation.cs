@@ -1,5 +1,4 @@
 ﻿using BlApi;
-
 namespace BlImplementation
 {
     internal class TaskImplementation : ITask
@@ -226,8 +225,8 @@ namespace BlImplementation
                             CompleteDate = updatedTask.CompleteDate,
                             Deliverables = updatedTask.Deliverables,
                             Remarks = updatedTask.Remarks,
-                            EngineerId = updatedTask?.Engineer?.Id
-                        });
+                            EngineerId = null
+                        } );
                     }
                     //לאחר יצירת הלו"ז
                     else
@@ -241,7 +240,7 @@ namespace BlImplementation
                             RequiredEffortTime = task.RequiredEffortTime,
                             Copmlexity = (DO.EngineerExperience?)task.Copmlexity,
                             StartDate = task.StartDate,
-                            ScheduledDate = task.ScheduledDate,
+                            ScheduledDate = null,
                             CompleteDate = task.CompleteDate,
                             Deliverables = updatedTask.Deliverables,
                             Remarks = updatedTask.Remarks,
@@ -290,5 +289,50 @@ namespace BlImplementation
             }
         }
 
+        public void UpdateOrAddScheduledStartDate(int taskId, DateTime plannedStartDate)
+        {
+            try
+            {
+                // קבל את כל המשימות הקודמות למשימה זו
+                var dependencies = dal.Dependency.ReadAll(dep => dep.DependsOnTask == taskId);
+
+                // בדוק אם כל תאריכי ההתחלה המתוכננים של המשימות הקודמות כבר מוגדרים
+                foreach (var dependency in dependencies)
+                {
+                    var dependentTask = dal.Task.Read((int)dependency!.DependentTask!);
+                    if (dependentTask?.ScheduledDate == null)
+                    {
+                        throw new BO.BlInvalidDataException($"Scheduled start date for task {dependency.DependentTask} is not defined.");
+                    }
+                }
+
+                // בדוק שהתאריך המתוכנן לא מוקדם מכל תאריכי הסיום המשוערים של המשימות הקודמות
+                var maxPreviousEndDate = dependencies.Max(dep => dal.Task.Read((int)dep!.DependentTask!)?.ScheduledDate);
+                if (maxPreviousEndDate != null && plannedStartDate < maxPreviousEndDate)
+                {
+                    throw new BO.BlInvalidDataException($"Planned start date for task {taskId} is earlier than the latest estimated end date of its preceding tasks.");
+                }
+
+                // בצע את בקשת העדכון לשכבת הנתונים
+                var taskToUpdate = dal.Task.Read(taskId);
+                if (taskToUpdate != null)
+                {
+                    var task = taskToUpdate! with { ScheduledDate = plannedStartDate };
+                    dal.Task.Update(task);
+                }
+                else
+                {
+                    throw new BO.BlDoesNotExistException($"Task with ID={taskId} does not exist.");
+                }
+            }
+            catch (BO.BlInvalidDataException)
+            {
+                throw; // החריגה כבר מזוהה, אין צורך לעטוף מחדש
+            }
+            catch (Exception ex)
+            {
+                throw new BO.BlUnableToUpdateException($"Error occurred while updating or adding scheduled start date for task with ID={taskId}.", ex);
+            }
+        }
     }
 }

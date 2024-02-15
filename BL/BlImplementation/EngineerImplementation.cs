@@ -169,8 +169,8 @@ namespace BlImplementation
 
             try
             {
-                if (updatedEngineer.Task != null)
-                {
+                    if (updatedEngineer.Task != null && Factory.Get().StartProject != null)
+                    {
                     DO.Task? NewTask = dal.Task.Read(e => e.Alias == updatedEngineer.Task.Alias);
                     DO.Task? oldTask = new();
 
