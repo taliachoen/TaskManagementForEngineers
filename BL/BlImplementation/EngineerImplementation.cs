@@ -1,5 +1,6 @@
-﻿
-using BlApi;
+﻿using BlApi;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace BlImplementation
@@ -8,6 +9,11 @@ namespace BlImplementation
     {
         private readonly DalApi.IDal dal = DalApi.Factory.Get;
 
+        /// <summary>
+        /// Validates the data of an engineer.
+        /// </summary>
+        /// <param name="newEngineer">The engineer to validate.</param>
+        /// <returns>True if the engineer data is valid; otherwise, false.</returns>
         private static bool ValidateEngineer(BO.Engineer newEngineer)
         {
             if (newEngineer.Id <= 0)
@@ -25,7 +31,11 @@ namespace BlImplementation
             return true;
         }
 
-        //linqToObject
+        /// <summary>
+        /// Reads all engineers based on an optional filter.
+        /// </summary>
+        /// <param name="filter">Optional filter for engineers.</param>
+        /// <returns>A collection of engineers.</returns>
         public IEnumerable<BO.Engineer> ReadAll(Func<BO.Engineer, bool>? filter = null)
         {
             if (filter == null)
@@ -38,7 +48,11 @@ namespace BlImplementation
             }
         }
 
-        //linqToObject
+        /// <summary>
+        /// Retrieves engineers based on their experience level.
+        /// </summary>
+        /// <param name="level">The experience level to filter by.</param>
+        /// <returns>A collection of engineers with the specified experience level.</returns>
         public IEnumerable<BO.Engineer> GetEngineersByLevel(int level)
         {
             return dal.Engineer.ReadAll()
@@ -53,6 +67,11 @@ namespace BlImplementation
                 });
         }
 
+        /// <summary>
+        /// Retrieves an engineer based on their ID.
+        /// </summary>
+        /// <param name="engineerId">The ID of the engineer to retrieve.</param>
+        /// <returns>The engineer with the specified ID.</returns>
         public BO.Engineer Read(int engineerId)
         {
             try
@@ -81,6 +100,11 @@ namespace BlImplementation
             }
         }
 
+        /// <summary>
+        /// Creates a new engineer.
+        /// </summary>
+        /// <param name="newEngineer">The new engineer to create.</param>
+        /// <returns>The ID of the newly created engineer.</returns>
         public int Create(BO.Engineer newEngineer)
         {
             if (!ValidateEngineer(newEngineer))
@@ -106,6 +130,10 @@ namespace BlImplementation
             }
         }
 
+        /// <summary>
+        /// Deletes an engineer based on their ID.
+        /// </summary>
+        /// <param name="engineerId">The ID of the engineer to delete.</param>
         public void Delete(int engineerId)
         {
             try
@@ -142,6 +170,10 @@ namespace BlImplementation
             }
         }
 
+        /// <summary>
+        /// Updates an existing engineer.
+        /// </summary>
+        /// <param name="updatedEngineer">The updated engineer data.</param>
         public void Update(BO.Engineer updatedEngineer)
         {
             BO.Engineer engineer = Read(updatedEngineer.Id);
@@ -169,20 +201,20 @@ namespace BlImplementation
 
             try
             {
-                    if (updatedEngineer.Task != null && Factory.Get().StartProject != null)
-                    {
-                    DO.Task? NewTask = dal.Task.Read(e => e.Alias == updatedEngineer.Task.Alias);
+                if (Factory.Get().StartProject != null && updatedEngineer.Task != null)
+                {
+                    DO.Task? newTask = dal.Task.Read(e => e.Alias == updatedEngineer.Task.Alias);
                     DO.Task? oldTask = new();
 
                     try { oldTask = dal.Task.Read(x => x.EngineerId == updatedEngineer.Id && x.CompleteDate == null); }
                     catch (DO.DalDoesNotExistException) { }
 
-                    if (NewTask != null && NewTask.EngineerId != null && NewTask.EngineerId != updatedEngineer.Id)
+                    if (newTask != null && newTask.EngineerId != null && newTask.EngineerId != updatedEngineer.Id)
                     {
                         throw new BO.BlAlreadyExistsException("A different engineer is already assigned to the task.");
                     }
 
-                    if (NewTask != null && NewTask.EngineerId != null && NewTask.EngineerId == updatedEngineer.Id)
+                    if (newTask != null && newTask.EngineerId != null && newTask.EngineerId == updatedEngineer.Id)
                     {
                         throw new BO.BlNoUpdateWasMadeException("No changes were made to the task.");
                     }
@@ -192,10 +224,21 @@ namespace BlImplementation
                         throw new BO.BlUnableToUpdateException("Cannot update task while another task is in progress.");
                     }
 
-                    if (NewTask != null)
+                    // Check if all dependent tasks are DONE
+                    bool allDependenciesDone = dal.Dependency.ReadAll(dep => dep.DependsOnTask == newTask?.Id)
+                        .All(dep => dal.Task.Read((int)dep!.DependentTask!)?.CompleteDate != null);
+
+                    if (allDependenciesDone)
                     {
-                        var taskToUpdate = NewTask! with { EngineerId = updatedEngineer.Id, StartDate = DateTime.Now };
-                        dal.Task.Update(taskToUpdate);
+                        if (newTask != null)
+                        {
+                            var taskToUpdate = newTask! with { EngineerId = updatedEngineer.Id, StartDate = DateTime.Now };
+                            dal.Task.Update(taskToUpdate);
+                        }
+                    }
+                    else
+                    {
+                        throw new BO.BlUnableToUpdateException("Cannot assign the task to the engineer until all dependent tasks are marked as DONE.");
                     }
                 }
             }

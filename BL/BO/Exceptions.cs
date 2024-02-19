@@ -1,6 +1,8 @@
 ﻿namespace BO;
 
-//מספר מזהה לא קיים
+/// <summary>
+/// Exception thrown when attempting to access a non-existent entity.
+/// </summary>
 [Serializable]
 public class BlDoesNotExistException : Exception
 {
@@ -10,7 +12,9 @@ public class BlDoesNotExistException : Exception
                 : base(message, innerException) { }
 }
 
-//תכונה עם ערך נאל
+/// <summary>
+/// Exception thrown when a property has a null value.
+/// </summary>
 [Serializable]
 public class BlNullPropertyException : Exception
 {
@@ -20,7 +24,9 @@ public class BlNullPropertyException : Exception
                 : base(message, innerException) { }
 }
 
-//כבר קיים
+/// <summary>
+/// Exception thrown when attempting to create an entity that already exists.
+/// </summary>
 [Serializable]
 public class BlAlreadyExistsException : Exception
 {
@@ -30,7 +36,9 @@ public class BlAlreadyExistsException : Exception
                 : base(message, innerException) { }
 }
 
-//המחיקה לא מתאפשרת
+/// <summary>
+/// Exception thrown when deletion of an entity is not possible.
+/// </summary>
 [Serializable]
 public class BlDeletionImpossibleException : Exception
 {
@@ -38,10 +46,11 @@ public class BlDeletionImpossibleException : Exception
 
     public BlDeletionImpossibleException(string message, Exception innerException)
                 : base(message, innerException) { }
-
 }
 
-//הקריאה לא מתאפשרת
+/// <summary>
+/// Exception thrown when reading from an entity is not possible.
+/// </summary>
 [Serializable]
 public class BlReadImpossibleException : Exception
 {
@@ -49,10 +58,11 @@ public class BlReadImpossibleException : Exception
 
     public BlReadImpossibleException(string message, Exception innerException)
                 : base(message, innerException) { }
-
 }
 
-//נתונים לא חוקיים
+/// <summary>
+/// Exception thrown when invalid data is encountered.
+/// </summary>
 [Serializable]
 public class BlInvalidDataException : Exception
 {
@@ -62,9 +72,11 @@ public class BlInvalidDataException : Exception
                 : base(message, innerException) { }
 }
 
-//לא בוצע עידכון
+/// <summary>
+/// Exception thrown when no update is made to an entity.
+/// </summary>
 [Serializable]
-public class BlNoUpdateWasMadeException: Exception
+public class BlNoUpdateWasMadeException : Exception
 {
     public BlNoUpdateWasMadeException(string? message) : base(message) { }
 
@@ -72,7 +84,9 @@ public class BlNoUpdateWasMadeException: Exception
                 : base(message, innerException) { }
 }
 
-//לא הצליח לעדכן
+/// <summary>
+/// Exception thrown when an update to an entity is not successful.
+/// </summary>
 [Serializable]
 public class BlUnableToUpdateException : Exception
 {
@@ -82,7 +96,9 @@ public class BlUnableToUpdateException : Exception
                 : base(message, innerException) { }
 }
 
-//לא הצליח ליצור אוביקט
+/// <summary>
+/// Exception thrown when creating an object is not possible.
+/// </summary>
 [Serializable]
 public class BlCreateImpossibleException : Exception
 {
@@ -90,5 +106,4 @@ public class BlCreateImpossibleException : Exception
 
     public BlCreateImpossibleException(string message, Exception innerException)
                 : base(message, innerException) { }
-
 }

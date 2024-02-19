@@ -1,17 +1,36 @@
-﻿
-
-namespace BlApi;
-
-public interface IBl
+﻿namespace BlApi
 {
-    public IEngineer Engineer { get; }
-    
-    public ITask Task { get; }
+    public interface IBl
+    {
+        /// <summary>
+        /// Gets the interface for managing engineers.
+        /// </summary>
+        public IEngineer Engineer { get; }
 
-    //Action to update the project start date 
-    public DateTime? StartProject { get; set; }
-    //Return action to the project end date
-    public DateTime? EndProject { get; set; }
-    
-    void Reset();
+        /// <summary>
+        /// Gets the interface for managing tasks.
+        /// </summary>
+        public ITask Task { get; }
+
+        /// <summary>
+        /// Action to update the project start date.
+        /// </summary>
+        public DateTime? StartProject { get; set; }
+
+        /// <summary>
+        /// Return action to the project end date.
+        /// </summary>
+        public DateTime? EndProject { get; set; }
+
+        /// <summary>
+        /// Resets the state of the Business Logic layer.
+        /// </summary>
+        void Reset();
+
+        /// <summary>
+        /// Updates the project schedule based on the planned start date.
+        /// </summary>
+        /// <param name="plannedStartDate">The planned start date for the project.</param>
+        public void UpdateProjectSchedule(DateTime plannedStartDate);
+    }
 }

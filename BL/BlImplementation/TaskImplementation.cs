@@ -1,10 +1,20 @@
 ﻿using BlApi;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace BlImplementation
 {
+
     internal class TaskImplementation : ITask
     {
         private readonly DalApi.IDal dal = DalApi.Factory.Get;
 
+        /// <summary>
+        /// Validates the data of a task.
+        /// </summary>
+        /// <param name="newTask">The task to validate.</param>
+        /// <returns>True if the task data is valid; otherwise, false.</returns>
         private static bool ValidateTask(BO.Task newTask)
         {
             if (string.IsNullOrEmpty(newTask.Alias))
@@ -25,6 +35,11 @@ namespace BlImplementation
             return true;
         }
 
+        /// <summary>
+        /// Retrieves the status of a task based on its ID.
+        /// </summary>
+        /// <param name="taskId">The ID of the task.</param>
+        /// <returns>The status of the task.</returns>
         private BO.Status TipeOfStatus(int taskId)
         {
             try
@@ -43,15 +58,20 @@ namespace BlImplementation
             }
         }
 
+        /// <summary>
+        /// Retrieves the list of dependencies for a task based on its ID.
+        /// </summary>
+        /// <param name="taskId">The ID of the task.</param>
+        /// <returns>The list of dependencies as TaskInList objects.</returns>
         private List<BO.TaskInList> Dependencies(int taskId)
         {
             try
             {
                 var v = dal.Dependency.ReadAll(e => e.DependentTask == taskId);
-                List<BO.TaskInList>? taskInLists = new List<BO.TaskInList>(); ;
+                List<BO.TaskInList>? taskInLists = new(); ;
                 foreach (var dep in v)
                 {
-                    var task = dal.Task.Read((int)dep.DependsOnTask) ?? throw new BO.BlDoesNotExistException("מזהה משימה לא נמצא");
+                    var task = dal.Task.Read((int)dep!.DependsOnTask!) ?? throw new BO.BlDoesNotExistException("מזהה משימה לא נמצא");
                     BO.TaskInList taskInList = new()
                     {
                         Id = task!.Id,
@@ -70,6 +90,11 @@ namespace BlImplementation
             }
         }
 
+        /// <summary>
+        /// Retrieves information about the engineer assigned to a task.
+        /// </summary>
+        /// <param name="taskId">The ID of the task.</param>
+        /// <returns>The information about the engineer in the task as EngineerInTask object.</returns>
         private BO.EngineerInTask EngineerInTask(int taskId)
         {
             try
@@ -77,9 +102,9 @@ namespace BlImplementation
                 DO.Task? task = dal.Task.Read(taskId);
                 DO.Engineer? engineer = null;
                 BO.EngineerInTask? engineerInTask = null;
-                if (task.EngineerId != null && task?.CompleteDate == null)
+                if (task!.EngineerId != null && task?.CompleteDate == null)
                 {
-                    engineer = dal.Engineer.Read((int)task.EngineerId);
+                    engineer = dal.Engineer.Read((int)task!.EngineerId);
                     if (engineer != null)
                     {
                         engineerInTask = new() { Id = engineer.Id, Name = engineer.Name };
@@ -93,6 +118,11 @@ namespace BlImplementation
             }
         }
 
+        /// <summary>
+        /// Checks whether a task can be deleted based on its ID.
+        /// </summary>
+        /// <param name="taskId">The ID of the task.</param>
+        /// <returns>True if the task can be deleted; otherwise, false.</returns>
         private bool CanDeleteTask(int taskId)
         {
             try
@@ -106,7 +136,11 @@ namespace BlImplementation
             }
         }
 
-        //linqToObject
+        /// <summary>
+        /// Retrieves all tasks based on an optional filter.
+        /// </summary>
+        /// <param name="filter">Optional filter for tasks.</param>
+        /// <returns>The collection of tasks that match the filter.</returns>
         public IEnumerable<BO.Task> ReadAll(Func<BO.Task, bool>? filter = null)
         {
             try
@@ -126,6 +160,11 @@ namespace BlImplementation
             }
         }
 
+        /// <summary>
+        /// Retrieves information about a task based on its ID.
+        /// </summary>
+        /// <param name="taskId">The ID of the task.</param>
+        /// <returns>The information about the task as a Task object.</returns>
         public BO.Task Read(int taskId)
         {
             try
@@ -158,6 +197,11 @@ namespace BlImplementation
             }
         }
 
+        /// <summary>
+        /// Creates a new task based on the provided data.
+        /// </summary>
+        /// <param name="newTask">The data for the new task.</param>
+        /// <returns>The ID of the newly created task.</returns>
         public int Create(BO.Task newTask)
         {
             if (!ValidateTask(newTask))
@@ -174,7 +218,7 @@ namespace BlImplementation
                     CreatedAtDate = newTask.CreatedAtDate,
                     RequiredEffortTime = newTask.RequiredEffortTime,
                     Copmlexity = (DO.EngineerExperience?)newTask.Copmlexity,
-                    StartDate = newTask.StartDate,
+                    StartDate = null,
                     ScheduledDate = newTask.ScheduledDate,
                     CompleteDate = null,
                     Deliverables = newTask.Deliverables,
@@ -194,6 +238,10 @@ namespace BlImplementation
             }
         }
 
+        /// <summary>
+        /// Updates an existing task based on the provided data.
+        /// </summary>
+        /// <param name="updatedTask">The updated data for the task.</param>
         public void Update(BO.Task updatedTask)
         {
             if (ValidateTask(updatedTask) && updatedTask != null)
@@ -209,7 +257,7 @@ namespace BlImplementation
                 }
                 try
                 {
-                    //לפני יצירת הלו"ז
+                    // Before creating the schedule
                     if (Factory.Get().StartProject == null)
                     {
                         dal.Task.Update(new DO.Task
@@ -220,15 +268,15 @@ namespace BlImplementation
                             CreatedAtDate = updatedTask.CreatedAtDate,
                             RequiredEffortTime = updatedTask.RequiredEffortTime,
                             Copmlexity = (DO.EngineerExperience?)updatedTask.Copmlexity,
-                            StartDate = updatedTask.StartDate,
+                            StartDate = null,
                             ScheduledDate = updatedTask.ScheduledDate,
                             CompleteDate = updatedTask.CompleteDate,
                             Deliverables = updatedTask.Deliverables,
                             Remarks = updatedTask.Remarks,
                             EngineerId = null
-                        } );
+                        });
                     }
-                    //לאחר יצירת הלו"ז
+                    // After creating the schedule
                     else
                     {
                         dal.Task.Update(new DO.Task
@@ -240,7 +288,7 @@ namespace BlImplementation
                             RequiredEffortTime = task.RequiredEffortTime,
                             Copmlexity = (DO.EngineerExperience?)task.Copmlexity,
                             StartDate = task.StartDate,
-                            ScheduledDate = null,
+                            ScheduledDate = task.ScheduledDate,
                             CompleteDate = task.CompleteDate,
                             Deliverables = updatedTask.Deliverables,
                             Remarks = updatedTask.Remarks,
@@ -261,6 +309,10 @@ namespace BlImplementation
 
         }
 
+        /// <summary>
+        /// Deletes a task based on its ID.
+        /// </summary>
+        /// <param name="taskId">The ID of the task to delete.</param>
         public void Delete(int taskId)
         {
             try
@@ -268,10 +320,10 @@ namespace BlImplementation
                 if (CanDeleteTask(taskId))
                 {
                     dal.Task.Delete(taskId);
-                    var dependencies = dal.Dependency.ReadAll().Where(dep => dep.DependentTask != taskId).ToList();
+                    var dependencies = dal.Dependency.ReadAll().Where(dep => dep!.DependentTask != taskId).ToList();
                     foreach (var dependency in dependencies)
                     {
-                        dal.Dependency.Delete(dependency.Id);
+                        dal.Dependency.Delete(dependency!.Id);
                     }
                 }
                 else
@@ -289,31 +341,36 @@ namespace BlImplementation
             }
         }
 
-        public void UpdateOrAddScheduledStartDate(int taskId, DateTime plannedStartDate)
+        /// <summary>
+        /// Updates or adds the scheduled start date for a task based on its ID.
+        /// </summary>
+        /// <param name="taskId">The ID of the task.</param>
+        /// <param name="plannedStartDate">The planned start date for the task.</param>
+        public void UpdateOrAddStartDate(int taskId, DateTime? plannedStartDate)
         {
             try
             {
-                // קבל את כל המשימות הקודמות למשימה זו
+                // Get all tasks preceding the current task
                 var dependencies = dal.Dependency.ReadAll(dep => dep.DependsOnTask == taskId);
 
-                // בדוק אם כל תאריכי ההתחלה המתוכננים של המשימות הקודמות כבר מוגדרים
-                foreach (var dependency in dependencies)
-                {
-                    var dependentTask = dal.Task.Read((int)dependency!.DependentTask!);
-                    if (dependentTask?.ScheduledDate == null)
-                    {
-                        throw new BO.BlInvalidDataException($"Scheduled start date for task {dependency.DependentTask} is not defined.");
-                    }
-                }
-
-                // בדוק שהתאריך המתוכנן לא מוקדם מכל תאריכי הסיום המשוערים של המשימות הקודמות
-                var maxPreviousEndDate = dependencies.Max(dep => dal.Task.Read((int)dep!.DependentTask!)?.ScheduledDate);
+                // Check if the planned start date is not earlier than the latest estimated end date of preceding tasks
+                var maxPreviousEndDate = dependencies.Max(dep => dal.Task.Read((int)dep!.DependentTask!)?.StartDate);
                 if (maxPreviousEndDate != null && plannedStartDate < maxPreviousEndDate)
                 {
                     throw new BO.BlInvalidDataException($"Planned start date for task {taskId} is earlier than the latest estimated end date of its preceding tasks.");
                 }
 
-                // בצע את בקשת העדכון לשכבת הנתונים
+                // Check if the task has no dependencies and there is a project start date
+                if (!dependencies.Any() && Factory.Get().StartProject != null)
+                {
+                    var projectStartDate = Factory.Get().StartProject;
+                    if (plannedStartDate < projectStartDate)
+                    {
+                        throw new BO.BlInvalidDataException($"Planned start date for task {taskId} is before the project's start date.");
+                    }
+                }
+
+                // Perform the update request to the data layer
                 var taskToUpdate = dal.Task.Read(taskId);
                 if (taskToUpdate != null)
                 {
@@ -324,15 +381,17 @@ namespace BlImplementation
                 {
                     throw new BO.BlDoesNotExistException($"Task with ID={taskId} does not exist.");
                 }
+
             }
             catch (BO.BlInvalidDataException)
             {
-                throw; // החריגה כבר מזוהה, אין צורך לעטוף מחדש
+                throw; // The exception is already identified, no need to wrap again
             }
             catch (Exception ex)
             {
                 throw new BO.BlUnableToUpdateException($"Error occurred while updating or adding scheduled start date for task with ID={taskId}.", ex);
             }
         }
+
     }
 }

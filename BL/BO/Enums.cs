@@ -1,14 +1,19 @@
-﻿using System.Diagnostics.Contracts;
-
+﻿
 namespace BO;
 
 
+/// <summary>
+/// Represents the status of a task.
+/// </summary>
 public enum Status {
   Unscheduled,
   Scheduled,
   OnTrack,
   Done
 };
+/// <summary>
+/// Represents the experience levels of an engineer.
+/// </summary>
 public enum EngineerExperience {
   Beginner,
   AdvancedBeginner,
@@ -16,19 +21,3 @@ public enum EngineerExperience {
   Advanced,
   Expert
 };
-
-/*מצב הרשימה הציבורי {
-    לא מתוכנן,
-    מתוזמן,
-    במעקב,
-    בסכנה,
-    בוצע
-};
-public enum EngineerExperience {
-    מתחילים,
-    מתקדם מתחיל,
-    בינוני,
-    מִתקַדֵם,
-    מוּמחֶה
-};
- */

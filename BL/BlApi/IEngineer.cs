@@ -1,45 +1,42 @@
-﻿
-
-namespace BlApi;
+﻿namespace BlApi;
 
 public interface IEngineer
 {
     /// <summary>
-    /// בקשת רשימת מהנדסים
+    /// Request a list of engineers.
     /// </summary>
-    /// <returns>רשימת מהנדסים</returns>
+    /// <returns>List of engineers</returns>
     public IEnumerable<BO.Engineer> ReadAll(Func<BO.Engineer, bool>? filter = null);
 
     /// <summary>
-    /// בקשת רשימת מהנדסים עם סינון על פי רמה מסוימת
+    /// Request a list of engineers filtered by a specific level.
     /// </summary>
-    /// <param name="level">הרמה לסינון</param>
-    /// <returns>רשימת מהנדסים לפי הסינון</returns>
+    /// <param name="level">The level for filtering</param>
+    /// <returns>List of engineers based on the filter</returns>
     public IEnumerable<BO.Engineer> GetEngineersByLevel(int level);
 
     /// <summary>
-    /// בקשת פרטי מהנדס על פי מזהה 
+    /// Request details of an engineer based on the identifier.
     /// </summary>
-    /// <param name="engineerId">מזהה המהנדס</param>
-    /// <returns>אובייקט מהנדס שלפי מזהה</returns>
+    /// <param name="engineerId">Engineer's identifier</param>
+    /// <returns>Engineer object based on the identifier</returns>
     public BO.Engineer Read(int engineerId);
 
     /// <summary>
-    /// הוספת מהנדס 
+    /// Add a new engineer.
     /// </summary>
-    /// <param name="newEngineer">אובייקט מהנדס להוספה</param>
+    /// <param name="newEngineer">Engineer object to add</param>
     public int Create(BO.Engineer newEngineer);
 
     /// <summary>
-    /// מחיקת מהנדס 
+    /// Delete an engineer.
     /// </summary>
-    /// <param name="engineerId">מזהה המהנדס למחיקה</param>
+    /// <param name="engineerId">Engineer's identifier for deletion</param>
     public void Delete(int engineerId);
 
     /// <summary>
-    /// עדכון נתונים של מהנדס
+    /// Update engineer's data.
     /// </summary>
-    /// <param name="updatedEngineer">אובייקט מהנדס עם הנתונים המעודכנים</param>
+    /// <param name="updatedEngineer">Engineer object with updated data</param>
     public void Update(BO.Engineer updatedEngineer);
-
 }

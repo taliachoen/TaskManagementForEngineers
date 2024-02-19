@@ -1,44 +1,35 @@
-﻿
-
-namespace BlApi;
+﻿namespace BlApi;
 
 public interface ITask
 {
-
     /// <summary>
-    /// בקשת רשימת משימות
+    /// Request a list of tasks.
     /// </summary>
-    /// <returns>רשימת משימות</returns>
+    /// <returns>List of tasks</returns>
     public IEnumerable<BO.Task> ReadAll(Func<BO.Task, bool>? filter = null);
-    /// <summary>
-    /// בקשת רשימת משימות עם סינון על פי רמת המהנדס
-    /// </summary>
-    /// <param name="engineerLevel">הרמה של המהנדס</param>
-    /// <returns>רשימת משימות לפי הסינון</returns>
-    // public IEnumerable<Task> GetTasksByEngineerLevel(int engineerLevel);
 
     /// <summary>
-    /// בקשת פרטי משימה
+    /// Request details of a task based on the identifier.
     /// </summary>
-    /// <param name="taskId">מזהה המשימה</param>
-    /// <returns>אובייקט משימה שלפי מזהה</returns>
+    /// <param name="taskId">Task's identifier</param>
+    /// <returns>Task object based on the identifier</returns>
     public BO.Task Read(int taskId);
+
     /// <summary>
-    /// הוספת משימה
+    /// Add a new task.
     /// </summary>
-    /// <param name="newTask">אובייקט משימה להוספה</param>
+    /// <param name="newTask">Task object to add</param>
     public int Create(BO.Task newTask);
 
     /// <summary>
-    /// עדכון משימה
+    /// Update task information.
     /// </summary>
-    /// <param name="updatedTask">אובייקט משימה עם הנתונים המעודנים</param>
+    /// <param name="updatedTask">Task object with updated data</param>
     public void Update(BO.Task updatedTask);
 
     /// <summary>
-    /// מחיקת משימה
+    /// Delete a task.
     /// </summary>
-    /// <param name="taskId">מזהה המשימה למחיקה</param>
+    /// <param name="taskId">Task's identifier for deletion</param>
     public void Delete(int taskId);
-
 }

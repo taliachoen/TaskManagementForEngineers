@@ -1,70 +1,89 @@
 ﻿using BlApi;
-namespace BlImplementation;
 
-internal class Bl : IBl
+namespace BlImplementation
 {
-    public IEngineer Engineer => new EngineerImplementation();
-
-    public ITask Task => new TaskImplementation();
-
-    //Action to update the project start date 
-    public DateTime? StartProject { get; set; } = null;
-    //Return action to the project end date
-    public DateTime? EndProject { get; set; } = null;
-
-
-
-
-/// <summary>
-/// Action to delete entity data from the files. 
-/// </summary>
-public void Reset()
+    internal class Bl : IBl
     {
-        DalApi.Factory.Get.Reset();
-    }
+        // Exposes an instance of EngineerImplementation through the IEngineer interface.
+        public IEngineer Engineer => new EngineerImplementation();
 
+        // Exposes an instance of TaskImplementation through the ITask interface.
+        public ITask Task => new TaskImplementation();
 
-    public void UpdateProjectSchedule(DateTime plannedStartDate)
-    {
-        // קבל את כל המשימות
-        var allTasks = Task.ReadAll();
+        // Action to update the project start date.
+        public DateTime? StartProject { get; set; } = null;
 
-        // בדוק אם כל תאריכי התחילה מתוכננים של המשימות הקודמות
-        foreach (var task in allTasks)
+        // Action to retrieve the project end date.
+        public DateTime? EndProject { get; set; } = null;
+
+        /// <summary>
+        /// Action to delete entity data from the files.
+        /// </summary>
+        public void Reset()
         {
-            // אם למשימה יש תלות, בדוק אם תאריך ההתחלה של המשימה הקודמת קיים ואם הוא לא מוקדם מהתאריך הנוכחי
-            if (task!.Dependencies!.Any())
-            {
-                var dependenciesStartDates = task.Dependencies.Select(dep => dep.Status == BO.Status.Done ? dep.CompleteDate : null);
-                var maxPreviousStartDate = dependenciesStartDates.Max();
-                if (maxPreviousStartDate != null && plannedStartDate < maxPreviousStartDate)
+            // Calls the Reset method in the data access layer (DAL) to delete entity data.
+            DalApi.Factory.Get.Reset();
+        }
+
+        /// <summary>
+        /// Updates the project schedule based on the planned start date.
+        /// </summary>
+        /// <param name="plannedStartDate">The planned start date for the project.</param>
+        public void UpdateProjectSchedule(DateTime plannedStartDate)
+        {
+            // Get all tasks from the TaskImplementation.
+            var allTasks = Task.ReadAll();
+            var maxPreviousStartDate = allTasks.Min(task => task.ScheduledDate ?? DateTime.MinValue);
+
+                if (plannedStartDate > maxPreviousStartDate)
                 {
-                    throw new InvalidOperationException($"Planned start date for task {task.Id} is earlier than the latest completion date of its preceding tasks.");
+                    throw new InvalidOperationException($"Planned start date for  at least one task is earlier than the latest start date of its preceding tasks.");
                 }
-            }
-            // אם למשימה אין תלות, בדוק שהתאריך המתוכנן גדול או שווה לתאריך ההתחלה של הפרויקט
-            else
+
+
+
+
+            // If checks pass, update the planned start date for the project.
+            StartProject = plannedStartDate;
+
+            // Update start dates for tasks.
+            var firstTask = allTasks.FirstOrDefault(task => !task.Dependencies!.Any());
+
+            if (firstTask != null)
             {
-                if (task.ScheduledDate != null && plannedStartDate < task.ScheduledDate)
+                // Update the start date of the first task to the planned start date of the project.
+                firstTask.StartDate = plannedStartDate;
+                Task.Update(firstTask);
+
+                // Update start dates for other tasks based on dependencies.
+                foreach (var task in allTasks.Where(t => t != firstTask))
                 {
-                    throw new InvalidOperationException($"Planned start date for task {task.Id} is earlier than the project's planned start date.");
+                    DateTime? maxStartDateOfDependencyTask = null;
+                    BO.Task? taskWithMaxStartDate = null;
+
+                    if (task.Dependencies != null && task.Dependencies.Any())
+                    {
+                        var dependenciesStartDates = task.Dependencies
+                            .Select(dep =>
+                            {
+                                var dependencyTask = Task.Read(dep.Id);
+                                if (maxStartDateOfDependencyTask < dependencyTask.StartDate)
+                                {
+                                    maxStartDateOfDependencyTask = dependencyTask.StartDate;
+                                    taskWithMaxStartDate = dependencyTask;
+                                }
+                                return dependencyTask.StartDate;
+                            });
+                    }
+
+                    if (maxStartDateOfDependencyTask != null)
+                    {
+                        // Update the start date of the current task based on dependencies.
+                        task.StartDate = maxStartDateOfDependencyTask.Value.Add(value: (TimeSpan)taskWithMaxStartDate!.RequiredEffortTime!);
+                        Task.Update(task);
+                    }
                 }
             }
         }
-
-        // אם הבדיקות עברו בהצלחה, עדכן את תאריך ההתחלה המתוכנן לפרויקט
-        StartProject = plannedStartDate;
-
-        // עדכן את תאריכי המשימות
-        foreach (var task in allTasks)
-        {
-            // אם המשימה עדיין לא התחילה, עדכן את תאריך ההתחלה שלה לתאריך המתוכנן לפרויקט
-            if (task.Status == BO.Status.Unscheduled)
-            {
-                task.ScheduledDate = plannedStartDate;
-                Task.Update(task);
-            }
-        }
     }
-
 }

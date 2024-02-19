@@ -30,7 +30,7 @@ public static class Initialization
         "Task33","Task34", "Task35","Task36","Task37","Task38","Task39","Task40"
         };
 
-        List<Engineer> engineers = s_dal.Engineer.ReadAll().ToList();
+        List<Engineer> engineers = s_dal!.Engineer.ReadAll()!.ToList()!;
         foreach (var taskAlias in taskAliases)
         {
             int randomEngineerIndex = s_rand.Next(engineers.Count);
@@ -43,17 +43,16 @@ public static class Initialization
             string description = "Description for " + taskAlias;
             DateTime createdAtDate = DateTime.Now;
             TimeSpan requiredEffortTime = TimeSpan.FromDays(s_rand.Next(1, 10));
-            DateTime startDate = createdAtDate.AddDays(s_rand.Next(1, 5));
             /*Updating the end of the task according to the start of the task
             and the estimated time to work on the task and another range of days  by lottery*/
-            DateTime ?completeDate = null;
+            DateTime? ScheduledDate = DateTime.Now.AddDays(s_rand.Next(1, 10));
             EngineerExperience complexity = (EngineerExperience)s_rand.Next(1, 4);
             string deliverables = "Deliverables for " + taskAlias;
             string remarks = "Remarks for " + taskAlias;
             Task newTask = new(
                 0, taskAlias, description, createdAtDate, requiredEffortTime,
-                complexity, startDate, null, 
-                completeDate, deliverables, remarks, engineerId
+                complexity, null, ScheduledDate, 
+                null, deliverables, remarks, engineerId
                 );
 
             s_dal?.Task.Create(newTask);
