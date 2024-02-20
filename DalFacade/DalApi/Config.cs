@@ -20,6 +20,8 @@ static class Config
     internal static string s_dalName;
     internal static Dictionary<string, DalImplementation> s_dalPackages;
 
+
+
     /// <summary>
     /// Static constructor to load DAL configuration from XML.
     /// </summary>

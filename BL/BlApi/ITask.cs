@@ -25,7 +25,7 @@ public interface ITask
     /// Update task information.
     /// </summary>
     /// <param name="updatedTask">Task object with updated data</param>
-    public void Update(BO.Task updatedTask);
+    public void Update(BO.Task updatedTask, bool DuringScheduled =false);
 
     /// <summary>
     /// Delete a task.
@@ -33,3 +33,4 @@ public interface ITask
     /// <param name="taskId">Task's identifier for deletion</param>
     public void Delete(int taskId);
 }
+                               

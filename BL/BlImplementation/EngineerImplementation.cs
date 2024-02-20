@@ -1,7 +1,4 @@
 ﻿using BlApi;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace BlImplementation
 {
@@ -201,7 +198,7 @@ namespace BlImplementation
 
             try
             {
-                if (Factory.Get().StartProject != null && updatedEngineer.Task != null)
+                if (Factory.Get().ReturnStartProject() != null && updatedEngineer.Task != null)
                 {
                     DO.Task? newTask = dal.Task.Read(e => e.Alias == updatedEngineer.Task.Alias);
                     DO.Task? oldTask = new();

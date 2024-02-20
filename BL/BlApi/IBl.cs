@@ -15,12 +15,12 @@
         /// <summary>
         /// Action to update the project start date.
         /// </summary>
-        public DateTime? StartProject { get; set; }
+       //public DateTime? StartProject { get; set; }
 
         /// <summary>
         /// Return action to the project end date.
         /// </summary>
-        public DateTime? EndProject { get; set; }
+       //public DateTime? EndProject { get; set; }
 
         /// <summary>
         /// Resets the state of the Business Logic layer.
@@ -32,5 +32,9 @@
         /// </summary>
         /// <param name="plannedStartDate">The planned start date for the project.</param>
         public void UpdateProjectSchedule(DateTime plannedStartDate);
+
+        public DateTime? ReturnStartProject();
+        
+        public void UpdateStartProject(DateTime date);
     }
 }

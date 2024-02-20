@@ -7,5 +7,7 @@
         /// </summary>
         /// <returns>An instance of the IBl interface.</returns>
         public static IBl Get() => new BlImplementation.Bl();
+
+
     }
 }

@@ -8,6 +8,29 @@ namespace BlTest
     {
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
 
+        /// <summary>
+        /// Helper method to parse string input with validation for options "Y" or "N"
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        private static string GetStringInputWithYNValidation(string message)
+        {
+            string input;
+            while (true)
+            {
+                Console.Write(message);
+                input = Console.ReadLine()?.Trim().ToUpper();
+
+                if (input == "Y" || input == "y"|| input == "N" || input =="n")
+                {
+                    break;
+                }
+
+                Console.WriteLine("Invalid input. Please enter 'Y' or 'N'.");
+            }
+
+            return input;
+        }
 
         /// <summary>
         /// Helper method to parse integer input with validation 
@@ -152,7 +175,7 @@ namespace BlTest
                         case 4:
                             // Update operation
                             BO.Engineer engineerUpdate;
-                            if (Factory.Get().StartProject == null) 
+                            if (Factory.Get().ReturnStartProject() == null) 
                             {
                                 Console.WriteLine("Enter the properties of engineer (id, email, cost, name,level )");
                                 engineerUpdate = new()
@@ -220,27 +243,32 @@ namespace BlTest
                             break;
                         case 1:
                             // Create operation
-                            Console.WriteLine("Enter the properties of task");
-                            Console.WriteLine("(Alias, Description, RequiredEffortTime, DeadlineDate, Deliverables, Remarks)");
-                            BO.Task taskCreate = new()
+                            if (Factory.Get().ReturnStartProject() == null)
                             {
-                                Description = Console.ReadLine(),
-                                Alias = Console.ReadLine(),
-                                CreatedAtDate = DateTime.Now,
-                                Status = BO.Status.Unscheduled,
-                                Dependencies = null,
-                                RequiredEffortTime = TimeSpan.FromHours(GetDoubleInput("Enter RequiredEffortTime (in hours): ")),
-                                StartDate = null,
-                                ScheduledDate =null,
-                                ForecastDate= null,
-                                CompleteDate = null,
-                                Deliverables = Console.ReadLine(),
-                                Remarks = Console.ReadLine(),
-                                Engineer =  null,
-                                Copmlexity = (BO.EngineerExperience)GetIntInput("Enter Complexity: "),
-                                
-                            };
-                            id = s_bl.Task.Create(taskCreate);
+                                Console.WriteLine("Enter the properties of task");
+                                Console.WriteLine("(Description, Alias, Dependencies, RequiredEffortTime, ScheduledDate, Deliverables, Remarks, Copmlexity)");
+                                BO.Task taskCreate = new()
+                                {
+                                    Description = Console.ReadLine(),
+                                    Alias = Console.ReadLine(),
+                                    CreatedAtDate = DateTime.Now,
+                                    Status = BO.Status.Unscheduled,
+                                    Dependencies = null,
+                                    RequiredEffortTime = TimeSpan.FromHours(GetDoubleInput("Enter RequiredEffortTime (in hours): ")),
+                                    StartDate = null,
+                                    ScheduledDate = null,
+                                    ForecastDate = null,
+                                    CompleteDate = null,
+                                    Deliverables = Console.ReadLine(),
+                                    Remarks = Console.ReadLine(),
+                                    Engineer = null,
+                                    Copmlexity = (BO.EngineerExperience)GetIntInput("Enter Complexity: "),
+
+                                };
+                                id = s_bl.Task.Create(taskCreate);
+                            }
+                            else
+                                Console.WriteLine("A task cannot be created after the schedule is created");
                             break;
                         case 2:
                             // Read operation
@@ -262,39 +290,49 @@ namespace BlTest
                             BO.Task? taskUpdate = null;
                             Console.WriteLine("Enter the properties of task");
                             //לפני הלו"ז
-                            if (Factory.Get().StartProject == null)
+                            if (Factory.Get().ReturnStartProject() == null)
                             {
-                               Console.WriteLine("(Alias, Description, RequiredEffortTime, DeadlineDate, Deliverables, Remarks)");
+                               Console.WriteLine("(id, Description, Alias, RequiredEffortTime, ScheduledDate, Deliverables, Remarks)");
                                 taskUpdate = new()
                                 {
                                     Id = GetIntInput("Enter ID: "),
-                                    Alias = Console.ReadLine(),
                                     Description = Console.ReadLine(),
+                                    Alias = Console.ReadLine(),
+                                    CreatedAtDate = null,
+                                    Status = null,
+                                    Dependencies = null,
                                     RequiredEffortTime = TimeSpan.FromHours(GetDoubleInput("Enter RequiredEffortTime (in hours): ")),
-                                    Copmlexity = (BO.EngineerExperience)GetIntInput("Enter Complexity: "),
                                     StartDate = null,
-                                    ScheduledDate = null,
-                                    CompleteDate = GetDateTimeInput("Enter CompleteDate: "),
+                                    ScheduledDate = GetDateTimeInput("Enter ScheduledDate: "),
+                                    ForecastDate = null,
+                                    CompleteDate = null,
                                     Deliverables = Console.ReadLine(),
                                     Remarks = Console.ReadLine(),
+                                    Engineer = null,
+                                    Copmlexity = (BO.EngineerExperience)GetIntInput("Enter Complexity: "),
                                 };
                             }
+                            //אחרי יצירת לו
                             else
                             {
-                                Console.WriteLine("(Alias, Description, RequiredEffortTime, DeadlineDate, Deliverables, Remarks, EngineerId)");
+                                Console.WriteLine("(Alias, Description, RequiredEffortTime, Deliverables, Remarks, EngineerId)");
                                 taskUpdate = new()
                                 {
                                     Id = GetIntInput("Enter ID: "),
-                                    Alias = Console.ReadLine(),
                                     Description = Console.ReadLine(),
-                                    RequiredEffortTime = TimeSpan.FromHours(GetDoubleInput("Enter RequiredEffortTime (in hours): ")),
-                                    Copmlexity = (BO.EngineerExperience)GetIntInput("Enter Complexity: "),
+                                    Alias = Console.ReadLine(),
+                                    CreatedAtDate = null,
+                                    Status = null,
+                                    Dependencies = null,
+                                    RequiredEffortTime = null,
                                     StartDate = null,
-                                    ScheduledDate = null,
-                                    CompleteDate = GetDateTimeInput("Enter CompleteDate: "),
+                                    ScheduledDate = GetDateTimeInput("Enter ScheduledDate: "),
+                                    ForecastDate = null,
+                                    CompleteDate = null,
                                     Deliverables = Console.ReadLine(),
                                     Remarks = Console.ReadLine(),
-                                    Engineer = new BO.EngineerInTask { Id = GetIntInput("Enter EngineerId and Engineer name: "), Name = Console.ReadLine() }
+                                    Engineer = new BO.EngineerInTask { Id = GetIntInput("Enter EngineerId and Engineer name: "), Name = Console.ReadLine() },
+                                    Copmlexity = (BO.EngineerExperience)GetIntInput("Enter Complexity: "),
                                 };
                             }
                             s_bl.Task!.Update(taskUpdate);
@@ -343,14 +381,14 @@ namespace BlTest
                             break;
                         case 3:
                             Console.WriteLine("הכנס תאריך לתחילת הפרויקט");
-                            DateTime startProject =  GetDateTimeInput("הכנס תאריך לתחילת הפרויקט");
+                            DateTime startProject = GetDateTimeInput("הכנס תאריך לתחילת הפרויקט");
                             Factory.Get().UpdateProjectSchedule(startProject);
                             break;
                         case 4:
                             {
                                 Console.Write("Would you like to create Initial data? (Y/N)");
-                                string? ans = Console.ReadLine() ?? throw new FormatException("Wrong input");
-                                if (ans == "Y" || ans == "y")
+                                string ans = GetStringInputWithYNValidation("Invalid choice. Please enter 'Y' or 'N'.");
+                                if (ans == "Y")
                                 {
                                     s_bl.Reset();
                                     DalTest.Initialization.Do();

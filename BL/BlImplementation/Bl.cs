@@ -1,4 +1,6 @@
 ﻿using BlApi;
+using System;
+using System.Xml.Linq;
 
 namespace BlImplementation
 {
@@ -10,11 +12,6 @@ namespace BlImplementation
         // Exposes an instance of TaskImplementation through the ITask interface.
         public ITask Task => new TaskImplementation();
 
-        // Action to update the project start date.
-        public DateTime? StartProject { get; set; } = null;
-
-        // Action to retrieve the project end date.
-        public DateTime? EndProject { get; set; } = null;
 
         /// <summary>
         /// Action to delete entity data from the files.
@@ -25,65 +22,74 @@ namespace BlImplementation
             DalApi.Factory.Get.Reset();
         }
 
+        public DateTime? ReturnStartProject()
+        {
+            return DalApi.Factory.Get.ReturnStartProject();
+        }
+
+        public void UpdateStartProject(DateTime date)
+        {
+            DalApi.Factory.Get.UpdateStartProject(date);
+        }
+
         /// <summary>
         /// Updates the project schedule based on the planned start date.
         /// </summary>
-        /// <param name="plannedStartDate">The planned start date for the project.</param>
+        /// <param name="plannedStartDate">The planned start date of the project.</param>ד
         public void UpdateProjectSchedule(DateTime plannedStartDate)
         {
-            // Get all tasks from the TaskImplementation.
-            var allTasks = Task.ReadAll();
-            var maxPreviousStartDate = allTasks.Min(task => task.ScheduledDate ?? DateTime.MinValue);
-
-                if (plannedStartDate > maxPreviousStartDate)
-                {
-                    throw new InvalidOperationException($"Planned start date for  at least one task is earlier than the latest start date of its preceding tasks.");
-                }
-
-
-
-
-            // If checks pass, update the planned start date for the project.
-            StartProject = plannedStartDate;
-
-            // Update start dates for tasks.
-            var firstTask = allTasks.FirstOrDefault(task => !task.Dependencies!.Any());
-
-            if (firstTask != null)
+            try
             {
-                // Update the start date of the first task to the planned start date of the project.
-                firstTask.StartDate = plannedStartDate;
-                Task.Update(firstTask);
+                // Set the planned start date of the project
+                //  DateTime StartProject = plannedStartDate;
 
-                // Update start dates for other tasks based on dependencies.
-                foreach (var task in allTasks.Where(t => t != firstTask))
+                // Retrieve all tasks from the TaskImplementation
+                var allTasks = Task.ReadAll();
+
+                // Find the first task that has no dependencies
+                var firstTask = allTasks.FirstOrDefault(task => !task.Dependencies!.Any());
+
+                if (firstTask != null)
                 {
-                    DateTime? maxStartDateOfDependencyTask = null;
-                    BO.Task? taskWithMaxStartDate = null;
+                    // Update the start date of the first task to the planned start date of the project
+                    firstTask.ScheduledDate = plannedStartDate;
+                    Task.Update(firstTask, true);
 
-                    if (task.Dependencies != null && task.Dependencies.Any())
+                    bool hasUnscheduledTasks = true;
+                    while (hasUnscheduledTasks)
                     {
-                        var dependenciesStartDates = task.Dependencies
-                            .Select(dep =>
+                        hasUnscheduledTasks = false;
+                        // Update start dates for other tasks based on dependencies
+                        foreach (var task in allTasks.Where(t => t != firstTask))
+                        {
+                            if (task.ScheduledDate == null)
                             {
-                                var dependencyTask = Task.Read(dep.Id);
-                                if (maxStartDateOfDependencyTask < dependencyTask.StartDate)
+                                hasUnscheduledTasks = true;
+                                BO.Task dependencyTask = new();
+                                var maxStartDateOfDependencyTask = task.Dependencies?.Select(dep =>
                                 {
-                                    maxStartDateOfDependencyTask = dependencyTask.StartDate;
-                                    taskWithMaxStartDate = dependencyTask;
-                                }
-                                return dependencyTask.StartDate;
-                            });
-                    }
+                                    dependencyTask = Task.Read(dep.Id);
+                                    return dependencyTask.ScheduledDate;
+                                }).Max();
 
-                    if (maxStartDateOfDependencyTask != null)
-                    {
-                        // Update the start date of the current task based on dependencies.
-                        task.StartDate = maxStartDateOfDependencyTask.Value.Add(value: (TimeSpan)taskWithMaxStartDate!.RequiredEffortTime!);
-                        Task.Update(task);
+                                // Update the start date of the current task based on dependencies
+                                if (maxStartDateOfDependencyTask != null && dependencyTask != null)
+                                {
+                                    task.ScheduledDate = maxStartDateOfDependencyTask.Value.Add(dependencyTask!.RequiredEffortTime ?? TimeSpan.Zero);
+                                    Task.Update(task, true);
+                                }
+                            }
+                        }
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                throw new BO.BlUnableToUpdateException("Error occurred while updating project schedule", ex);
+            }
+            DalApi.Factory.Get.UpdateStartProject(plannedStartDate);
         }
+
+        
     }
 }

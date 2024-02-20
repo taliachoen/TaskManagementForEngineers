@@ -47,7 +47,7 @@ namespace Dal
         /// <returns></returns>
         public DateTime? ReturnStartProject()
         {
-            return Config.startProject;
+            return Config.startDate;
         }
 
         /// <summary>
@@ -65,7 +65,8 @@ namespace Dal
         /// <param name="value"></param>
         public void UpdateStartProject(DateTime? value)
         {
-            Config.startProject = value;
+            DateTime date = value ?? DateTime.Now;
+            XMLTools.SetStartDate("data-config", "startProject",date);
         }
     }
 }

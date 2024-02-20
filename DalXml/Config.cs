@@ -16,9 +16,12 @@
         /// Gets the next available dependency ID from the XML configuration and increments it. 
         /// </summary>
         internal static int NextDependencyId { get => XMLTools.GetAndIncreaseNextId(s_data_config_xml, "NextDependencyId"); }
-        // The start date of the project. 
-        internal static DateTime? startProject = null;
         // The end date of the project.
         internal static DateTime? endProject = null;
+        // The start date of the project. 
+        internal static DateTime? startDate
+        {
+            get => XMLTools.GetStartDate(s_data_config_xml, "startProject");
+        }
     }
 }

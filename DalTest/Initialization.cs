@@ -45,13 +45,12 @@ public static class Initialization
             TimeSpan requiredEffortTime = TimeSpan.FromDays(s_rand.Next(1, 10));
             /*Updating the end of the task according to the start of the task
             and the estimated time to work on the task and another range of days  by lottery*/
-            DateTime? ScheduledDate = DateTime.Now.AddDays(s_rand.Next(1, 10));
             EngineerExperience complexity = (EngineerExperience)s_rand.Next(1, 4);
             string deliverables = "Deliverables for " + taskAlias;
             string remarks = "Remarks for " + taskAlias;
             Task newTask = new(
                 0, taskAlias, description, createdAtDate, requiredEffortTime,
-                complexity, null, ScheduledDate, 
+                complexity, null, null, 
                 null, deliverables, remarks, engineerId
                 );
 

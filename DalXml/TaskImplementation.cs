@@ -1,5 +1,6 @@
 ﻿using DalApi;
 using DO;
+using System.Data.Common;
 
 namespace Dal
 {
@@ -94,9 +95,15 @@ namespace Dal
         /// <param name="task">The Task entity with updated information.</param>
         public void Update(DO.Task task)
         {
-            // Delete the existing Task with the specified ID and create a new one with the updated information.
-            Delete(task.Id);
-            Create(task);
+            List<DO.Task> listTask = XMLTools.LoadListFromXMLSerializer<DO.Task>(s_tasks);
+            DO.Task? taskToDelete = listTask.FirstOrDefault(taskD => taskD.Id == task.Id) ?? throw new DalDoesNotExistException($"Task with id={task.Id} does not exists");
+            listTask.Remove(taskToDelete);
+            listTask.Add(task);
+            XMLTools.SaveListToXMLSerializer(listTask, s_tasks);
+           
+            //Delete the existing Task with the specified ID and create a new one with the updated information.
+            //Delete(task.Id);
+            //Create(task);
         }
     }
 }
