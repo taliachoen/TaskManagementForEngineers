@@ -1,4 +1,6 @@
-﻿namespace BlApi
+﻿
+
+namespace BlApi
 {
     public interface IBl
     {
@@ -36,5 +38,9 @@
         public DateTime? ReturnStartProject();
         
         public void UpdateStartProject(DateTime date);
+
+        public void InitializeDB();
+
+        public void ResetDB();
     }
 }

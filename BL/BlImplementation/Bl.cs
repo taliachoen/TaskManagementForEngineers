@@ -13,6 +13,8 @@ namespace BlImplementation
         public ITask Task => new TaskImplementation();
 
 
+        public void InitializeDB() => DalTest.Initialization.Do();
+
         /// <summary>
         /// Action to delete entity data from the files.
         /// </summary>
@@ -40,8 +42,6 @@ namespace BlImplementation
         {
             try
             {
-                // Set the planned start date of the project
-                //  DateTime StartProject = plannedStartDate;
 
                 // Retrieve all tasks from the TaskImplementation
                 var allTasks = Task.ReadAll();
@@ -90,6 +90,8 @@ namespace BlImplementation
             DalApi.Factory.Get.UpdateStartProject(plannedStartDate);
         }
 
-        
+        public void ResetDB() => DalTest.Initialization.Reset();
+
+
     }
 }

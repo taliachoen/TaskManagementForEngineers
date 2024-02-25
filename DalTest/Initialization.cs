@@ -132,6 +132,12 @@ public static class Initialization
 
     }
 
+    public static void Reset()
+    {
+        // Calls the Reset method in the data access layer (DAL) to delete entity data.
+        Factory.Get.Reset();
+    }
+
     //Function that checks if the dependency already exists in the inversion
     private static bool IfDependencySame(int randomTaskId1,int randomTaskId2)
     {

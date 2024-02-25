@@ -1,0 +1,16 @@
+﻿<Window x:Class="PL.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PL"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <!-- View list of engineers -->
+        <Button Content="list of engineer" HorizontalAlignment="Left" Margin="200,200,0,0" VerticalAlignment="Top" Click="ViewEngineers_Click"/>
+        <Button Content="Initialization all data" HorizontalAlignment="Left" Margin="400,200,0,0" VerticalAlignment="Top" Click="InitData_Click"/>
+        <Button Content="Button" HorizontalAlignment="Left" Margin="600,200,0,0" VerticalAlignment="Top" Click="ResetData_Click"/>
+
+    </Grid>
+</Window>
