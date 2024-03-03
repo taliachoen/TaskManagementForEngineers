@@ -19,7 +19,7 @@ namespace BlTest
             while (true)
             {
                 Console.Write(message);
-                input = Console.ReadLine()?.Trim().ToUpper();
+                input = Console.ReadLine()?.Trim().ToUpper()!;
 
                 if (input == "Y" || input == "y"|| input == "N" || input =="n")
                 {

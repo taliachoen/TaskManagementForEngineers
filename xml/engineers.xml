@@ -1,44 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfEngineer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Engineer>
-    <Id>342566931</Id>
+    <Id>224864171</Id>
     <Email>MosheMan@gmail.com</Email>
-    <Cost>134</Cost>
+    <Cost>262</Cost>
     <Name>Moshe Man</Name>
-    <Level>Proficient</Level>
+    <Level>Competent</Level>
   </Engineer>
   <Engineer>
-    <Id>212329559</Id>
+    <Id>276231565</Id>
     <Email>AviSegal@gmail.com</Email>
-    <Cost>137</Cost>
+    <Cost>256</Cost>
     <Name>Avi Segal</Name>
     <Level>AdvanceedBeginner</Level>
   </Engineer>
   <Engineer>
-    <Id>332716558</Id>
+    <Id>258605127</Id>
     <Email>YeodaShpiler@gmail.com</Email>
-    <Cost>362</Cost>
+    <Cost>490</Cost>
     <Name>Yeoda Shpiler</Name>
-    <Level>Proficient</Level>
+    <Level>Competent</Level>
   </Engineer>
   <Engineer>
-    <Id>330497135</Id>
+    <Id>381233918</Id>
     <Email>EliezerDisler@gmail.com</Email>
-    <Cost>151</Cost>
+    <Cost>108</Cost>
     <Name>Eliezer Disler</Name>
     <Level>Proficient</Level>
   </Engineer>
   <Engineer>
-    <Id>236613603</Id>
+    <Id>363009606</Id>
     <Email>ChaimSalomon@gmail.com</Email>
-    <Cost>345</Cost>
+    <Cost>479</Cost>
+    <Name>Chaim Salomon</Name>
+    <Level>Competent</Level>
+  </Engineer>
+  <Engineer>
+    <Id>251196716</Id>
+    <Email>IsraelVeber@gmail.com</Email>
+    <Cost>319</Cost>
+    <Name>Israel Veber</Name>
+    <Level>Proficient</Level>
+  </Engineer>
+  <Engineer>
+    <Id>391327928</Id>
+    <Email>MosheMan@gmail.com</Email>
+    <Cost>223</Cost>
+    <Name>Moshe Man</Name>
+    <Level>Competent</Level>
+  </Engineer>
+  <Engineer>
+    <Id>396452969</Id>
+    <Email>AviSegal@gmail.com</Email>
+    <Cost>105</Cost>
+    <Name>Avi Segal</Name>
+    <Level>Competent</Level>
+  </Engineer>
+  <Engineer>
+    <Id>292184957</Id>
+    <Email>YeodaShpiler@gmail.com</Email>
+    <Cost>159</Cost>
+    <Name>Yeoda Shpiler</Name>
+    <Level>Proficient</Level>
+  </Engineer>
+  <Engineer>
+    <Id>205428053</Id>
+    <Email>EliezerDisler@gmail.com</Email>
+    <Cost>469</Cost>
+    <Name>Eliezer Disler</Name>
+    <Level>AdvanceedBeginner</Level>
+  </Engineer>
+  <Engineer>
+    <Id>211601552</Id>
+    <Email>ChaimSalomon@gmail.com</Email>
+    <Cost>160</Cost>
+    <Name>Chaim Salomon</Name>
+    <Level>Competent</Level>
+  </Engineer>
+  <Engineer>
+    <Id>370563248</Id>
+    <Email>IsraelVeber@gmail.com</Email>
+    <Cost>372</Cost>
+    <Name>Israel Veber</Name>
+    <Level>Proficient</Level>
+  </Engineer>
+  <Engineer>
+    <Id>384329986</Id>
+    <Email>MosheMan@gmail.com</Email>
+    <Cost>309</Cost>
+    <Name>Moshe Man</Name>
+    <Level>Competent</Level>
+  </Engineer>
+  <Engineer>
+    <Id>374028799</Id>
+    <Email>AviSegal@gmail.com</Email>
+    <Cost>295</Cost>
+    <Name>Avi Segal</Name>
+    <Level>AdvanceedBeginner</Level>
+  </Engineer>
+  <Engineer>
+    <Id>386728140</Id>
+    <Email>YeodaShpiler@gmail.com</Email>
+    <Cost>390</Cost>
+    <Name>Yeoda Shpiler</Name>
+    <Level>Competent</Level>
+  </Engineer>
+  <Engineer>
+    <Id>303718501</Id>
+    <Email>EliezerDisler@gmail.com</Email>
+    <Cost>454</Cost>
+    <Name>Eliezer Disler</Name>
+    <Level>Competent</Level>
+  </Engineer>
+  <Engineer>
+    <Id>386659728</Id>
+    <Email>ChaimSalomon@gmail.com</Email>
+    <Cost>431</Cost>
     <Name>Chaim Salomon</Name>
     <Level>Proficient</Level>
   </Engineer>
   <Engineer>
-    <Id>273957497</Id>
+    <Id>306051231</Id>
     <Email>IsraelVeber@gmail.com</Email>
-    <Cost>109</Cost>
+    <Cost>247</Cost>
+    <Name>Israel Veber</Name>
+    <Level>AdvanceedBeginner</Level>
+  </Engineer>
+  <Engineer>
+    <Id>236984537</Id>
+    <Email>MosheMan@gmail.com</Email>
+    <Cost>137</Cost>
+    <Name>Moshe Man</Name>
+    <Level>Proficient</Level>
+  </Engineer>
+  <Engineer>
+    <Id>325345611</Id>
+    <Email>AviSegal@gmail.com</Email>
+    <Cost>153</Cost>
+    <Name>Avi Segal</Name>
+    <Level>Proficient</Level>
+  </Engineer>
+  <Engineer>
+    <Id>280605864</Id>
+    <Email>YeodaShpiler@gmail.com</Email>
+    <Cost>343</Cost>
+    <Name>Yeoda Shpiler</Name>
+    <Level>Competent</Level>
+  </Engineer>
+  <Engineer>
+    <Id>266209777</Id>
+    <Email>EliezerDisler@gmail.com</Email>
+    <Cost>316</Cost>
+    <Name>Eliezer Disler</Name>
+    <Level>Competent</Level>
+  </Engineer>
+  <Engineer>
+    <Id>330138367</Id>
+    <Email>ChaimSalomon@gmail.com</Email>
+    <Cost>480</Cost>
+    <Name>Chaim Salomon</Name>
+    <Level>Competent</Level>
+  </Engineer>
+  <Engineer>
+    <Id>380981692</Id>
+    <Email>IsraelVeber@gmail.com</Email>
+    <Cost>433</Cost>
     <Name>Israel Veber</Name>
     <Level>Competent</Level>
   </Engineer>

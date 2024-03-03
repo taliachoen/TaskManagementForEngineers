@@ -5,7 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Engineer"
         mc:Ignorable="d"
-        Title="EngineerListWindow" Height="640" Width="800">
+        Title="EngineerListWindow" Height="640" Width="800"
+        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
+    
+   
+
     <Grid>
         <!-- External Grid -->
         <Grid.RowDefinitions>
@@ -24,14 +28,14 @@
             <!-- Left side: Label -->
             <Label Grid.Column="0" Content="filter by level" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,50,0"/>
             <!-- Right side: Combo Box -->
-            <ComboBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1"  >
-                <!-- Add options here -->
-            </ComboBox>
+            <ComboBox SelectionChanged="ExperianceSelector_SelectionChanged" SelectedValue="{Binding Experience, Mode=TwoWay}" ItemsSource="{Binding Source={StaticResource ExperienceCollectionKey}}"
+              Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+
         </Grid>
 
         <!-- ListView -->
-        <ListView Grid.Row="1">
-            <ListView Height="100" Width="100">
+        <ListView Grid.Row="1" >
+            <ListView Margin="5" Grid.Row="1" ItemsSource="{Binding EngineerList}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn/>

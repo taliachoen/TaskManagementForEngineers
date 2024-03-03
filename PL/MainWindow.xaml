@@ -10,7 +10,7 @@
         <!-- View list of engineers -->
         <Button Content="list of engineer" HorizontalAlignment="Left" Margin="200,200,0,0" VerticalAlignment="Top" Click="ViewEngineers_Click"/>
         <Button Content="Initialization all data" HorizontalAlignment="Left" Margin="400,200,0,0" VerticalAlignment="Top" Click="InitData_Click"/>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="600,200,0,0" VerticalAlignment="Top" Click="ResetData_Click"/>
+        <Button Content="reset" HorizontalAlignment="Left" Margin="600,200,0,0" VerticalAlignment="Top" Click="ResetData_Click"/>
 
     </Grid>
 </Window>
