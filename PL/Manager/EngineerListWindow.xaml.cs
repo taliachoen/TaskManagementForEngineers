@@ -26,38 +26,47 @@ namespace PL.Engineer
             InitializeComponent();
             EngineerList = s_bl?.Engineer.ReadAll()!;
         }
+
         public BO.EngineerExperience Experience { get; set; } = BO.EngineerExperience.All;
-
-        private void AddItemEngineerButton_Click(object sender, RoutedEventArgs e)
-        {
-            // פתיחת חלון חדש (לדוגמה, אפשר להשתמש בתיבת דו-שיח פשוטה)
-            AddEngineerWindow addItemWindow = new();
-            addItemWindow.ShowDialog();
-            // כאן תוכל לטפל במידע שהוסף לרשימה או לעשות כל פעולה נדרשת לאחר סגירת החלון החדש
-        }
-
-        private void ExperianceSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            EngineerList = (Experience == BO.EngineerExperience.All) ?
-                s_bl?.Engineer.ReadAll()! : s_bl?.Engineer.ReadAll(item => item.Level == Experience)!;
-        }
-
-
         public IEnumerable<BO.Engineer> EngineerList
         {
             get { return (IEnumerable<BO.Engineer>)GetValue(EngineerProperty); }
             set { SetValue(EngineerProperty, value); }
         }
-
+       
         public static readonly DependencyProperty EngineerProperty =
             DependencyProperty.Register("EngineerList",
                 typeof(IEnumerable<BO.Engineer>),
                 typeof(EngineerListWindow),
                 new PropertyMetadata(null));
 
-       
 
+        private void AddItemEngineerButton_Click(object sender, RoutedEventArgs e)
+        {
+            EngineerWindow engineerWindow = new();
+            engineerWindow.ShowDialog();
+        }
 
+        private void ExperienceSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            EngineerList = (Experience == BO.EngineerExperience.All) ?
+              s_bl?.Engineer.ReadAll()! : s_bl?.Engineer.GetEngineersByLevel((int)Experience)!;
+        }
+
+        private void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if ((sender as ListView)!.SelectedItem is BO.Engineer selectedEngineer)
+            {
+                EngineerWindow engineerWindow = new(selectedEngineer.Id);
+                engineerWindow.ShowDialog();
+            }
+        }
+
+        private void EngineerWindow_Closed(object sender, EventArgs e)
+        {
+            // כאשר החלון נסגר, נעדכן את הרשימה בחלון תצוגת הרשימה
+            EngineerList = s_bl?.Engineer.ReadAll()!;
+        }
     }
 
 }

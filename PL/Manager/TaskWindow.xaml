@@ -1,0 +1,112 @@
+﻿<Window x:Class="PL.Manager.TaskWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PL.Manager"
+        mc:Ignorable="d"
+        Title="TaskWindow" Height="700" Width="800"
+        DataContext="{Binding CurrentTask, RelativeSource={RelativeSource Self}, Mode=TwoWay}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="task" Grid.Row="0" HorizontalAlignment="Left" FontSize="30" Margin="350,0,0,0"/>
+
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="2*"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Content="Id:" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,20,300,0"/>
+            <TextBox Text="{Binding Id, Mode=OneTime, NotifyOnValidationError=true,  ValidatesOnExceptions=true}"  Grid.Row="0" Grid.Column="0" Margin="125,20,125,20" Width="150" Height="30"/>
+
+            <Label Content="Description:" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,20,300,0"/>
+            <TextBox Text="{Binding Description, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Row="1" Grid.Column="0" Margin="125,20,125,20" Width="150" Height="30"/>
+
+            <Label Content="Alias:" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,20,300,0"/>
+            <TextBox Text="{Binding Alias, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Row="2" Grid.Column="0" Margin="125,20,125,20" Width="150" Height="30"/>
+
+            <Label Content="Created At:" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,20,300,0"/>
+            <TextBox Text="{Binding CreatedAtDate, StringFormat=\{0:MM/dd/yyyy\}, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}"  Grid.Row="3" Grid.Column="0" Margin="125,20,125,20" Width="150" Height="30"/>
+
+            <Label Content="Status:" Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,20,300,0"/>
+            <ComboBox  ItemsSource="{Binding Source={StaticResource StatusCollectionKey}}" 
+                      SelectedValue="{Binding Status, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}"
+                      Grid.Row="4" Grid.Column="0" Margin="125,20,125,20" Width="150" Height="30"/>
+
+            <Label Content="Effort Time:" Grid.Row="5" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,20,300,0"/>
+            <TextBox Text="{Binding RequiredEffortTime, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" IsReadOnly="True"  Grid.Row="5" Grid.Column="0" Margin="125,20,125,20" Width="150" Height="30"/>
+
+            <Label Content="Complexity:" Grid.Row="6" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,20,300,0"/>
+            <ComboBox ItemsSource="{Binding Source={StaticResource ExperienceCollectionKey}}" 
+                      SelectedValue="{Binding Copmlexity, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}"
+                      Grid.Row="6" Grid.Column="0" Margin="125,20,125,20" Width="150" Height="30"/>
+
+            <Label Content="Start Date:" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,20,300,0"/>
+            <TextBox Text="{Binding StartDate, StringFormat=\{0:MM/dd/yyyy\}, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Row="0" Grid.Column="1" Margin="125,20,125,20" Width="150" Height="30"/>
+
+            <Label Content="Scheduled Date:" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,20,300,0"/>
+            <TextBox Text="{Binding ScheduledDate, StringFormat=\{0:MM/dd/yyyy\}, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Row="1" Grid.Column="1" Margin="125,20,125,20" Width="150" Height="30"/>
+
+            <Label Content="Forecast Date:" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,20,300,0"/>
+            <TextBox Text="{Binding ForecastDate, StringFormat=\{0:MM/dd/yyyy\}, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Row="2" Grid.Column="1" Margin="125,20,125,20" Width="150" Height="30"/>
+
+            <Label Content="Complete Date:" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,20,300,0"/>
+            <TextBox Text="{Binding CompleteDate, StringFormat=\{0:MM/dd/yyyy\}, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}"  Grid.Row="3" Grid.Column="1" Margin="125,20,125,20" Width="150" Height="30"/>
+
+            <Label Content="Deliverables:" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,20,300,0"/>
+            <TextBox Text="{Binding Deliverables, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Row="4" Grid.Column="1" Margin="125,20,125,20" Width="150" Height="30"/>
+
+            <Label Content="Remarks:" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,20,300,0"/>
+            <TextBox Text="{Binding Remarks, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Row="5" Grid.Column="1" Margin="125,20,125,20" Width="150" Height="30"/>
+
+            <Label Content="EngineerInTask:" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,20,300,0"/>
+            <TextBox Text="{Binding Engineer.Name, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Row="6" Grid.Column="1" Margin="125,20,125,20" Width="150" Height="30"/>
+
+            <Label Content="Dependencies:" Grid.Row="7" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,20,300,0"/>
+            <Label Content="  ID           Description             Alias       Status" Grid.Row="7" Margin="125,15,305,-10" FontWeight="Bold" Grid.ColumnSpan="2" />
+            <ListBox ItemsSource="{Binding Dependencies}" Grid.Row="7" Margin="125,40,10,15" Grid.ColumnSpan="2">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{Binding Id}" Margin="7"/>
+                            <TextBlock Grid.Column="1" Text="{Binding Description}" Margin="7"/>
+                            <TextBlock Grid.Column="2" Text="{Binding Alias}" Margin="7"/>
+                            <TextBlock Grid.Column="3" Text="{Binding Status}" Margin="7"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+
+
+        </Grid>
+
+        <Button  Content="{Binding Id, Mode=OneTime, Converter={StaticResource ConverIdToContentKey}}" 
+                 Grid.Row="2" HorizontalAlignment="Left" Height="30" Width="100" Margin="350,0,0,0" Click="UpdatePropertyValue"/>
+
+
+    </Grid>
+</Window>

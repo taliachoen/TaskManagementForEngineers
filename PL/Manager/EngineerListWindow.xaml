@@ -7,45 +7,36 @@
         mc:Ignorable="d"
         Title="EngineerListWindow" Height="640" Width="800"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
-    
-   
-
     <Grid>
-        <!-- External Grid -->
         <Grid.RowDefinitions>
-            <RowDefinition Height="40*"/>
-            <RowDefinition Height="500*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!--Internal, Upper Grid-->
-        <Grid HorizontalAlignment="Stretch" Height="auto" Grid.Row="0" VerticalAlignment="Stretch" Width="auto">
+        <Grid HorizontalAlignment="Stretch" Height="auto" Grid.Row="0" VerticalAlignment="Center" Width="auto">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Left side: Label -->
-            <Label Grid.Column="0" Content="filter by level" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,50,0"/>
-            <!-- Right side: Combo Box -->
-            <ComboBox SelectionChanged="ExperianceSelector_SelectionChanged" SelectedValue="{Binding Experience, Mode=TwoWay}" ItemsSource="{Binding Source={StaticResource ExperienceCollectionKey}}"
-              Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <Label Grid.Column="0" Content="filter by level" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"/>
+            <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" 
+          SelectedValue="{Binding Experience, Mode=TwoWay}" ItemsSource="{Binding Source={StaticResource ExperienceCollectionKey}}" SelectionChanged="ExperienceSelector_SelectionChanged"/>
+
 
         </Grid>
-
-        <!-- ListView -->
         <ListView Grid.Row="1" >
-            <ListView Margin="5" Grid.Row="1" ItemsSource="{Binding EngineerList}">
+            <ListView Margin="5" Grid.Row="1" ItemsSource="{Binding EngineerList}" 
+                      PreviewMouseDoubleClick="ListView_MouseDoubleClick">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn/>
                     </GridView>
                 </ListView.View>
             </ListView>
-            <!-- Add list items here -->
         </ListView>
 
-        <!-- Button -->
-        <Button Content="Add" Grid.Row="2" HorizontalAlignment="Center" Height="50" Width="100"/>
+        <Button Content="Add new engineer" Grid.Row="2" HorizontalAlignment="Center" Height="50" Width="100" Click="AddItemEngineerButton_Click" />
     </Grid>
 </Window>

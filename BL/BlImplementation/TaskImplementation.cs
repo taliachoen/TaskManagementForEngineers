@@ -7,6 +7,9 @@ namespace BlImplementation
     {
         private readonly DalApi.IDal dal = DalApi.Factory.Get;
 
+        private readonly IBl _bl;
+        internal TaskImplementation(IBl bl) => _bl = bl;
+
         /// <summary>
         /// Validates the data of a task.
         /// </summary>
@@ -267,7 +270,7 @@ namespace BlImplementation
                     CreatedAtDate = task!.CreatedAtDate,
                     RequiredEffortTime = newTask.RequiredEffortTime,
                     Copmlexity = (DO.EngineerExperience?)newTask.Copmlexity,
-                    StartDate = null,
+                    StartDate = _bl.Clock,
                     ScheduledDate = null,
                     CompleteDate = null,
                     Deliverables = newTask.Deliverables,
@@ -482,5 +485,88 @@ namespace BlImplementation
                 throw new BO.BlUnableToUpdateException($"Error occurred while updating or adding scheduled start date for task with ID={taskId}.", ex);
             }
         }
+
+        /// <summary>
+        /// Retrieves engineers based on their experience level.
+        /// </summary>
+        /// <param name="level">The experience level to filter by.</param>
+        /// <returns>A collection of task with the specified Copmlexity.</returns>
+        public IEnumerable<BO.Task> GeTaskByCopmlexity(int copmlexity)
+        {
+            return dal.Task.ReadAll()
+                .Where(e => (int?)e?.Copmlexity == copmlexity)
+                .Select(doTask => new BO.Task
+                {
+                    Id = doTask!.Id!,
+                    Description = doTask.Description,
+                    Alias = doTask.Alias,
+                    CreatedAtDate = doTask.CreatedAtDate,
+                    Status = TipeOfStatus(doTask.Id),
+                    Dependencies = Dependencies(doTask.Id),
+                    RequiredEffortTime = doTask.RequiredEffortTime,
+                    StartDate = doTask.StartDate,
+                    ScheduledDate = doTask.ScheduledDate,
+                    ForecastDate = ForecastDate(doTask.Id),
+                    CompleteDate = doTask.CompleteDate,
+                    Deliverables = doTask.Deliverables,
+                    Remarks = doTask.Remarks,
+                    Engineer = EngineerInTask(doTask.Id),
+                    Copmlexity = (BO.EngineerExperience?)doTask.Copmlexity
+                });
+        }
+
+        /// <summary>
+        /// Filter by status
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public IEnumerable<BO.Task> GeTaskByStatus(int status)
+        {
+            return dal.Task.ReadAll()
+                .Where(doTask => TipeOfStatus(doTask!.Id) == (BO.Status)status)
+                .Select(doTask => new BO.Task
+                {
+                    Id = doTask!.Id!,
+                    Description = doTask.Description,
+                    Alias = doTask.Alias,
+                    CreatedAtDate = doTask.CreatedAtDate,
+                    Status = TipeOfStatus(doTask.Id),
+                    Dependencies = Dependencies(doTask.Id),
+                    RequiredEffortTime = doTask.RequiredEffortTime,
+                    StartDate = doTask.StartDate,
+                    ScheduledDate = doTask.ScheduledDate,
+                    ForecastDate = ForecastDate(doTask.Id),
+                    CompleteDate = doTask.CompleteDate,
+                    Deliverables = doTask.Deliverables,
+                    Remarks = doTask.Remarks,
+                    Engineer = EngineerInTask(doTask.Id),
+                    Copmlexity = (BO.EngineerExperience?)doTask.Copmlexity
+                });
+        }
+
+        public IEnumerable<BO.Task> FilterTasksById(int taskId)
+        {
+            return dal.Task.ReadAll()
+                .Where(doTask => doTask!.EngineerId == taskId)
+                .Select(doTask => new BO.Task
+                {
+                    Id = doTask!.Id!,
+                    Description = doTask.Description,
+                    Alias = doTask.Alias,
+                    CreatedAtDate = doTask.CreatedAtDate,
+                    Status = TipeOfStatus(doTask.Id),
+                    Dependencies = Dependencies(doTask.Id),
+                    RequiredEffortTime = doTask.RequiredEffortTime,
+                    StartDate = doTask.StartDate,
+                    ScheduledDate = doTask.ScheduledDate,
+                    ForecastDate = ForecastDate(doTask.Id),
+                    CompleteDate = doTask.CompleteDate,
+                    Deliverables = doTask.Deliverables,
+                    Remarks = doTask.Remarks,
+                    Engineer = EngineerInTask(doTask.Id),
+                    Copmlexity = (BO.EngineerExperience?)doTask.Copmlexity
+                });
+        }
+
     }
 }

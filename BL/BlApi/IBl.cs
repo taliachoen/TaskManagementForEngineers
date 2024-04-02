@@ -42,5 +42,14 @@ namespace BlApi
         public void InitializeDB();
 
         public void ResetDB();
+
+        #region System Clock Management
+
+        public DateTime Clock { get; }
+        public void AdvanceDay(int days);
+        public void AdvanceHour(int hours);
+        public void InitializeTime();
+
+        #endregion
     }
 }

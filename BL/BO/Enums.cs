@@ -9,7 +9,8 @@ public enum Status {
   Unscheduled,
   Scheduled,
   OnTrack,
-  Done
+  Done,
+  All
 };
 /// <summary>
 /// Represents the experience levels of an engineer.

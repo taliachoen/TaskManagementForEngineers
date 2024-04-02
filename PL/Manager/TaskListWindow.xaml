@@ -1,0 +1,71 @@
+﻿<Window x:Class="PL.Manager.TaskListWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PL.Manager"
+        mc:Ignorable="d"
+        Title="TaskListWindow" Height="450" Width="800"  
+        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid HorizontalAlignment="Stretch" Height="auto" Grid.Row="0" VerticalAlignment="Center" Width="auto">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Column="0" Content="filter by level"  HorizontalAlignment="Left" Margin="5,0,0,0" />
+            <ComboBox Grid.Column="0"  VerticalAlignment="Top" Width="100px" HorizontalAlignment="Center" Margin="15,5,5,5"
+                      SelectedValue="{Binding Experience, Mode=TwoWay}" ItemsSource="{Binding Source={StaticResource ExperienceCollectionKey}}" SelectionChanged="ExperienceSelector_SelectionChanged"/>
+
+            <Label Grid.Column="1" Content="filter by engineer id"  HorizontalAlignment="Left"  />
+            <TextBox x:Name="EngineerIdFilterTextBox" Grid.Column="1" VerticalAlignment="Top" Width="100px" HorizontalAlignment="Center" Margin="65,5,5,5"
+         Text="{Binding EngineerIdFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <Label Grid.Column="2" Content="Filter by Status" HorizontalAlignment="Left" />
+            <ComboBox Grid.Column="2" VerticalAlignment="Top" Width="100px" HorizontalAlignment="Center" Margin="15,5,5,5"
+              SelectedValue="{Binding Status, Mode=TwoWay}" ItemsSource="{Binding Source={StaticResource StatusCollectionKey}}" SelectionChanged="StatusSelector_SelectionChanged"/>
+
+        </Grid>
+
+        <ListView Grid.Row="1" Margin="5" ItemsSource="{Binding TaskList}" 
+          PreviewMouseDoubleClick="ListView_MouseDoubleClick">
+            <ListView.View>
+                <GridView AllowsColumnReorder="True">
+                    <GridView.ColumnHeaderContainerStyle>
+                        <Style TargetType="{x:Type GridViewColumnHeader}">
+                            <Setter Property="Background" Value="#FFD3D3D3"/>
+                            <Setter Property="BorderBrush" Value="Black"/>
+                            <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                            <Setter Property="Padding" Value="6"/>
+                        </Style>
+                    </GridView.ColumnHeaderContainerStyle>
+                    <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Id}"/>
+                    <GridViewColumn Header="Description" DisplayMemberBinding="{Binding Description}"/>
+                    <GridViewColumn Header="Alias" DisplayMemberBinding="{Binding Alias}"/>
+                    <GridViewColumn Header="Created At" DisplayMemberBinding="{Binding CreatedAtDate}"/>
+                    <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Status}"/>
+                    <GridViewColumn Header="Dependencies" DisplayMemberBinding="{Binding Dependencies}"/>
+                    <GridViewColumn Header="Effort Time" DisplayMemberBinding="{Binding RequiredEffortTime}"/>
+                    <GridViewColumn Header="Start Date" DisplayMemberBinding="{Binding StartDate}"/>
+                    <GridViewColumn Header="Scheduled Date" DisplayMemberBinding="{Binding ScheduledDate}"/>
+                    <GridViewColumn Header="Forecast Date" DisplayMemberBinding="{Binding ForecastDate}"/>
+                    <GridViewColumn Header="Completion Date" DisplayMemberBinding="{Binding CompleteDate}"/>
+                    <GridViewColumn Header="Deliverables" DisplayMemberBinding="{Binding Deliverables}"/>
+                    <GridViewColumn Header="Remarks" DisplayMemberBinding="{Binding Remarks}"/>
+                    <GridViewColumn Header="Assigned Engineer" DisplayMemberBinding="{Binding Engineer}"/>
+                    <GridViewColumn Header="Complexity" DisplayMemberBinding="{Binding Copmlexity}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <Button Content="Add new task" Grid.Row="2" HorizontalAlignment="Center" Height="50" Width="100" Click="AddTaskButton_Click"/>
+    </Grid>
+</Window>

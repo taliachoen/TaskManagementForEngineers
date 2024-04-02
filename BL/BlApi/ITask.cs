@@ -32,5 +32,22 @@ public interface ITask
     /// </summary>
     /// <param name="taskId">Task's identifier for deletion</param>
     public void Delete(int taskId);
+
+    /// <summary>
+    /// Retrieves engineers based on their experience level.
+    /// </summary>
+    /// <param name="level">The experience level to filter by.</param>
+    /// <returns>A collection of task with the specified Copmlexity.</returns>
+    public IEnumerable<BO.Task> GeTaskByCopmlexity(int copmlexity);
+
+    /// <summary>
+    /// Filter by status
+    /// </summary>
+    /// <param name="status"></param>
+    /// <returns></returns>
+    public IEnumerable<BO.Task> GeTaskByStatus(int status);
+
+    public IEnumerable<BO.Task> FilterTasksById(int taskId);
+
+
 }
-                               

@@ -10,8 +10,10 @@ namespace BlImplementation
         public IEngineer Engineer => new EngineerImplementation();
 
         // Exposes an instance of TaskImplementation through the ITask interface.
-        public ITask Task => new TaskImplementation();
+        public ITask Task => new TaskImplementation(this);
 
+        private static DateTime s_Clock = DateTime.Now;
+        public DateTime Clock { get { return s_Clock; } private set { s_Clock = value; } }
 
         public void InitializeDB() => DalTest.Initialization.Do();
 
@@ -92,6 +94,19 @@ namespace BlImplementation
 
         public void ResetDB() => DalTest.Initialization.Reset();
 
+        public void AdvanceDay(int days)
+        {
+            s_Clock = s_Clock.AddDays(days);
+        }
 
+        public void AdvanceHour(int hours)
+        {
+            s_Clock = s_Clock.AddHours(hours);
+        }
+
+        public void InitializeTime()
+        {
+            s_Clock = DateTime.Now.Date;
+        }
     }
 }
