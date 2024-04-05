@@ -39,4 +39,12 @@ public interface IEngineer
     /// </summary>
     /// <param name="updatedEngineer">Engineer object with updated data</param>
     public void Update(BO.Engineer updatedEngineer);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="taskId"></param>
+    /// <param name="engineerId"></param>
+    public void UpdateEngineerTask(int taskId, int engineerId);
+
 }

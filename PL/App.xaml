@@ -7,5 +7,7 @@
         <local:ExperienceCollection x:Key="ExperienceCollectionKey" />
         <local:StatusCollectionKey x:Key="StatusCollectionKey" />
         <local:ConvertIdToContent x:Key="ConverIdToContentKey" />
+        <!--<local:ConvertStatusToColor x:Key="ConvertStatusToColorKey" />
+        <local:ConvertStatusToForground x:Key="ConvertStatusToForgroundKey" />-->
     </Application.Resources>
 </Application>

@@ -7,7 +7,7 @@ namespace BO;
 /// </summary>
 public enum Status {
   Unscheduled,
-  Scheduled,
+  //Scheduled,
   OnTrack,
   Done,
   All

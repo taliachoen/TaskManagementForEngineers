@@ -36,11 +36,6 @@ namespace PL
             new MainWindow().Show();
         }
 
-        private void EngineerView_Click(object sender, RoutedEventArgs e)
-        {
-            new EnterEngineerWindow().Show();
-        }
-
         private void AdvanceDay_Click(object sender, RoutedEventArgs e)
         {
             s_bl.AdvanceDay(1);
@@ -57,6 +52,44 @@ namespace PL
         {
             s_bl.InitializeTime();
             CurrentTime = s_bl.Clock;
+        }
+        private void EngineerView_Click(object sender, RoutedEventArgs e)
+        {
+            // הצגת תיבת הקלט להזנת מספר תעודת זהות של המהנדס
+            string engineerId = Microsoft.VisualBasic.Interaction.InputBox("הזן מספר תעודת זהות של המהנדס:", "מספר תעודת זהות", "");
+
+            // בדיקה אם המספר שהוזן אינו ריק וניתן להמיר אותו למספר שלם
+            if (!string.IsNullOrWhiteSpace(engineerId) && int.TryParse(engineerId, out int Id))
+            {
+                // בדיקה האם המהנדס קיים במערכת
+                try
+                {
+                    //if (string.IsNullOrEmpty(Id))
+                    //    throw new BO.BlInvalidDataException("Alias cannot be null or empty.");
+
+                    var engineerExist = s_bl.Engineer.Read(Id);
+                    if (s_bl.Task.IsCurrentTask(int.Parse(engineerId)))
+                    {
+                        new ShowEngineerTask(int.Parse(engineerId)).ShowDialog();
+                    }
+                    else
+                    {
+                        //רשימת משימות שניתן לבחור מהן משימה
+                        new ListOfTask(int.Parse(engineerId)).ShowDialog();
+                    }
+                }
+                catch
+                {
+                    MessageBox.Show("מספר תעודת הזהות שהוזן אינו קיים במערכת!", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("מספר תעודת זהות שגוי או לא הוזן!", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            //האם יש משימה שהוא עובד עליה כרג
+
+
         }
 
     }

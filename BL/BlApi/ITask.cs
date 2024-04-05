@@ -1,4 +1,6 @@
-﻿namespace BlApi;
+﻿using BO;
+
+namespace BlApi;
 
 public interface ITask
 {
@@ -48,6 +50,16 @@ public interface ITask
     public IEnumerable<BO.Task> GeTaskByStatus(int status);
 
     public IEnumerable<BO.Task> FilterTasksById(int taskId);
+
+    public bool IsCurrentTask(int engineerId);
+
+    public IEnumerable<TaskInList> ReadAllTaskInList(Func<BO.Task, bool>? filter = null);
+
+
+    public IEnumerable<TaskInList> AllTaskForEngineer(BO.EngineerExperience? engineerExperience);
+
+
+    public IEnumerable<TaskInList> AllTaskDependency(int idTask);
 
 
 }

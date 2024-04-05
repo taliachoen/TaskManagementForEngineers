@@ -25,7 +25,7 @@ public class Task
     /// <summary>
     /// Gets or sets the status of the task.
     /// </summary>
-    public Status? Status { get; set; }
+    public Status ?Status { get; set; }
 
     /// <summary>
     /// Gets or sets the list of dependencies for the task.
@@ -75,7 +75,7 @@ public class Task
     /// <summary>
     /// Gets or sets the complexity level of the task.
     /// </summary>
-    public EngineerExperience? Copmlexity { get; set; }
+    public EngineerExperience ?Copmlexity { get; set; }
 
     /// <summary>
     /// Overrides the ToString method to provide a string representation of the object.

@@ -1,4 +1,5 @@
 ﻿using BlApi;
+using BO;
 
 namespace BlImplementation
 {
@@ -48,9 +49,8 @@ namespace BlImplementation
                 return doTask == null
                     ? throw new BO.BlDoesNotExistException("Task ID not found")
                     : (BO.Status)(doTask!.StartDate is null ? 0
-                                    : doTask!.ScheduledDate is null ? 1
-                                    : doTask.CompleteDate is null ? 2
-                                    : 3);
+                                    : doTask.CompleteDate is null ? 1
+                                    : 2);
             }
             catch (Exception ex)
             {
@@ -68,7 +68,7 @@ namespace BlImplementation
         /// If the task has no start date, the scheduled date will be used for the calculation.
         /// Throws a BlDoesNotExistException if the task with the specified ID does not exist or if there is an error during the calculation.
         /// </remarks>
-        private DateTime ?ForecastDate(int taskId)
+        private DateTime? ForecastDate(int taskId)
         {
             try
             {
@@ -81,7 +81,7 @@ namespace BlImplementation
 
                 // Calculate forecast date based on the start date or scheduled date and required effort time
                 DateTime? baseDate = (task.StartDate ?? task.ScheduledDate ?? null);
-                if(baseDate == null)
+                if (baseDate == null)
                     return null;
                 // Add required effort time to the base date
                 DateTime forecastDate = baseDate.Value + (task.RequiredEffortTime ?? TimeSpan.Zero);
@@ -270,7 +270,7 @@ namespace BlImplementation
                     CreatedAtDate = task!.CreatedAtDate,
                     RequiredEffortTime = newTask.RequiredEffortTime,
                     Copmlexity = (DO.EngineerExperience?)newTask.Copmlexity,
-                    StartDate = _bl.Clock,
+                    StartDate = null,
                     ScheduledDate = null,
                     CompleteDate = null,
                     Deliverables = newTask.Deliverables,
@@ -336,7 +336,7 @@ namespace BlImplementation
                             Remarks = task.Remarks,
                             EngineerId = updatedTask?.Engineer?.Id
                         });
-                       
+
                     }
                     // Before creating the schedule
                     else if (Factory.Get().ReturnStartProject() == null)
@@ -358,7 +358,7 @@ namespace BlImplementation
                         });
                     }
                     // After creating the schedule
-                    else if(!DuringScheduled) 
+                    else if (!DuringScheduled)
                     {
                         dal.Task.Update(new DO.Task
                         {
@@ -370,12 +370,12 @@ namespace BlImplementation
                             Copmlexity = (DO.EngineerExperience?)task.Copmlexity,
                             StartDate = task.StartDate,
                             ScheduledDate = task.ScheduledDate,
-                            CompleteDate = task.CompleteDate,
+                            CompleteDate = updatedTask.CompleteDate,
                             Deliverables = updatedTask.Deliverables,
                             Remarks = updatedTask.Remarks,
                             EngineerId = updatedTask?.Engineer?.Id
                         });
-                        UpdateOrAddStartDate(task.Id, task.StartDate);
+                        UpdateOrAddStartDate(task.Id, updatedTask?.StartDate);
                     }
 
                 }
@@ -467,7 +467,7 @@ namespace BlImplementation
                 var taskToUpdate = dal.Task.Read(taskId);
                 if (taskToUpdate != null)
                 {
-                    var task = taskToUpdate! with { ScheduledDate = plannedDate };
+                    var task = taskToUpdate! with { StartDate = plannedDate };
                     dal.Task.Update(task);
                 }
                 else
@@ -568,5 +568,74 @@ namespace BlImplementation
                 });
         }
 
+        /// <summary>
+        /// בדיקה אם יש למהנדס משימה שהוא עובד עליה כרגע 
+        /// </summary>
+        /// <param name="engineerId"></param>
+        /// <returns></returns>
+        /// <exception cref="BO.BlReadImpossibleException"></exception>
+        public bool IsCurrentTask(int engineerId)
+        {
+            try
+            {
+
+                return dal.Task.ReadAll(task => task.EngineerId == engineerId && task.StartDate != null && task.CompleteDate == null).Any();
+            }
+            catch (Exception ex)
+            {
+                throw new BO.BlReadImpossibleException("Error occurred while checking if engineer has current task", ex);
+            }
+        }
+
+        public IEnumerable<TaskInList> AllTaskForEngineer(BO.EngineerExperience? engineerExperience)
+        {
+            // סנן משימות שהן במצב "לא מתוזמנות" ואין להן מהנדס משויך
+            var unscheduledTasks = ReadAll(task =>
+                //task.Engineer?.Id == 0 &&
+                task.Status == Status.Unscheduled &&
+                task.Copmlexity <= engineerExperience);// &&
+            //(task.Dependencies != null ? task.Dependencies.All(subTask => subTask.Status == BO.Status.Done) : true));
+
+            //החזר רשימה של TaskInList מהמשימות שעברו את הסינון
+            return unscheduledTasks.Select(task => new TaskInList
+            {
+                Id = task.Id,
+                Description = task.Description,
+                Alias = task.Alias,
+                Status = (Status)task.Status!
+            });
+
+        }
+
+        public IEnumerable<TaskInList> ReadAllTaskInList(Func<BO.Task, bool>? filter = null)
+        {
+            var allTasks = ReadAll(filter).Select(task => new TaskInList
+            {
+                Id = task.Id,
+                Description = task.Description,
+                Alias = task.Alias,
+                Status = (Status)task.Status!
+            });
+
+            return allTasks;
+
+        }
+
+        public IEnumerable<TaskInList> AllTaskDependency(int idTask)
+        {
+            BO.Task currentTask = Read(idTask); // קריאה לפונקציה Read בקלאס TaskImplementation
+             var v = Dependencies(idTask);
+            var allTasks = ReadAll().Where(task => task.Id != idTask && task.CompleteDate > currentTask.StartDate).Select(task => new TaskInList
+            {
+                Id = task.Id,
+                Description = task.Description,
+                Alias = task.Alias,
+                Status = (Status)task.Status!
+            }).Intersect(v);
+            return allTasks;
+        }
+
+
+            //var allTasks = ReadAll().Where(task => task.Id != idTask && task.CompleteDate > currentTask.StartDate && task.Dependencies?.Where(x=>x.Id != currentTask.Dependencies)).Select(task => new TaskInList
     }
 }

@@ -1,17 +1,8 @@
 ﻿using PL.Engineer;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace PL.Manager
 {
@@ -21,11 +12,11 @@ namespace PL.Manager
     public partial class TaskWindow : Window
     {
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
-    
+
         public TaskWindow(int taskId = 0)
         {
-
             InitializeComponent();
+
             if (taskId == 0)
             {
                 CurrentTask = new BO.Task();
@@ -41,19 +32,6 @@ namespace PL.Manager
                     MessageBox.Show($"Error: {ex.Message}");
                 }
             }
-            Closed += TaskWindow_Closed!;
-
-        }
-
-        private void TaskWindow_Closed(object sender, EventArgs e)
-        {
-            var mainWindow = Application.Current.Windows
-                                            .OfType<TaskListWindow>()
-                                            .FirstOrDefault();
-            if (mainWindow != null)
-            {
-                mainWindow.TaskList = s_bl.Task.ReadAll()!;
-            }
         }
 
         public BO.Task CurrentTask
@@ -68,28 +46,31 @@ namespace PL.Manager
                 typeof(TaskWindow),
                 new PropertyMetadata(null));
 
+
         private void UpdatePropertyValue(object sender, RoutedEventArgs e)
         {
-
             try
             {
-                string? propertyName = ((Button)sender).Content.ToString();
+                string propertyName = ((Button)sender).Content.ToString()!;
 
                 if (propertyName == "Update")
                     s_bl.Task.Update(CurrentTask);
                 else
                     s_bl.Task.Create(CurrentTask);
-                
+
+                Close(); // Close the window after updating or adding a task
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error updating property: {ex.Message}");
             }
         }
+
+        private void AddDependency_Click(object sender, RoutedEventArgs e)
+        {
+            AddDependency addDependencyWindow = new AddDependency(CurrentTask.Id);
+            addDependencyWindow.Show();
+        }
+
     }
-
-
-   
-
 }
-

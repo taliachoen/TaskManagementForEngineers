@@ -39,7 +39,7 @@ namespace BlImplementation
         /// <summary>
         /// Updates the project schedule based on the planned start date.
         /// </summary>
-        /// <param name="plannedStartDate">The planned start date of the project.</param>ד
+        /// <param name="plannedStartDate">The planned start date of the project.</param>
         public void UpdateProjectSchedule(DateTime plannedStartDate)
         {
             try
@@ -56,7 +56,6 @@ namespace BlImplementation
                     // Update the start date of the first task to the planned start date of the project
                     firstTask.ScheduledDate = plannedStartDate;
                     Task.Update(firstTask, true);
-
                     bool hasUnscheduledTasks = true;
                     while (hasUnscheduledTasks)
                     {
@@ -92,6 +91,8 @@ namespace BlImplementation
             DalApi.Factory.Get.UpdateStartProject(plannedStartDate);
         }
 
+
+        
         public void ResetDB() => DalTest.Initialization.Reset();
 
         public void AdvanceDay(int days)

@@ -66,6 +66,13 @@ namespace PL
             // Open a new Engineer List Window
             new TaskListWindow().Show();
         }
-        
+
+
+        private void GanttChart_Click(object sender, RoutedEventArgs e)
+        {
+            // Open the Gantt Chart window
+            new Gantt().Show();
+        }
+
     }
 }

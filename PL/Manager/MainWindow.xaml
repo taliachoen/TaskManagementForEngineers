@@ -18,7 +18,7 @@
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="30px">
             <Button Content="list of engineer" Margin="20" Click="ViewEngineers_Click"/>
             <Button Content="list of task" Margin="20" Click="ViewTasks_Click"/>
-            <Button Content="Gantt chart" Margin="20"/>
+            <Button Content="Gantt chart" Margin="20" Click="GanttChart_Click"/>
         </StackPanel>
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="30px">
