@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Manager"
         mc:Ignorable="d"
-        Title="TaskWindow" Height="700" Width="850"
-        DataContext="{Binding CurrentTask, RelativeSource={RelativeSource Self}, Mode=TwoWay}">
+        Title="TaskWindow" Height="700" Width="850"  Background="#B5D6D9"
+        DataContext="{Binding CurrentTask, RelativeSource={RelativeSource Self}, Mode=TwoWay}" >
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -14,7 +14,7 @@
             <RowDefinition Height="3*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="task" Grid.Row="0" HorizontalAlignment="Left" FontSize="30" Margin="350,0,0,0"/>
+        <TextBlock Text="      task" Grid.Row="0" HorizontalAlignment="Center" FontSize="30" Margin="10,0,0,473"  Grid.RowSpan="2" Width="840" />
 
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
@@ -43,7 +43,7 @@
             <TextBox Text="{Binding Alias, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Row="2" Grid.Column="0" Margin="125,0,125,20" Width="150" Height="30"/>
 
             <Label Content="Created At:" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,300,0"/>
-            <TextBox Text="{Binding CreatedAtDate, StringFormat=\{0:MM/dd/yyyy\}, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}"  Grid.Row="3" Grid.Column="0" Margin="125,0,125,20" Width="150" Height="30"/>
+            <TextBox Text="{Binding CreatedAtDate, StringFormat=\{0:MM/dd/yyyy\}, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" IsReadOnly="True"  Grid.Row="3" Grid.Column="0" Margin="125,0,125,20" Width="150" Height="30"/>
 
             <Label Content="Status:" Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,20,300,0"/>
             <ComboBox  ItemsSource="{Binding Source={StaticResource StatusCollectionKey}}" 
@@ -59,16 +59,16 @@
                       Grid.Row="6" Grid.Column="0" Margin="125,0,125,20" Width="150" Height="30"/>
 
             <Label Content="Start Date:" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,300,0"/>
-            <TextBox Text="{Binding StartDate, StringFormat=\{0:MM/dd/yyyy\}, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Row="0" Grid.Column="1" Margin="125,0,125,20" Width="150" Height="30"/>
+            <TextBox Text="{Binding StartDate, StringFormat=\{0:MM/dd/yyyy\}, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" IsReadOnly="True" Grid.Row="0" Grid.Column="1" Margin="125,0,125,20" Width="150" Height="30"/>
 
             <Label Content="Scheduled Date:" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,20,300,0"/>
-            <TextBox Text="{Binding ScheduledDate, StringFormat=\{0:MM/dd/yyyy\}, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Row="1" Grid.Column="1" Margin="125,20,125,20" Width="150" Height="30"/>
+            <TextBox Text="{Binding ScheduledDate, StringFormat=\{0:MM/dd/yyyy\}, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" IsReadOnly="True" Grid.Row="1" Grid.Column="1" Margin="125,20,125,20" Width="150" Height="30"/>
 
             <Label Content="Forecast Date:" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,20,300,0"/>
-            <TextBox Text="{Binding ForecastDate, StringFormat=\{0:MM/dd/yyyy\}, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Row="2" Grid.Column="1" Margin="125,20,125,20" Width="150" Height="30"/>
+            <TextBox Text="{Binding ForecastDate, StringFormat=\{0:MM/dd/yyyy\}, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" IsReadOnly="True" Grid.Row="2" Grid.Column="1" Margin="125,20,125,20" Width="150" Height="30"/>
 
             <Label Content="Complete Date:" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,20,300,0"/>
-            <TextBox Text="{Binding CompleteDate, StringFormat=\{0:MM/dd/yyyy\}, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}"  Grid.Row="3" Grid.Column="1" Margin="125,20,125,20" Width="150" Height="30"/>
+            <TextBox Text="{Binding CompleteDate, StringFormat=\{0:MM/dd/yyyy\}, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" IsReadOnly="True"  Grid.Row="3" Grid.Column="1" Margin="125,20,125,20" Width="150" Height="30"/>
 
             <Label Content="Deliverables:" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,20,300,0"/>
             <TextBox Text="{Binding Deliverables, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Row="4" Grid.Column="1" Margin="125,20,125,20" Width="150" Height="30"/>
@@ -115,13 +115,9 @@
             </Grid>
 
             <Grid Grid.Column="1">
-                <Button Content=" הוספת תלות" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,15,0" Click="AddDependency_Click"></Button>
-           
-                <Label Content="הכנס מזהה משימה להסרה" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,52,10,0"/>
-                <!--<Button Content="הסר" Height="29" VerticalAlignment="Top" Margin="21,78,201,0" Click="RemoveDependency_Click"></Button>-->
-                <!--<TextBox x:Name="RemoveDependencyIdTextBox" Margin="101,80,24,13" Height="20"/>-->
+                <Button Content=" הוספת תלות" HorizontalAlignment="Center" VerticalAlignment="Top" Click="AddDependency_Click" Margin="0,42,0,0" Height="37" Width="155" Background="CadetBlue"/>
             </Grid>
 
         </Grid>
-        </Grid>
+    </Grid>
 </Window>

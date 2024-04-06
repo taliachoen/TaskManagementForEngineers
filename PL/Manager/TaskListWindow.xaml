@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Manager"
         mc:Ignorable="d"
-        Title="TaskListWindow" Height="450" Width="800"  
+        Title="TaskListWindow" Height="450" Width="800"  Background="#B5D6D9"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
     <Grid>
         <Grid.RowDefinitions>
@@ -66,6 +66,6 @@
             </ListView.View>
         </ListView>
 
-        <Button Content="Add new task" Grid.Row="2" HorizontalAlignment="Center" Height="50" Width="100" Click="AddTaskButton_Click"/>
+        <Button Content="Add new task" Grid.Row="2" HorizontalAlignment="Center" Height="50" Width="100" Background="CadetBlue" Click="AddTaskButton_Click"/>
     </Grid>
 </Window>

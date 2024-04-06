@@ -54,9 +54,10 @@ namespace Dal
         /// Action to update the end date of the project.
         /// </summary>
         /// <param name="value"></param>
-        public void UpdateEndProject(DateTime? value)
+        public void UpdateEndProject(DateTime value)
         {
-            Config.endProject = value;
+           // Config.endProject = value;
+            XMLTools.SetEndDate("data-config", "endProject", value);
         }
 
         /// <summary>

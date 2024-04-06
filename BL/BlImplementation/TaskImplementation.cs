@@ -1,5 +1,6 @@
 ﻿using BlApi;
 using BO;
+using System.ComponentModel.DataAnnotations;
 
 namespace BlImplementation
 {
@@ -349,8 +350,8 @@ namespace BlImplementation
                             CreatedAtDate = updatedTask.CreatedAtDate,
                             RequiredEffortTime = updatedTask.RequiredEffortTime,
                             Copmlexity = (DO.EngineerExperience?)updatedTask.Copmlexity,
-                            StartDate = null,
-                            ScheduledDate = null,
+                            StartDate = task.StartDate,
+                            ScheduledDate = task.ScheduledDate,
                             CompleteDate = updatedTask.CompleteDate,
                             Deliverables = updatedTask.Deliverables,
                             Remarks = updatedTask.Remarks,
@@ -624,7 +625,7 @@ namespace BlImplementation
         public IEnumerable<TaskInList> AllTaskDependency(int idTask)
         {
             BO.Task currentTask = Read(idTask); // קריאה לפונקציה Read בקלאס TaskImplementation
-             var v = Dependencies(idTask);
+            var v = Dependencies(idTask);
             var allTasks = ReadAll().Where(task => task.Id != idTask && task.CompleteDate > currentTask.StartDate).Select(task => new TaskInList
             {
                 Id = task.Id,
@@ -636,6 +637,63 @@ namespace BlImplementation
         }
 
 
-            //var allTasks = ReadAll().Where(task => task.Id != idTask && task.CompleteDate > currentTask.StartDate && task.Dependencies?.Where(x=>x.Id != currentTask.Dependencies)).Select(task => new TaskInList
+
+        public List<BO.TaskScheduleDays> GetAllScheduleTasks()
+        {
+            try
+            {
+                var startProject = dal.ReturnStartProject();
+                if (startProject == null)
+                {
+                    throw new ValidationException("תאריך התחלה לא קיים עדיין");
+                }
+                List<TaskScheduleDays?> result = new();
+
+                foreach (var task in ReadAll())
+                {
+                    try
+                    {
+                        int daysFromProjectStart = (int)((task!.ScheduledDate!.Value - dal.ReturnStartProject()!.Value).TotalDays);
+                        int daysFromProjectEnd = (int)((dal.ReturnEndProject()!.Value.AddDays(50) - (task.StartDate ?? task.ScheduledDate + task.RequiredEffortTime)!.Value).TotalDays);
+                        var taskDays = task.RequiredEffortTime!.Value.Days;
+                        string d = "";
+                        foreach (var dep in dal.Dependency.ReadAll())
+                        {
+                            if (dep?.DependentTask == task.Id)
+                            {
+                                d += dep.DependsOnTask + " , ";
+                            }
+
+                        }
+                        BO.TaskScheduleDays taskSchedule = new()
+                        {
+                            TaskId = task.Id,
+                            DependencyId = d,
+                            TaskName = task.Alias,
+                            DaysFromProjectStart = daysFromProjectStart,
+                            TaskDays = taskDays,
+                            DaysToProjectEnd = daysFromProjectEnd
+                        };
+                        result.Add(taskSchedule);
+                    }
+                    catch (Exception ex)
+                    {
+                        // טיפול בחריגה בתוך הלולאה הפנימית, אם זו נחוצה
+                        // אפשר להדפיס הודעת שגיאה או לבצע פעולות נוספות כרצונך
+                    }
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                // טיפול בחריגה ברמה העליונה, אם זו נחוצה
+                // אפשר להדפיס הודעת שגיאה או לבצע פעולות נוספות כרצונך
+                return new List<BO.TaskScheduleDays>();
+            }
+        }
+
+
+
+        //var allTasks = ReadAll().Where(task => task.Id != idTask && task.CompleteDate > currentTask.StartDate && task.Dependencies?.Where(x=>x.Id != currentTask.Dependencies)).Select(task => new TaskInList
     }
 }

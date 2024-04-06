@@ -62,4 +62,7 @@ public interface ITask
     public IEnumerable<TaskInList> AllTaskDependency(int idTask);
 
 
+    public List<TaskScheduleDays> GetAllScheduleTasks();
+
+
 }
