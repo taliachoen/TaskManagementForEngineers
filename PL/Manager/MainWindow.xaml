@@ -5,26 +5,34 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid VerticalAlignment="Center">
+        Title="MainWindow" Height="550" Width="800" Background="#B5D6D9">
+    <Window.Resources>
+        <!-- Define custom colors -->
+        <SolidColorBrush x:Key="ButtonBackgroundColor" Color="#007ACC"/>
+        <SolidColorBrush x:Key="ButtonForegroundColor" Color="White"/>
+    </Window.Resources>
+    <Grid Background="LightGray" VerticalAlignment="Center">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="2*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Text="MANAGER MENU" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,20,0,10"/>
+        <!-- Header -->
+        <TextBlock Grid.Row="0" Text="MANAGER MENU" FontSize="32" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,20,0,10"/>
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="30px">
-            <Button Content="list of engineer" Margin="20" Click="ViewEngineers_Click"/>
-            <Button Content="list of task" Margin="20" Click="ViewTasks_Click"/>
-            <Button Content="Gantt chart" Margin="20" Click="GanttChart_Click"/>
+        <!-- Buttons Panel 1 -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,30">
+            <Button Content="List of Engineers" Margin="20" Width="200" Height="50" Background="{StaticResource ButtonBackgroundColor}" Foreground="{StaticResource ButtonForegroundColor}" Click="ViewEngineers_Click"/>
+            <Button Content="List of Tasks" Margin="20" Width="200" Height="50" Background="{StaticResource ButtonBackgroundColor}" Foreground="{StaticResource ButtonForegroundColor}" Click="ViewTasks_Click"/>
+            <Button Content="Gantt Chart" Margin="20" Width="200" Height="50" Background="{StaticResource ButtonBackgroundColor}" Foreground="{StaticResource ButtonForegroundColor}" Click="GanttChart_Click"/>
         </StackPanel>
 
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="30px">
-            <Button Content="reset" Margin="20" Click="ResetData_Click"/>
-            <Button Content="Initialization all data" Margin="20" Click="InitData_Click"/>
-            <Button Content="Creating a schedule" Margin="20"  Click="CreatingSchedule_Click"/>
+        <!-- Buttons Panel 2 -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,30">
+            <Button Content="Reset" Margin="20" Width="200" Height="50" Background="{StaticResource ButtonBackgroundColor}" Foreground="{StaticResource ButtonForegroundColor}" Click="ResetData_Click"/>
+            <Button Content="Initialization All Data" Margin="20" Width="200" Height="50" Background="{StaticResource ButtonBackgroundColor}" Foreground="{StaticResource ButtonForegroundColor}" Click="InitData_Click"/>
+            <Button Content="Creating a Schedule" Margin="20" Width="200" Height="50" Background="{StaticResource ButtonBackgroundColor}" Foreground="{StaticResource ButtonForegroundColor}" Click="CreatingSchedule_Click"/>
         </StackPanel>
     </Grid>
 </Window>

@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Engineer"
         mc:Ignorable="d"
-        Title="ListOfTask" Height="450" Width="800"
-        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
-
-    <Grid Background="#f2f2f2">
+        Title="ListOfTask" Height="450" Width="800"  Background="#B5D6D9"
+             DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
+    
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>

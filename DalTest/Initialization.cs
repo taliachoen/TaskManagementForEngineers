@@ -6,6 +6,7 @@ using DO;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Xml.Linq;
 public static class Initialization
@@ -22,12 +23,12 @@ public static class Initialization
         string[] taskAliases =
         {
         "Task1", "Task2", "Task3", "Task4", "Task5",
-        "Task6", "Task7", "Task8", "Task9", "Task10",
-        "Task11", "Task12", "Task13", "Task14", "Task15",
-        "Task16", "Task17", "Task18", "Task19", "Task20",
-        "Task21","Task22","Task23","Task24","Task25","Task26",
-        "Task27","Task28","Task29","Task30","Task31","Task32",
-        "Task33","Task34", "Task35","Task36","Task37","Task38","Task39","Task40"
+        //"Task6", "Task7", "Task8", "Task9", "Task10",
+        //"Task11", "Task12", "Task13", "Task14", "Task15",
+        //"Task16", "Task17", "Task18", "Task19", "Task20",
+        //"Task21","Task22","Task23","Task24","Task25","Task26",
+        //"Task27","Task28","Task29","Task30","Task31","Task32",
+        //"Task33","Task34", "Task35","Task36","Task37","Task38","Task39","Task40"
         };
 
         List<Engineer> engineers = s_dal!.Engineer.ReadAll()!.ToList()!;
@@ -42,7 +43,7 @@ public static class Initialization
             }
             string description = "Description for " + taskAlias;
             DateTime createdAtDate = DateTime.Now;
-            TimeSpan requiredEffortTime = TimeSpan.FromDays(s_rand.Next(1, 10));
+            TimeSpan requiredEffortTime = TimeSpan.FromDays(s_rand.Next(20, 40));
             /*Updating the end of the task according to the start of the task
             and the estimated time to work on the task and another range of days  by lottery*/
             EngineerExperience complexity = (EngineerExperience)s_rand.Next(1, 4);
@@ -94,43 +95,82 @@ public static class Initialization
     /// <summary>
     ///initialization the dependencies 
     /// </summary>
+    //private static void CreateDependencies()
+    //{
+    //    int randomTaskId1;
+    //    int randomTaskId2;
+
+    //    for (int i = 0; i < 4; i++)
+    //    {
+    //        randomTaskId1 = RandomIdTask();
+    //        do
+    //            randomTaskId2 = RandomIdTask();
+    //        while (randomTaskId2 == randomTaskId1 || IfDependencySame(randomTaskId1, randomTaskId2));
+
+    //        Dependency newDependency = new (
+    //            0, randomTaskId1, randomTaskId2
+    //        );
+    //        s_dal!.Dependency.Create(newDependency);
+    //    }
+
+    //    //Added 3 dependencies on one task
+    //    //randomTaskId1 = RandomIdTask();
+    //    //for (int i = 0; i < 3; i++)
+    //    //{
+    //    //    do
+    //    //        randomTaskId2 = RandomIdTask();
+    //    //    while (randomTaskId2 == randomTaskId1 || IfDependencySame(randomTaskId1, randomTaskId2));
+
+    //    //    Dependency newDependency = new(
+    //    //        0, randomTaskId1, randomTaskId2
+    //    //    );
+
+    //    //    s_dal!.Dependency.Create(newDependency);
+    //    //}
+
+    //    //Function to reating 2 tasks with 3 identical dependencies
+    //   // IdentityDependency();
+
+    //}
+
+
+    //private static void CreateDependencies()
+    //{
+    //    int randomTaskId1;
+    //    int randomTaskId2;
+    //    int numTasks = s_dal!.Task.ReadAll().Count(); // קביעת מספר המשימות הקיימות
+
+    //    for (int i = 0; i < 4; i++)
+    //    {
+    //        randomTaskId1 = RandomIdTask() - 1;
+
+    //        // נקבע את המשימה השנייה כך שתלות המשימה הנוכחית תהיה בה
+    //        // התלות האחרונה תהיה עם המשימה הראשונה
+    //        randomTaskId2 = (randomTaskId1 + i + 1) % numTasks;
+
+    //        Dependency newDependency = new(
+    //            0, randomTaskId1, randomTaskId2
+    //        );
+    //        s_dal!.Dependency.Create(newDependency);
+    //    }
+    //}
     private static void CreateDependencies()
     {
-        int randomTaskId1;
-        int randomTaskId2;
+        var allTasks = s_dal!.Task.ReadAll().ToList();
+        int numTasks = allTasks.Count();
 
-        for (int i = 0; i < 40; i++)
+        for (int i = 0; i < numTasks - 1; i++)
         {
-            randomTaskId1 = RandomIdTask();
-            do
-                randomTaskId2 = RandomIdTask();
-            while (randomTaskId2 == randomTaskId1 || IfDependencySame(randomTaskId1, randomTaskId2));
-
-            Dependency newDependency = new (
-                0, randomTaskId1, randomTaskId2
-            );
-            s_dal!.Dependency.Create(newDependency);
-        }
-
-        //Added 3 dependencies on one task
-        randomTaskId1 = RandomIdTask();
-        for (int i = 0; i < 3; i++)
-        {
-            do
-                randomTaskId2 = RandomIdTask();
-            while (randomTaskId2 == randomTaskId1 || IfDependencySame(randomTaskId1, randomTaskId2));
-
             Dependency newDependency = new(
-                0, randomTaskId1, randomTaskId2
+                0,
+                allTasks[i]!.Id,
+                allTasks[i + 1]!.Id
             );
 
-            s_dal!.Dependency.Create(newDependency);
+            s_dal.Dependency.Create(newDependency);
         }
-
-        //Function to reating 2 tasks with 3 identical dependencies
-        IdentityDependency();
-
     }
+
 
     public static void Reset()
     {

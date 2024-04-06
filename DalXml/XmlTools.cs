@@ -127,6 +127,13 @@ static class XMLTools
         root.Element(elemName)?.SetValue(startDate.ToString("yyyy-MM-dd")); // Adjust the date format as needed
         XMLTools.SaveListToXMLElement(root, data_config_xml);
     }
+
+    public static void SetEndDate(string data_config_xml, string elemName, DateTime endDate)
+    {
+        XElement root = XMLTools.LoadListFromXMLElement(data_config_xml);
+        root.Element(elemName)?.SetValue(endDate.ToString("yyyy-MM-dd")); // Adjust the date format as needed
+        XMLTools.SaveListToXMLElement(root, data_config_xml);
+    }
     #endregion
 
 }

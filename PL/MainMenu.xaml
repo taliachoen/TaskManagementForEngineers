@@ -6,20 +6,17 @@
         xmlns:local="clr-namespace:PL"
         mc:Ignorable="d"
         Title="MainMenu" Height="450" Width="800"
+         Background="#B5D6D9"
         DataContext="{Binding RelativeSource={RelativeSource self}}">
 
-    <Grid Background="#f2f2f2">
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="0.2*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
-        <!-- Header Section -->
-        <StackPanel Grid.Row="0" Background="#2196F3" VerticalAlignment="Center">
-            <TextBlock Text="דף כניסה" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Foreground="White" Margin="0,20,0,10"/>
-        </StackPanel>
-
-        <!-- Content Section -->
+        <Grid Grid.Row="0" Background="#6495ED">
+            <TextBlock Grid.Row="0" Text="🏠דף כניסה" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,20,0,10" Foreground="White"/>
+        </Grid>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -27,24 +24,18 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Manager View Button -->
             <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="20">
-                <Button Content="תצוגת מנהל" Click="ManagerView_Click" Margin="5" Padding="10"/>
+                <Button Content="תצוגת מנהל" Click="ManagerView_Click" Margin="5" Background="#007FFF" Foreground="White" FontSize="18" Padding="15,5"/>
             </StackPanel>
-
-            <!-- Time and Advance Buttons -->
-            <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
-                <TextBlock Text="{Binding CurrentTime , Mode=OneWay}" Margin="5" FontSize="18"/>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button Content="+Advance One Day" Click="AdvanceDay_Click" Margin="5" Padding="10"/>
-                    <Button Content="+Advance One Hour" Click="AdvanceHour_Click" Margin="5" Padding="10"/>
-                </StackPanel>
+            <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Width="150px">
+                <TextBlock Text="{Binding CurrentTime , Mode=OneWay}" Margin="5" Width="120px" HorizontalAlignment="Center" Foreground="#007FFF"/>
+                <Button Content="+Advance One Day" Click="AdvanceDay_Click" Margin="5" Background="#007FFF" Foreground="White" FontSize="18" Padding="15,5"/>
+                <Button Content="+Advance One Hour" Click="AdvanceHour_Click" Margin="5" Background="#007FFF" Foreground="White" FontSize="18" Padding="15,5"/>
             </StackPanel>
-
-            <!-- Engineer View Button -->
             <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="20">
-                <Button Content="תצוגת מהנדס" Click="EngineerView_Click" Padding="10"/>
+                <Button Content="תצוגת מהנדס" Click="EngineerView_Click" Margin="5" Background="#007FFF" Foreground="White" FontSize="18" Padding="15,5"/>
             </StackPanel>
         </Grid>
     </Grid>
 </Window>
+

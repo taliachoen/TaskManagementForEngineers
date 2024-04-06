@@ -52,7 +52,7 @@ sealed internal class DalList : IDal
     /// Implementation of update operations of the end and end date of a project
     /// </summary>
     /// <param name="value"></param>
-    public void UpdateEndProject(DateTime? value)
+    public void UpdateEndProject(DateTime value)
     {
         DataSource.Config.endProject = value;
     }
