@@ -8,36 +8,41 @@
         Title="ShowEngineerTask" Height="450" Width="500"
         DataContext="{Binding CurrentEngineerTask, RelativeSource={RelativeSource Self}, Mode=TwoWay}">
 
-    <Grid>
+    <Grid Background="#f2f2f2">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="10*"/>
-            <RowDefinition Height="2*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="Engineer Task Details" FontSize="20" FontWeight="Bold" Margin="10"/>
 
-        <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1" Margin="10">
-            <StackPanel Margin="10">
-                <TextBlock Text="{Binding Alias}" FontSize="16" FontWeight="Bold"/>
+        <!-- Header Section -->
+        <TextBlock Text="Engineer Task Details" FontSize="24" FontWeight="Bold" Margin="10" Grid.Row="0"/>
+
+        <!-- Content Section -->
+        <Border Grid.Row="1" BorderBrush="#333" BorderThickness="1" Margin="10" Padding="10">
+            <StackPanel>
+                <TextBlock Text="{Binding Alias}" FontSize="18" FontWeight="Bold"/>
                 <TextBlock Text="Description:" FontWeight="Bold"/>
-                <TextBox Text="{Binding Description}" Margin="0,5,0,10"/>
+                <TextBox Text="{Binding Description}" Margin="0,5,0,10" BorderThickness="1"/>
                 <TextBlock Text="Status:" FontWeight="Bold"/>
-                <TextBox Text="{Binding Status}" Margin="0,5,0,10"/>
+                <TextBox Text="{Binding Status}" Margin="0,5,0,10" BorderThickness="1"/>
                 <TextBlock Text="Start Date:" FontWeight="Bold"/>
-                <TextBox Text="{Binding StartDate}" Margin="0,5,0,10"/>
+                <TextBox Text="{Binding StartDate}" Margin="0,5,0,10" BorderThickness="1"/>
                 <TextBlock Text="Scheduled Date:" FontWeight="Bold"/>
-                <TextBox Text="{Binding ScheduledDate}" Margin="0,5,0,10"/>
+                <TextBox Text="{Binding ScheduledDate}" Margin="0,5,0,10" BorderThickness="1"/>
                 <TextBlock Text="Forecasted Date:" FontWeight="Bold"/>
-                <TextBox Text="{Binding ForecastDate}" Margin="0,5,0,10"/>
+                <TextBox Text="{Binding ForecastDate}" Margin="0,5,0,10" BorderThickness="1"/>
                 <TextBlock Text="Deliverables:" FontWeight="Bold"/>
-                <TextBox Text="{Binding Deliverables}" Margin="0,5,0,10"/>
+                <TextBox Text="{Binding Deliverables}" Margin="0,5,0,10" BorderThickness="1"/>
                 <TextBlock Text="Remarks:" FontWeight="Bold"/>
-                <TextBox Text="{Binding Remarks}" Margin="0,5,0,10"/>
+                <TextBox Text="{Binding Remarks}" Margin="0,5,0,10" BorderThickness="1"/>
             </StackPanel>
         </Border>
 
-        <Button Content="Update Task" Grid.Row="2" HorizontalAlignment="Left" Margin="130,10,0,10" Click="UpdateTaskButton_Click"/>
-
-        <Button Content="Complete Task" Grid.Row="2" HorizontalAlignment="Left" Margin="300,10,0,10" Click="CompleteTaskButton_Click"/>
+        <!-- Buttons Section -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" Margin="10">
+            <Button Content="Update Task" Margin="5" Click="UpdateTaskButton_Click"/>
+            <Button Content="Complete Task" Margin="5" Click="CompleteTaskButton_Click"/>
+        </StackPanel>
     </Grid>
 </Window>

@@ -68,11 +68,11 @@ namespace PL
         }
 
 
-        private void GanttChart_Click(object sender, RoutedEventArgs e)
-        {
-            // Open the Gantt Chart window
-            new Gantt().Show();
-        }
+        //private void GanttChart_Click(object sender, RoutedEventArgs e)
+        //{
+        //    // Open the Gantt Chart window
+        //    new Gantt().Show();
+        //}
 
     }
 }
