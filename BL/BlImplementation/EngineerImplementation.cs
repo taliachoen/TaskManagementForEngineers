@@ -71,8 +71,6 @@ namespace BlImplementation
         /// <returns>The engineer with the specified ID.</returns>
         public BO.Engineer Read(int engineerId)
         {
-           // try
-           // {
                 DO.Engineer? doEngineer = dal.Engineer.Read(engineerId);
                 if (doEngineer==null)
                 {
@@ -98,12 +96,6 @@ namespace BlImplementation
                 catch {
                 throw new BO.BlReadImpossibleException($"Error while reading engineer with ID={engineerId}");
                 }
-
-            //}
-            //catch (BO.BlDoesNotExistException ex)
-            //{
-            //    throw new BO.BlReadImpossibleException($"Error while reading engineer with ID={engineerId}", ex);
-            //}
         }
 
         /// <summary>
@@ -188,7 +180,6 @@ namespace BlImplementation
             {
                 throw new BO.BlInvalidDataException("Engineer data is invalid.");
             }
-            //הוספת בדיקה אם היה שינו כלשהוא
             try
             {
                 dal.Engineer.Update(new DO.Engineer
@@ -220,17 +211,12 @@ namespace BlImplementation
                         throw new BO.BlAlreadyExistsException("A different engineer is already assigned to the task.");
                     }
 
-                    if (newTask != null && newTask.EngineerId != 0 && newTask.EngineerId == updatedEngineer.Id)
-                    {
-                        throw new BO.BlNoUpdateWasMadeException("No changes were made to the task.");
-                    }
 
                     if (oldTask?.CompleteDate == null && oldTask?.StartDate != null)
                     {
                         throw new BO.BlUnableToUpdateException("Cannot update task while another task is in progress.");
                     }
 
-                    // Check if all dependent tasks are DONE
                     bool allDependenciesDone = dal.Dependency.ReadAll(dep => dep.DependsOnTask == newTask?.Id)
                         .All(dep => dal.Task.Read((int)dep!.DependentTask!)?.CompleteDate != null);
 
@@ -239,15 +225,13 @@ namespace BlImplementation
                         if (newTask != null)
                         {
                             var taskToUpdate = newTask! with { EngineerId = updatedEngineer.Id, StartDate = DateTime.Now };
-                            //לשנות את הסטטוס של המשימה
-                            //taskToUpdate.Status = BO.Status.Done;
                             dal.Task.Update(taskToUpdate);
                         }
                     }
-                    else
-                    {
-                        throw new BO.BlUnableToUpdateException("Cannot assign the task to the engineer until all dependent tasks are marked as DONE.");
-                    }
+                    //else
+                    //{
+                    //    throw new BO.BlUnableToUpdateException("Cannot assign the task to the engineer until all dependent tasks are marked as DONE.");
+                    //}
                 }
             }
             catch (DO.DalDoesNotExistException ex)
@@ -258,12 +242,9 @@ namespace BlImplementation
 
         public void UpdateEngineerTask(int taskId, int engineerId)
         {
-            //להוסיף TRY
-            // קרא את המהנדס מה DAL
             DO.Engineer doEngineer = dal.Engineer.Read(engineerId)!;
             DO.Task doTask = dal.Task.Read(taskId)!;
 
-            // המר את DO.Engineer ל-BO.Engineer
             BO.Engineer updateEngineer = new()
             {
                 Id = doEngineer!.Id,
@@ -278,45 +259,7 @@ namespace BlImplementation
             // עדכן את המשימה של המהנדס ב BL
             Update(updateEngineer);
 
-            //לקרא למהנדס שוב ולבדוק האם הוא שינה לו את המשימה ולהציג לו הודעה בהתאם - אם כן או לא
-
         }
-
-
-
-        //public void UpdateEngineerTask(int taskId, int engineerId)
-        //{
-        //    try
-        //    {
-        //        BO.Engineer updateEngineer = Read(engineerId);
-        //        var taskToUpdate = updateEngineer! with { Id = taskId };
-        //        dal.Task.Update(taskToUpdate);
-
-        //        //var taskToUpdate = v! with { EngineerId = updatedEngineer.Id, StartDate = DateTime.Now };
-
-        //        // קוד לקריאה של המשימה לפי המזהה taskId מבסיס הנתונים
-        //        //DO.Task updatedTask = dal.Task.Read(taskId);
-
-
-        //        // כאן תוכל לעדכן את הערך Task של המהנדס על פי המשימה שקראת
-        //        // לדוגמה:
-        //        // BO.Engineer engineer = dal.Engineer.Read(engineerId); // קריאה לפרטי המהנדס מבסיס הנתונים
-        //        // engineer.Task = updatedTask; // עדכון המשימה של המהנדס
-
-        //        // כמו כן, תוכל להוסיף כל בדיקות או פעולות נדרשות לפני העדכון של המשימה של המהנדס
-        //        // לדוגמה, בדיקה אם המשימה החדשה שקראת עבור המהנדס תואמת לכללי העסקים או אם יש דרישות נוספות לפני העדכון
-
-        //        // כאן תוכל להוסיף הודעת הצלחה או לעדכן משתנה אחר כדי להעביר מידע נוסף לצד המשתמש
-        //        //else
-        //        //{
-        //        //    throw new BlException($"Task with ID {taskId} does not exist.");
-        //        //}
-        //    }
-        //    catch (DalException ex)
-        //    {
-        //        throw new BlException("Failed to update engineer task.", ex);
-        //    }
-        //}
 
     }
 }

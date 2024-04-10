@@ -17,29 +17,50 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <TextBox HorizontalAlignment="Left" Margin="100,30,0,0" TextWrapping="Wrap" Text="Engineer" VerticalAlignment="Top" Width="120"/>
 
-        <!--<Label Content="id" Grid.Row="1" HorizontalAlignment="Left" Margin="100,30,0,0" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Grid.Row="1" Margin="150,30,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" />-->
+        <Label Content="id" Grid.Row="1" HorizontalAlignment="Left" Margin="100,30,0,0" VerticalAlignment="Top"/>
+        <TextBox HorizontalAlignment="Left" Grid.Row="1"  Text="{Binding Id, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Margin="150,30,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" />
 
-        <Label Content="name" Grid.Row="1"  HorizontalAlignment="Left" Margin="100,30,0,0" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Grid.Row="1" Text="{Binding Name, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Margin="150,30,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Label Content="name" Grid.Row="2"  HorizontalAlignment="Left" Margin="100,30,0,0" VerticalAlignment="Top"/>
+        <TextBox HorizontalAlignment="Left" Grid.Row="2" Text="{Binding Name, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Margin="150,30,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
 
-        <Label Content="email" Grid.Row="2" HorizontalAlignment="Left" Margin="100,30,0,0" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Grid.Row="2" Text="{Binding Email, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Margin="150,30,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Label Content="email" Grid.Row="3" HorizontalAlignment="Left" Margin="100,30,0,0" VerticalAlignment="Top"/>
+        <TextBox HorizontalAlignment="Left" Grid.Row="3" Text="{Binding Email, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Margin="150,30,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
 
-        <Label Content="level" Grid.Row="3" HorizontalAlignment="Left" Margin="100,30,0,0" VerticalAlignment="Top"/>
+        <!--<Label Content="level" Grid.Row="3" HorizontalAlignment="Left" Margin="100,30,0,0" VerticalAlignment="Top"/>
         <ComboBox HorizontalAlignment="Left" Grid.Row="3" ItemsSource="{Binding Source={StaticResource ExperienceCollectionKey}}" 
                   SelectedValue="{Binding Level, Mode=TwoWay, NotifyOnValidationError=true, 
-                  ValidatesOnExceptions=true}" Margin="150,30,0,0" VerticalAlignment="Top" Width="120"/>
+                  ValidatesOnExceptions=true}" Margin="150,30,0,0" VerticalAlignment="Top" Width="120"/>-->
 
-        <Label Content="cost" Grid.Row="4" HorizontalAlignment="Left" Margin="100,30,0,0" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Grid.Row="4" Text="{Binding Cost, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Margin="150,30,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Label Content="level" Grid.Row="4" HorizontalAlignment="Left" Margin="100,30,0,0" VerticalAlignment="Top"/>
+        <ComboBox x:Name="EngineerLevelComboBox" HorizontalAlignment="Left" Grid.Row="4" 
+    ItemsSource="{Binding Source={StaticResource ExperienceCollectionKey}}" 
+    SelectedValue="{Binding Level, Mode=TwoWay, NotifyOnValidationError=true, 
+    ValidatesOnExceptions=true}" Margin="150,30,0,0" VerticalAlignment="Top" Width="120"/>
+        <TextBlock Grid.Row="4" Text="רמת מתחיל" HorizontalAlignment="Left" Margin="300,30,0,0" VerticalAlignment="Top">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding SelectedItem, ElementName=EngineerLevelComboBox}" Value="Beginner">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
 
-        <Label Content="task" Grid.Row="5" HorizontalAlignment="Left" Margin="100,30,0,0" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Grid.Row="5" IsReadOnly="True" Text="{Binding Task.Id, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Margin="150,30,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+
+
+        <Label Content="cost" Grid.Row="5" HorizontalAlignment="Left" Margin="100,30,0,0" VerticalAlignment="Top"/>
+        <TextBox HorizontalAlignment="Left" Grid.Row="5" Text="{Binding Cost, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Margin="150,30,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+
+        <Label Content="task" Grid.Row="6" HorizontalAlignment="Left" Margin="100,30,0,0" VerticalAlignment="Top"/>
+        <TextBox HorizontalAlignment="Left" Grid.Row="6" IsReadOnly="True" Text="{Binding Task.Id, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Margin="150,30,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
 
         <Button  Content="{Binding Id, Mode=OneTime, Converter={StaticResource ConverIdToContentKey}}"
                 HorizontalAlignment="Left" Margin="150,20,0,0"  VerticalAlignment="Top" Padding="5" 

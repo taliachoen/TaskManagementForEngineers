@@ -1,45 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfEngineer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Engineer>
-    <Id>388365756</Id>
+    <Id>237532920</Id>
+    <Email>AviSegal@gmail.com</Email>
+    <Cost>206</Cost>
+    <Name>Avi Segal</Name>
+    <Level>AdvanceedBeginner</Level>
+  </Engineer>
+  <Engineer>
+    <Id>383044064</Id>
+    <Email>YeodaShpiler@gmail.com</Email>
+    <Cost>457</Cost>
+    <Name>Yeoda Shpiler</Name>
+    <Level>AdvanceedBeginner</Level>
+  </Engineer>
+  <Engineer>
+    <Id>245087877</Id>
+    <Email>EliezerDisler@gmail.com</Email>
+    <Cost>375</Cost>
+    <Name>Eliezer Disler</Name>
+    <Level>AdvanceedBeginner</Level>
+  </Engineer>
+  <Engineer>
+    <Id>209774876</Id>
+    <Email>ChaimSalomon@gmail.com</Email>
+    <Cost>380</Cost>
+    <Name>Chaim Salomon</Name>
+    <Level>Competent</Level>
+  </Engineer>
+  <Engineer>
+    <Id>330026539</Id>
+    <Email>IsraelVeber@gmail.com</Email>
+    <Cost>269</Cost>
+    <Name>Israel Veber</Name>
+    <Level>AdvanceedBeginner</Level>
+  </Engineer>
+  <Engineer>
+    <Id>316967920</Id>
     <Email>MosheMan@gmail.com</Email>
-    <Cost>187</Cost>
+    <Cost>200</Cost>
     <Name>Moshe Man</Name>
     <Level>Competent</Level>
-  </Engineer>
-  <Engineer>
-    <Id>386391247</Id>
-    <Email>AviSegal@gmail.com</Email>
-    <Cost>121</Cost>
-    <Name>Avi Segal</Name>
-    <Level>Competent</Level>
-  </Engineer>
-  <Engineer>
-    <Id>370519766</Id>
-    <Email>YeodaShpiler@gmail.com</Email>
-    <Cost>114</Cost>
-    <Name>Yeoda Shpiler</Name>
-    <Level>Competent</Level>
-  </Engineer>
-  <Engineer>
-    <Id>358909318</Id>
-    <Email>EliezerDisler@gmail.com</Email>
-    <Cost>241</Cost>
-    <Name>Eliezer Disler</Name>
-    <Level>Proficient</Level>
-  </Engineer>
-  <Engineer>
-    <Id>322510428</Id>
-    <Email>ChaimSalomon@gmail.com</Email>
-    <Cost>485</Cost>
-    <Name>Chaim Salomon</Name>
-    <Level>Proficient</Level>
-  </Engineer>
-  <Engineer>
-    <Id>235904448</Id>
-    <Email>IsraelVeber@gmail.com</Email>
-    <Cost>245</Cost>
-    <Name>Israel Veber</Name>
-    <Level>Proficient</Level>
   </Engineer>
 </ArrayOfEngineer>

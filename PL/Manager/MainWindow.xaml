@@ -19,8 +19,35 @@
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <TextBlock Grid.Row="0" Text="MANAGER MENU" FontSize="32" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,20,0,10"/>
+        <!--<TextBlock Grid.Row="0" Text="MANAGER MENU" FontSize="32" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,20,0,10"/>-->
+        <TextBlock Grid.Row="0" Text="MANAGER MENU" HorizontalAlignment="Center" Margin="0,20,0,0" FontSize="48">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Style.Triggers>
+                        <EventTrigger RoutedEvent="MouseEnter">
+                            <EventTrigger.Actions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0:0:0.300" Storyboard.TargetProperty="FontSize" To="28" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger.Actions>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="MouseLeave">
+                            <EventTrigger.Actions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0:0:0.800" Storyboard.TargetProperty="FontSize" To="18" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger.Actions>
+                        </EventTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
 
+        
         <!-- Buttons Panel 1 -->
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,30">
             <Button Content="List of Engineers" Margin="20" Width="200" Height="50" Background="{StaticResource ButtonBackgroundColor}" Foreground="{StaticResource ButtonForegroundColor}" Click="ViewEngineers_Click"/>
